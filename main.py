@@ -14,6 +14,10 @@ from procedural_materials import MarbleMaterial
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
+# Utility function for clamping values
+def _clamp(value: float, min_value: float, max_value: float) -> float:
+    return max(min_value, min(value, max_value))
+
 # Set default window resolution
 loadPrcFileData("", "win-size 1024 1024")
 
@@ -197,10 +201,17 @@ class RaymarchApp(ShowBase):
 
         props = WindowProperties()
         props.setCursorHidden(True)
+        props.set_mouse_mode(WindowProperties.M_relative)
         self.win.request_properties(props)
+
         self.center_x = int(self.win.get_x_size() / 2)
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
+
+        self.heading = self.camera.get_h()
+        self.pitch = self.camera.get_p()
+        self.sensitivity = 0.2
+        self.move_speed = 5.0
         self.taskMgr.add(self._camera_update, "camera-update")
 
     def _set_key(self, key, value):
@@ -208,36 +219,42 @@ class RaymarchApp(ShowBase):
 
     def _camera_update(self, task):
         dt = globalClock.get_dt()
+
         md = self.win.get_pointer(0)
-        x = md.get_x() - self.center_x
-        y = md.get_y() - self.center_y
-        self.win.movePointer(0, self.center_x, self.center_y)
-        self.camera.set_h(self.camera.get_h() - x * 0.2)
-        pitch = self.camera.get_p() - y * 0.2
-        if pitch > 90:
-            pitch = 90
-        elif pitch < -90:
-            pitch = -90
-        self.camera.set_p(pitch)
+        x = md.get_x()
+        y = md.get_y()
+
+        if self.win.get_properties().get_mouse_mode() != WindowProperties.M_relative:
+            x -= self.center_x
+            y -= self.center_y
+            self.win.movePointer(0, self.center_x, self.center_y)
+
+        self.heading -= x * self.sensitivity
+        self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.0, 89.0)
+        self.camera.set_hpr(self.heading, self.pitch, 0)
+
+        quat = self.camera.get_quat(self.render)
+        forward = quat.get_forward()
+        right = quat.get_right()
+        up = quat.get_up()
 
         direction = Vec3(0, 0, 0)
         if self.key_map["forward"]:
-            direction.y += 1
+            direction += forward
         if self.key_map["back"]:
-            direction.y -= 1
+            direction -= forward
         if self.key_map["left"]:
-            direction.x -= 1
+            direction -= right
         if self.key_map["right"]:
-            direction.x += 1
+            direction += right
         if self.key_map["up"]:
-            direction.z += 1
+            direction += up
         if self.key_map["down"]:
-            direction.z -= 1
+            direction -= up
 
         if direction.length_squared() > 0:
             direction.normalize()
-            speed = 5.0
-            self.camera.set_pos(self.camera, direction * speed * dt)
+            self.camera.set_pos(self.camera.get_pos() + direction * self.move_speed * dt)
         return task.cont
 
 
