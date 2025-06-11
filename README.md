@@ -10,3 +10,11 @@ Version 0.1 will:
 4. allow the user to select  one of three procedurally generated materials for world geometry.
 5. light the scene with a dynamic light grid that allow the user to determine the color, spacing of the grid in x/y/z, and spacing offset.
 6. provide a UI with an options menu to configure settings.
+
+## Procedural Materials
+
+Procedural PBR materials are generated at runtime using simplex noise and
+fractional Brownian motion. The `MarbleMaterial` class in `procedural_materials.py`
+produces an albedo and roughness texture that are fed directly into the compute
+shader. Additional materials can subclass `ProceduralMaterial` and implement the
+`generate()` method to produce their own textures.
