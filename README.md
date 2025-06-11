@@ -4,9 +4,9 @@ A proof-of-concept ray marching program using Panda3D.
 
 Version 0.1 will:
 
-1. allow users to select an SDF that provides world geometry
+1. allow users to select an SDF that provides world geometry.
 2. allow users to explore the SDF with WSAD for x and z directions, spacebar and ctrl for y+ and y-, and mouse look. There will not be collision.
-3. utilize full BRDF and PBR
-4. allow the user to select  one of three procedurally generated materials for world geometry
-5. light the scene with a dynamic light grid that allow the user to determine the color, spacing of the grid in x/y/z, and spacing offset
-6. provide a UI with an options menu to configure settings
+3. utilize full BRDF and PBR.
+4. allow the user to select  one of three procedurally generated materials for world geometry.
+5. light the scene with a dynamic light grid that allow the user to determine the color, spacing of the grid in x/y/z, and spacing offset.
+6. provide a UI with an options menu to configure settings.
