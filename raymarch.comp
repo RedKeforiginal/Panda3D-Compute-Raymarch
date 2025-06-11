@@ -8,10 +8,16 @@ layout(rgba32f, binding = 0) writeonly uniform image2D outputImage;
 uniform mat4 inv_view_proj;
 uniform vec3 camera_pos;
 uniform float time;
+uniform vec3 u_color;        // Base color of the material
+uniform float u_roughness;   // Perceptual roughness in [0,1]
+uniform float u_R0;          // Reflectance at normal incidence
+uniform vec3 u_light_dir;    // Directional light direction (world space)
+uniform vec3 u_light_color;  // Radiance of the light source
 
 const int MAX_STEPS = 128;
 const float MAX_DIST = 100.0;
 const float EPSILON = 0.001;
+const float PI = 3.14159265359;
 
 // Signed distance function
 float lattice(vec3 p){
@@ -81,10 +87,57 @@ vec3 get_normal(vec3 p) {
     ));
 }
 
+// ---- Physically based shading helpers ----
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+    float denom = NdotH2 * (a2 - 1.0) + 1.0;
+    return a2 / (PI * denom * denom);
+}
+
+float GeometrySchlickGGX(float NdotV, float k) {
+    return NdotV / (NdotV * (1.0 - k) + k);
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float k) {
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, k);
+    float ggx1 = GeometrySchlickGGX(NdotL, k);
+    return ggx1 * ggx2;
+}
+
+vec3 FresnelSchlick(float cosTheta, float R0) {
+    return vec3(R0) + (vec3(1.0 - R0)) * pow(1.0 - cosTheta, 5.0);
+}
+
 vec4 shade(vec3 p, vec3 n) {
-    vec3 light_dir = normalize(vec3(1.0, 1.0, 1.0));
-    float diff = max(dot(n, light_dir), 0.0);
-    return vec4(vec3(diff), 1.0);
+    vec3 L = normalize(u_light_dir);
+    vec3 V = normalize(camera_pos - p);
+    vec3 H = normalize(V + L);
+
+    float NdotL = max(dot(n, L), 0.0);
+    float NdotV = max(dot(n, V), 0.0);
+    float NdotH = max(dot(n, H), 0.0);
+    float VdotH = max(dot(V, H), 0.0);
+
+    float D = DistributionGGX(n, H, u_roughness);
+    float k = (u_roughness + 1.0) * (u_roughness + 1.0) / 8.0;
+    float G = GeometrySmith(n, V, L, k);
+    vec3 F = FresnelSchlick(VdotH, u_R0);
+
+    vec3 numerator = D * G * F;
+    float denominator = max(4.0 * NdotV * NdotL, 0.001);
+    vec3 specular = numerator / denominator;
+
+    vec3 kd = (vec3(1.0) - F);
+    vec3 diffuse = kd * (u_color / PI);
+
+    vec3 radiance = u_light_color * NdotL;
+    vec3 color = (diffuse + specular) * radiance;
+    return vec4(color, 1.0);
 }
 
 void main() {
