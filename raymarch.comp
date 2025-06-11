@@ -14,6 +14,8 @@ uniform float u_R0;          // Reflectance at normal incidence
 uniform vec3 u_light_dir;    // Directional light direction (world space)
 uniform vec3 u_light_color;  // Radiance of the light source
 
+layout(binding = 1) uniform sampler2D albedo_tex;
+layout(binding = 2) uniform sampler2D roughness_tex;
 const int MAX_STEPS = 128;
 const float MAX_DIST = 100.0;
 const float EPSILON = 0.001;
@@ -112,6 +114,16 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float k) {
 vec3 FresnelSchlick(float cosTheta, float R0) {
     return vec3(R0) + (vec3(1.0 - R0)) * pow(1.0 - cosTheta, 5.0);
 }
+vec3 sample_albedo(vec3 p) {
+    vec2 uv = p.xz * 0.05;
+    return texture(albedo_tex, uv).rgb;
+}
+
+float sample_roughness(vec3 p) {
+    vec2 uv = p.xz * 0.05;
+    return texture(roughness_tex, uv).r;
+}
+
 
 vec4 shade(vec3 p, vec3 n) {
     vec3 L = normalize(u_light_dir);
@@ -123,8 +135,10 @@ vec4 shade(vec3 p, vec3 n) {
     float NdotH = max(dot(n, H), 0.0);
     float VdotH = max(dot(V, H), 0.0);
 
-    float D = DistributionGGX(n, H, u_roughness);
-    float k = (u_roughness + 1.0) * (u_roughness + 1.0) / 8.0;
+    vec3 base_color = sample_albedo(p);
+    float roughness = sample_roughness(p);
+    float D = DistributionGGX(n, H, roughness);
+    float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
     float G = GeometrySmith(n, V, L, k);
     vec3 F = FresnelSchlick(VdotH, u_R0);
 
@@ -133,7 +147,7 @@ vec4 shade(vec3 p, vec3 n) {
     vec3 specular = numerator / denominator;
 
     vec3 kd = (vec3(1.0) - F);
-    vec3 diffuse = kd * (u_color / PI);
+    vec3 diffuse = kd * (base_color / PI);
 
     vec3 radiance = u_light_color * NdotL;
     vec3 color = (diffuse + specular) * radiance;

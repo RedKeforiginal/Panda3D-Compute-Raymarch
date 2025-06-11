@@ -9,6 +9,7 @@ from panda3d.core import (
     ShaderInput,
     WindowProperties,
 )
+from procedural_materials import MarbleMaterial
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
@@ -74,6 +75,8 @@ class RaymarchApp(ShowBase):
 
         cm = CardMaker("full")
         cm.setFrameFullscreenQuad()
+        self.material = MarbleMaterial()
+        self.material.generate()
         self.fullscreen_quad = self.render2d.attachNewNode(cm.generate())
         self.fullscreen_quad.set_shader_off()
         self.fullscreen_quad.set_texture(self.output_tex)
@@ -104,6 +107,8 @@ class RaymarchApp(ShowBase):
         sattr = sattr.set_shader_input("camera_pos", self.camera.get_pos())
         sattr = sattr.set_shader_input("time", globalClock.get_frame_time())
         sattr = sattr.set_shader_input("u_color", (1.0, 0.766, 0.336))
+        sattr = sattr.set_shader_input("albedo_tex", self.material.albedo_tex)
+        sattr = sattr.set_shader_input("roughness_tex", self.material.roughness_tex)
         sattr = sattr.set_shader_input("u_roughness", 0.2)
         sattr = sattr.set_shader_input("u_R0", 0.04)
         sattr = sattr.set_shader_input("u_light_dir", (1.0, 1.0, 1.0))
