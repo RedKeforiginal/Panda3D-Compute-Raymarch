@@ -8,3 +8,6 @@ call venv\Scripts\activate.bat
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 python main.py
+
+REM Prevent the window from closing immediately so output can be reviewed
+pause
