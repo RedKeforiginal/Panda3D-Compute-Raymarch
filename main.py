@@ -12,7 +12,7 @@ from panda3d.core import (
 )
 from procedural_materials import MarbleMaterial
 from direct.showbase.ShowBase import ShowBase
-from direct.gui.DirectGui import DirectButton, DirectFrame
+from direct.gui.DirectGui import DirectButton, DirectFrame, DirectEntry
 
 # Utility function for clamping values
 def _clamp(value: float, min_value: float, max_value: float) -> float:
@@ -35,6 +35,10 @@ class RaymarchApp(ShowBase):
 
         # Setup compute-raymarch rendering
         self._init_raymarch()
+
+        # Default light grid settings
+        self.light_spacing = Vec3(8.0, 8.0, 8.0)
+        self.light_color = Vec3(4.0, 4.0, 4.0)
 
         # Setup the main menu with launch, options and quit.
         self.menu = DirectFrame(frameColor=(0, 0, 0, 0))
@@ -88,7 +92,7 @@ class RaymarchApp(ShowBase):
         self.light_btn = DirectButton(
             text="Lighting Settings",
             scale=btn_scale,
-            command=self._placeholder,
+            command=self._show_lighting_options,
             pos=(0, 0, y - 0.3),
         )
         self.light_btn.reparentTo(self.options_menu)
@@ -103,24 +107,80 @@ class RaymarchApp(ShowBase):
 
         self.options_menu.hide()
 
+        # Lighting settings submenu
+        self.lighting_menu = DirectFrame(frameColor=(0, 0, 0, 0))
+        self.spacing_x_entry = DirectEntry(
+            text=str(self.light_spacing.x), scale=0.05, pos=(-0.2, 0, y)
+        )
+        self.spacing_y_entry = DirectEntry(
+            text=str(self.light_spacing.y), scale=0.05, pos=(-0.2, 0, y - 0.15)
+        )
+        self.spacing_z_entry = DirectEntry(
+            text=str(self.light_spacing.z), scale=0.05, pos=(-0.2, 0, y - 0.3)
+        )
+        self.color_r_entry = DirectEntry(
+            text=str(self.light_color.x), scale=0.05, pos=(0.2, 0, y)
+        )
+        self.color_g_entry = DirectEntry(
+            text=str(self.light_color.y), scale=0.05, pos=(0.2, 0, y - 0.15)
+        )
+        self.color_b_entry = DirectEntry(
+            text=str(self.light_color.z), scale=0.05, pos=(0.2, 0, y - 0.3)
+        )
+        self.apply_light_btn = DirectButton(
+            text="Apply", scale=btn_scale, command=self._apply_light_settings, pos=(0, 0, y - 0.45)
+        )
+        self.light_back_btn = DirectButton(
+            text="Back", scale=btn_scale, command=self._show_options, pos=(0, 0, y - 0.6)
+        )
+        for widget in [
+            self.spacing_x_entry, self.spacing_y_entry, self.spacing_z_entry,
+            self.color_r_entry, self.color_g_entry, self.color_b_entry,
+            self.apply_light_btn, self.light_back_btn
+        ]:
+            widget.reparentTo(self.lighting_menu)
+        self.lighting_menu.hide()
+
     def _placeholder(self):
         """Placeholder callback for unimplemented menu actions."""
         print("Menu item selected (placeholder)")
 
+    def _show_lighting_options(self):
+        """Display the lighting options submenu."""
+        self.options_menu.hide()
+        self.lighting_menu.show()
+
+    def _apply_light_settings(self):
+        """Apply lighting settings from UI entries."""
+        try:
+            x = float(self.spacing_x_entry.get())
+            y = float(self.spacing_y_entry.get())
+            z = float(self.spacing_z_entry.get())
+            self.light_spacing = Vec3(x, y, z)
+            r = float(self.color_r_entry.get())
+            g = float(self.color_g_entry.get())
+            b = float(self.color_b_entry.get())
+            self.light_color = Vec3(r, g, b)
+        except ValueError:
+            print("Invalid lighting values")
+
     def _show_options(self):
         """Display the options menu."""
         self.menu.hide()
+        self.lighting_menu.hide()
         self.options_menu.show()
 
     def _show_main_menu(self):
         """Return to the main menu."""
         self.options_menu.hide()
+        self.lighting_menu.hide()
         self.menu.show()
 
     def _launch(self):
         """Launch the demo with basic camera controls."""
         self.menu.hide()
         self.options_menu.hide()
+        self.lighting_menu.hide()
         self._enable_camera_controls()
 
     def _init_raymarch(self):
@@ -169,8 +229,8 @@ class RaymarchApp(ShowBase):
         sattr = sattr.set_shader_input("roughness_tex", self.material.roughness_tex)
         sattr = sattr.set_shader_input("u_roughness", 0.2)
         sattr = sattr.set_shader_input("u_R0", 0.04)
-        sattr = sattr.set_shader_input("u_light_dir", (1.0, 1.0, 1.0))
-        sattr = sattr.set_shader_input("u_light_color", (4.0, 4.0, 4.0))
+        sattr = sattr.set_shader_input("u_light_spacing", self.light_spacing)
+        sattr = sattr.set_shader_input("u_light_color", self.light_color)
         groups = LVecBase3i((self.output_tex.get_x_size() + 7) // 8,
                             (self.output_tex.get_y_size() + 7) // 8,
                             1)
