@@ -7,6 +7,7 @@ from panda3d.core import (
     CardMaker,
     Mat4,
     ShaderInput,
+    WindowProperties,
 )
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
@@ -21,7 +22,10 @@ class RaymarchApp(ShowBase):
     def __init__(self):
         super().__init__()
         self.setFrameRateMeter(True)
-        self.win.set_title("Panda3D Raymarch Placeholder")
+        # Set the window title using WindowProperties.
+        props = WindowProperties()
+        props.set_title("Panda3D Raymarch Placeholder")
+        self.win.request_properties(props)
 
         # Setup compute-raymarch rendering
         self._init_raymarch()
