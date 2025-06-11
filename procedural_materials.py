@@ -8,7 +8,7 @@ def fbm_noise(noise, x, y, octaves=4, lacunarity=2.0, gain=0.5):
     amplitude = 1.0
     frequency = 1.0
     for _ in range(octaves):
-        value += amplitude * noise.noise2d(x * frequency, y * frequency)
+        value += amplitude * noise.noise2(x * frequency, y * frequency)
         frequency *= lacunarity
         amplitude *= gain
     return value
