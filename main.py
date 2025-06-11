@@ -103,6 +103,11 @@ class RaymarchApp(ShowBase):
         sattr = sattr.set_shader_input("inv_view_proj", inv_view_proj)
         sattr = sattr.set_shader_input("camera_pos", self.camera.get_pos())
         sattr = sattr.set_shader_input("time", globalClock.get_frame_time())
+        sattr = sattr.set_shader_input("u_color", (1.0, 0.766, 0.336))
+        sattr = sattr.set_shader_input("u_roughness", 0.2)
+        sattr = sattr.set_shader_input("u_R0", 0.04)
+        sattr = sattr.set_shader_input("u_light_dir", (1.0, 1.0, 1.0))
+        sattr = sattr.set_shader_input("u_light_color", (4.0, 4.0, 4.0))
         groups = LVecBase3i((self.output_tex.get_x_size() + 7) // 8,
                             (self.output_tex.get_y_size() + 7) // 8,
                             1)
