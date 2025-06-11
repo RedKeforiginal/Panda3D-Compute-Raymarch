@@ -69,7 +69,8 @@ class RaymarchApp(ShowBase):
         w = self.win.get_x_size()
         h = self.win.get_y_size()
         self._create_output_tex(w, h)
-        self.comp_shader = Shader.load_compute("raymarch.comp")
+        # Panda3D 1.10 requires explicitly specifying the GLSL language when loading compute shaders
+        self.comp_shader = Shader.load_compute(Shader.SL_GLSL, "raymarch.comp")
 
         cm = CardMaker("full")
         cm.setFrameFullscreenQuad()
