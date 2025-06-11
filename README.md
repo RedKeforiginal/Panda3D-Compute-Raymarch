@@ -1,6 +1,6 @@
 # Panda3D-Compute-Raymarch
 
-a proof-of-concept ray marching program using Panda3D.
+A proof-of-concept ray marching program using Panda3D.
 
 Version 0.1 will:
 
