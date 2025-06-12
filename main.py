@@ -1,3 +1,4 @@
+import panda3d
 from panda3d.core import WindowProperties, Vec3
 from direct.showbase.ShowBase import ShowBase
 
