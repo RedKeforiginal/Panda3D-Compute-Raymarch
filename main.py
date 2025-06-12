@@ -41,6 +41,10 @@ class RaymarchApp(ShowBase):
         self.light_spacing = Vec3(8.0, 8.0, 8.0)
         self.light_color = Vec3(4.0, 4.0, 4.0)
 
+        # Matrix to convert Panda3D's Z-up world coordinates to the Y-up
+        # coordinate system expected by the compute shader.
+        self.world_to_shader = Mat4.rotate_mat(-90, Vec3(1, 0, 0))
+
         # Setup the main menu with launch, options and quit.
         self.menu = DirectFrame(frameColor=(0, 0, 0, 0))
 
@@ -220,10 +224,14 @@ class RaymarchApp(ShowBase):
         view_proj = self.cam.get_mat(self.render) * self.camLens.get_projection_mat()
         inv_view_proj = Mat4(view_proj)
         inv_view_proj.invert_in_place()
+        inv_view_proj = self.world_to_shader * inv_view_proj
+
+        cam_pos = self.camera.get_pos(self.render)
+        cam_pos = self.world_to_shader.xform_point(cam_pos)
         sattr = ShaderAttrib.make(self.comp_shader)
         sattr = sattr.set_shader_input("outputImage", self.output_tex, ShaderInput.AWrite)
         sattr = sattr.set_shader_input("inv_view_proj", inv_view_proj)
-        sattr = sattr.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        sattr = sattr.set_shader_input("camera_pos", cam_pos)
         sattr = sattr.set_shader_input("time", globalClock.get_frame_time())
         sattr = sattr.set_shader_input("u_color", (1.0, 0.766, 0.336))
         sattr = sattr.set_shader_input("albedo_tex", self.material.albedo_tex)
