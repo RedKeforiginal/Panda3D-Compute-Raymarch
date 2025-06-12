@@ -1,5 +1,10 @@
 import panda3d
 from direct.showbase.ShowBase import ShowBase
+from panda3d.core import (
+    Shader, ComputeNode, NodePath, Texture, CardMaker,
+    Vec3, Mat4
+)
+from procedural_materials import MarbleMaterial
 
 
 class FPSCamera:
@@ -96,8 +101,56 @@ class FPSCamera:
 class App(ShowBase):
     def __init__(self):
         super().__init__()
+        self.setup_compute_shader()
         self.setBackgroundColor(0.1, 0.1, 0.1)
         self.camera_controller = FPSCamera(self)
+
+        self.taskMgr.add(self.update_compute, "update_compute")
+
+    def setup_compute_shader(self):
+        win_size_x = self.win.getXSize()
+        win_size_y = self.win.getYSize()
+        self.output_tex = Texture()
+        self.output_tex.setup_2d_texture(win_size_x, win_size_y, Texture.T_float, Texture.F_rgba32)
+        self.output_tex.clear_color = (0, 0, 0, 1)
+        self.output_tex.clear_image()
+
+        material = MarbleMaterial()
+        albedo, rough = material.generate()
+
+        self.compute_shader = Shader.load_compute(Shader.SL_GLSL, "raymarch.comp")
+        groups_x = (win_size_x + 7) // 8
+        groups_y = (win_size_y + 7) // 8
+        self.compute_node = ComputeNode("raymarch")
+        self.compute_node.add_dispatch(groups_x, groups_y, 1)
+        self.compute_np = NodePath(self.compute_node)
+        self.compute_np.set_shader(self.compute_shader)
+        self.compute_np.set_shader_input("outputImage", self.output_tex)
+        self.compute_np.set_shader_input("albedo_tex", albedo)
+        self.compute_np.set_shader_input("roughness_tex", rough)
+        self.compute_np.set_shader_input("u_color", Vec3(1, 1, 1))
+        self.compute_np.set_shader_input("u_roughness", 0.5)
+        self.compute_np.set_shader_input("u_R0", 0.04)
+        self.compute_np.set_shader_input("u_light_spacing", Vec3(8, 4, 8))
+        self.compute_np.set_shader_input("u_light_color", Vec3(5, 5, 5))
+        self.render.attach_new_node(self.compute_np)
+
+        cm = CardMaker("quad")
+        cm.set_frame_fullscreen_quad()
+        card = NodePath(cm.generate())
+        card.reparent_to(self.render2d)
+        card.set_texture(self.output_tex)
+
+    def update_compute(self, task):
+        view_mat = self.camera.get_mat()
+        proj_mat = self.camLens.get_projection_mat()
+        view_proj = proj_mat * view_mat
+        inv_view_proj = Mat4(view_proj)
+        inv_view_proj.invert_in_place()
+        self.compute_np.set_shader_input("inv_view_proj", inv_view_proj)
+        self.compute_np.set_shader_input("camera_pos", self.camera.get_pos())
+        self.compute_np.set_shader_input("time", task.time)
+        return task.cont
 
 
 def main():
