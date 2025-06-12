@@ -13,6 +13,7 @@ from panda3d.core import (
 from procedural_materials import MarbleMaterial
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame, DirectEntry
+import math
 
 # Utility function for clamping values
 def _clamp(value: float, min_value: float, max_value: float) -> float:
@@ -268,13 +269,11 @@ class RaymarchApp(ShowBase):
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
 
-        # Create a simple hierarchy for standard FPS controls.  The camera is
-        # parented under a root node that rotates the world by -90 degrees about
-        # the X axis so that Y becomes the vertical axis.  Yaw is applied to the
-        # root and pitch directly to the camera.
-        self.camera_root = self.render.attachNewNode("camera_root")
-        self.camera_root.set_hpr(0, -90, 0)
-        self.camera.reparentTo(self.camera_root)
+        # Reparent the camera directly to render and handle the orientation
+        # ourselves.  The default orientation of (0, 0, 0) now looks down the
+        # positive Z axis with Y as the up axis.
+        self.camera.reparentTo(self.render)
+        self.camera.set_pos(0, 0, 0)
         self.camera.set_hpr(0, 0, 0)
         self.heading = 0.0
         self.pitch = 0.0
@@ -302,13 +301,18 @@ class RaymarchApp(ShowBase):
         # looks upward.
         self.heading += x * self.sensitivity
         self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.9, 89.9)
-        self.camera_root.set_h(self.heading)
-        self.camera.set_p(self.pitch)
+        # Calculate direction vectors based on heading (yaw) and pitch.
+        h_rad = math.radians(self.heading)
+        p_rad = math.radians(self.pitch)
+        ch = math.cos(h_rad)
+        sh = math.sin(h_rad)
+        cp = math.cos(p_rad)
+        sp = math.sin(p_rad)
 
-        quat = self.camera.get_quat(self.render)
-        forward = quat.getForward()
-        right = quat.getRight()
-        up = quat.getUp()
+        forward = Vec3(sh * cp, sp, ch * cp)
+        right = Vec3(ch, 0.0, -sh)
+        up = right.cross(forward)
+        self.camera.look_at(self.camera.get_pos() + forward, up)
 
         direction = Vec3(0, 0, 0)
         if self.key_map["forward"]:
@@ -326,7 +330,7 @@ class RaymarchApp(ShowBase):
 
         if direction.length_squared() > 0:
             direction.normalize()
-            self.camera_root.set_pos(self.camera_root.get_pos() + direction * self.move_speed * dt)
+            self.camera.set_pos(self.camera.get_pos() + direction * self.move_speed * dt)
         return task.cont
 
 
