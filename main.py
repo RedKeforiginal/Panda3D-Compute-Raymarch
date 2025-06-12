@@ -6,7 +6,17 @@ loadPrcFileData('', 'win-size 1024 1024')
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
-from panda3d.core import Vec3, WindowProperties
+from panda3d.core import (
+    Vec3,
+    WindowProperties,
+    Texture,
+    Shader,
+    ComputeNode,
+    CardMaker,
+    Mat4,
+)
+
+from procedural_materials import MarbleMaterial
 
 class FirstPersonController:
     """Simple FPS camera controller using Panda3D input."""
@@ -97,11 +107,57 @@ class MainMenuApp(ShowBase):
             parent=self.menu_frame,
         )
 
+    def _setup_compute(self):
+        width = self.win.getXSize()
+        height = self.win.getYSize()
+        self.output_tex = Texture()
+        self.output_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
+        self.output_tex.clear_image()
+
+        self.compute_shader = Shader.load_compute("raymarch.comp")
+        groups_x = (width + 7) // 8
+        groups_y = (height + 7) // 8
+        self.compute_node = ComputeNode("raymarch")
+        self.compute_node.add_dispatch(groups_x, groups_y, 1)
+        self.compute_np = self.render.attach_new_node(self.compute_node)
+        self.compute_np.set_shader(self.compute_shader)
+        self.compute_np.set_shader_input("outputImage", self.output_tex, write=True)
+
+        material = MarbleMaterial()
+        albedo, rough = material.generate()
+        self.compute_np.set_shader_input("albedo_tex", albedo)
+        self.compute_np.set_shader_input("roughness_tex", rough)
+        self.compute_np.set_shader_input("u_color", Vec3(1, 1, 1))
+        self.compute_np.set_shader_input("u_roughness", 0.5)
+        self.compute_np.set_shader_input("u_R0", 0.04)
+        self.compute_np.set_shader_input("u_light_spacing", Vec3(10, 4, 10))
+        self.compute_np.set_shader_input("u_light_color", Vec3(1, 1, 1))
+
+        cm = CardMaker("fullscreen")
+        cm.set_frame_fullscreen_quad()
+        card = self.render2d.attach_new_node(cm.generate())
+        card.set_texture(self.output_tex)
+        card.set_shader_off()
+
+        self.taskMgr.add(self._update_compute, "update-compute")
+
+    def _update_compute(self, task):
+        view = self.cam.get_mat(self.render)
+        proj = self.camLens.get_projection_mat()
+        view_proj = proj * view
+        inv_view_proj = Mat4(view_proj)
+        inv_view_proj.invert_in_place()
+        self.compute_np.set_shader_input("inv_view_proj", inv_view_proj)
+        self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        self.compute_np.set_shader_input("time", task.time)
+        return task.cont
+
     def _on_launch(self):
+
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
         self.controller = FirstPersonController(self)
-
+        self._setup_compute()
     def _on_settings(self):
         print("Settings selected (placeholder)")
 
