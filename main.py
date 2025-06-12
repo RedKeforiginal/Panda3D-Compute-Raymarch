@@ -1,5 +1,4 @@
 import panda3d
-from panda3d.core import WindowProperties, Vec3
 from direct.showbase.ShowBase import ShowBase
 
 
@@ -33,7 +32,7 @@ class FPSCamera:
         base.taskMgr.add(self.update, "update_camera")
 
     def _setup_window(self):
-        props = WindowProperties()
+        props = panda3d.core.WindowProperties()
         props.setCursorHidden(True)
         self.base.win.requestProperties(props)
 
@@ -71,7 +70,7 @@ class FPSCamera:
             self.base.camera.setHpr(self.yaw, self.pitch, 0)
             self.base.win.movePointer(0, self.center_x, self.center_y)
 
-        move_vec = Vec3(0, 0, 0)
+        move_vec = panda3d.core.Vec3(0, 0, 0)
         if self.key_map["forward"]:
             move_vec.y += 1
         if self.key_map["backward"]:
