@@ -290,7 +290,7 @@ class RaymarchApp(ShowBase):
             self.win.movePointer(0, self.center_x, self.center_y)
 
         self.heading -= x * self.sensitivity
-        self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.0, 89.0)
+        self.pitch = _clamp(self.pitch + y * self.sensitivity, -90.0, 90.0)
         self.camera.set_hpr(self.heading, self.pitch, 0)
 
         quat = self.camera.get_quat(self.render)
