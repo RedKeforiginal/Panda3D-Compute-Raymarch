@@ -268,15 +268,13 @@ class RaymarchApp(ShowBase):
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
 
-        # Create a hierarchy of nodes for classic FPS controls.  The camera
-        # is parented under a pitch node, which is in turn parented under a yaw node.
-        # The yaw node is parented under a root node that pitches the world by -90 degrees
-        # about the X axis so that Y becomes the up axis.
+        # Create a simple hierarchy for standard FPS controls.  The camera is
+        # parented under a root node that rotates the world by -90 degrees about
+        # the X axis so that Y becomes the vertical axis.  Yaw is applied to the
+        # root and pitch directly to the camera.
         self.camera_root = self.render.attachNewNode("camera_root")
         self.camera_root.set_hpr(0, -90, 0)
-        self.yaw_node = self.camera_root.attachNewNode("camera_yaw")
-        self.pitch_node = self.yaw_node.attachNewNode("camera_pitch")
-        self.camera.reparentTo(self.pitch_node)
+        self.camera.reparentTo(self.camera_root)
         self.camera.set_hpr(0, 0, 0)
         self.heading = 0.0
         self.pitch = 0.0
@@ -304,8 +302,8 @@ class RaymarchApp(ShowBase):
         # looks upward.
         self.heading += x * self.sensitivity
         self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.9, 89.9)
-        self.yaw_node.set_h(self.heading)
-        self.pitch_node.set_p(self.pitch)
+        self.camera_root.set_h(self.heading)
+        self.camera.set_p(self.pitch)
 
         quat = self.camera.get_quat(self.render)
         forward = quat.getForward()
@@ -328,7 +326,7 @@ class RaymarchApp(ShowBase):
 
         if direction.length_squared() > 0:
             direction.normalize()
-            self.yaw_node.set_pos(self.yaw_node.get_pos() + direction * self.move_speed * dt)
+            self.camera_root.set_pos(self.camera_root.get_pos() + direction * self.move_speed * dt)
         return task.cont
 
 
