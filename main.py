@@ -218,12 +218,18 @@ class RaymarchApp(ShowBase):
 
     def _dispatch_compute(self, task):
         view_proj = self.cam.get_mat(self.render) * self.camLens.get_projection_mat()
+        # Convert Panda3D's Z-up orientation to the shader's Y-up convention
+        # by rotating -90 degrees around the X axis.  This makes +Y point up in
+        # the shader while keeping the camera controls in Panda3D unchanged.
+        convert = Mat4.rotateMat(-90, Vec3(1, 0, 0))
+        view_proj = view_proj * convert
         inv_view_proj = Mat4(view_proj)
         inv_view_proj.invert_in_place()
         sattr = ShaderAttrib.make(self.comp_shader)
         sattr = sattr.set_shader_input("outputImage", self.output_tex, ShaderInput.AWrite)
         sattr = sattr.set_shader_input("inv_view_proj", inv_view_proj)
-        sattr = sattr.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        rotated_pos = self.camera.get_pos(self.render) * convert
+        sattr = sattr.set_shader_input("camera_pos", rotated_pos)
         sattr = sattr.set_shader_input("time", globalClock.get_frame_time())
         sattr = sattr.set_shader_input("u_color", (1.0, 0.766, 0.336))
         sattr = sattr.set_shader_input("albedo_tex", self.material.albedo_tex)
