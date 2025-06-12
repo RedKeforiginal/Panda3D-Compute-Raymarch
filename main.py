@@ -269,9 +269,9 @@ class RaymarchApp(ShowBase):
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
 
-        # Reparent the camera directly to render and handle the orientation
-        # ourselves.  The default orientation of (0, 0, 0) now looks down the
-        # positive Z axis with Y as the up axis.
+        # Reparent the camera directly to render so we can control the
+        # orientation manually.  The camera uses Panda3D's default convention
+        # where the forward direction is along the +Y axis and Z is up.
         self.camera.reparentTo(self.render)
         self.camera.set_pos(0, 0, 0)
         self.camera.set_hpr(0, 0, 0)
@@ -296,23 +296,18 @@ class RaymarchApp(ShowBase):
             y -= self.center_y
             self.win.movePointer(0, self.center_x, self.center_y)
 
-        # Apply standard mouse look behaviour.  Positive mouse motion
-        # to the right turns the camera to the right and upward motion
-        # looks upward.
+        # Apply standard mouse look behaviour.  Positive mouse motion to the
+        # right turns the camera to the right and upward motion looks upward.
         self.heading += x * self.sensitivity
         self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.9, 89.9)
-        # Calculate direction vectors based on heading (yaw) and pitch.
-        h_rad = math.radians(self.heading)
-        p_rad = math.radians(self.pitch)
-        ch = math.cos(h_rad)
-        sh = math.sin(h_rad)
-        cp = math.cos(p_rad)
-        sp = math.sin(p_rad)
 
-        forward = Vec3(sh * cp, sp, ch * cp)
-        right = Vec3(ch, 0.0, -sh)
-        up = right.cross(forward)
-        self.camera.look_at(self.camera.get_pos() + forward, up)
+        # Update the camera orientation using Panda3D's HPR convention.
+        self.camera.set_hpr(self.heading, self.pitch, 0.0)
+
+        quat = self.camera.get_quat()
+        forward = quat.get_forward()
+        right = quat.get_right()
+        up = quat.get_up()
 
         direction = Vec3(0, 0, 0)
         if self.key_map["forward"]:
