@@ -222,7 +222,7 @@ class RaymarchApp(ShowBase):
         sattr = ShaderAttrib.make(self.comp_shader)
         sattr = sattr.set_shader_input("outputImage", self.output_tex, ShaderInput.AWrite)
         sattr = sattr.set_shader_input("inv_view_proj", inv_view_proj)
-        sattr = sattr.set_shader_input("camera_pos", self.camera.get_pos())
+        sattr = sattr.set_shader_input("camera_pos", self.camera.get_pos(self.render))
         sattr = sattr.set_shader_input("time", globalClock.get_frame_time())
         sattr = sattr.set_shader_input("u_color", (1.0, 0.766, 0.336))
         sattr = sattr.set_shader_input("albedo_tex", self.material.albedo_tex)
@@ -268,11 +268,13 @@ class RaymarchApp(ShowBase):
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
 
-        # Start out looking along the negative Z axis so that the XZ plane
-        # corresponds to the ground plane and Y is up.
-        self.camera.set_hpr(0, -90, 0)
-        self.heading = self.camera.get_h()
-        self.pitch = self.camera.get_p()
+        # Reparent the camera under a new node to convert the world to Y-up
+        self.camera_root = self.render.attachNewNode("camera_root")
+        self.camera_root.set_hpr(0, -90, 0)
+        self.camera.reparentTo(self.camera_root)
+        self.camera.set_hpr(0, 0, 0)
+        self.heading = 0.0
+        self.pitch = 0.0
         self.sensitivity = 0.2
         self.move_speed = 5.0
         self.taskMgr.add(self._camera_update, "camera-update")
@@ -297,7 +299,8 @@ class RaymarchApp(ShowBase):
         # looks upward.
         self.heading += x * self.sensitivity
         self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.9, 89.9)
-        self.camera.set_hpr(self.heading, self.pitch, 0)
+        self.camera_root.set_h(self.heading)
+        self.camera.set_p(self.pitch)
 
         quat = self.camera.get_quat(self.render)
         forward = quat.getForward()
@@ -320,7 +323,7 @@ class RaymarchApp(ShowBase):
 
         if direction.length_squared() > 0:
             direction.normalize()
-            self.camera.set_pos(self.camera.get_pos() + direction * self.move_speed * dt)
+            self.camera_root.set_pos(self.camera_root.get_pos() + direction * self.move_speed * dt)
         return task.cont
 
 
