@@ -268,9 +268,11 @@ class RaymarchApp(ShowBase):
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
 
-        # Reparent the camera under a new node to convert the world to Y-up
+        # Reparent the camera under a new node so that Y becomes the vertical
+        # axis.  Rotating the parent by +90 degrees about X converts Panda3D's
+        # default Z-up coordinate system to a Y-up world.
         self.camera_root = self.render.attachNewNode("camera_root")
-        self.camera_root.set_hpr(0, -90, 0)
+        self.camera_root.set_hpr(0, 90, 0)
         self.camera.reparentTo(self.camera_root)
         self.camera.set_hpr(0, 0, 0)
         self.heading = 0.0
