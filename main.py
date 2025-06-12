@@ -4,7 +4,7 @@ from panda3d.core import loadPrcFileData
 loadPrcFileData('', 'win-size 1024 1024')
 
 from direct.showbase.ShowBase import ShowBase
-from direct.gui.DirectGui import DirectButton, DirectFrame
+from direct.gui.DirectGui import DirectButton, DirectFrame, DirectEntry, DirectLabel
 
 from panda3d.core import (
     Vec3,
@@ -73,9 +73,18 @@ class MainMenuApp(ShowBase):
 
     def __init__(self):
         super().__init__()
+        self.light_spacing = Vec3(4.0, 4.0, 4.0)
+        self.light_offset = Vec3(0.0, 0.0, 0.0)
+        self.light_color = Vec3(1.0, 0.85, 0.8)
         self._build_menu()
+        self.accept("escape", self._build_menu)
 
     def _build_menu(self):
+        if hasattr(self, "menu_frame"):
+            self.menu_frame.destroy()
+        props = WindowProperties()
+        props.setCursorHidden(False)
+        self.win.requestProperties(props)
         self.menu_frame = DirectFrame(
             frameColor=(0, 0, 0, 1),
             frameSize=(-0.6, 0.6, -0.8, 0.8),
@@ -106,6 +115,58 @@ class MainMenuApp(ShowBase):
             command=self.userExit,
             parent=self.menu_frame,
         )
+    def _build_options_menu(self):
+        if hasattr(self, "menu_frame"):
+            self.menu_frame.destroy()
+        self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.6,0.6,-0.8,0.8), pos=(0,0,0))
+        button_scale = 0.09
+        spacing = 0.2
+        DirectButton(text="SDF", scale=button_scale, pos=(0,0,spacing), command=self._on_sdf, parent=self.menu_frame)
+        DirectButton(text="Materials", scale=button_scale, pos=(0,0,0), command=self._on_materials, parent=self.menu_frame)
+        DirectButton(text="Lighting", scale=button_scale, pos=(0,0,-spacing), command=self._build_lighting_menu, parent=self.menu_frame)
+        DirectButton(text="Back", scale=button_scale, pos=(0,0,-spacing*2), command=self._build_menu, parent=self.menu_frame)
+
+    def _build_lighting_menu(self):
+        if hasattr(self, "menu_frame"):
+            self.menu_frame.destroy()
+        self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.7,0.7,-0.9,0.9), pos=(0,0,0))
+        entries = {}
+        labels = ["X spacing","Y spacing","Z spacing","X offset","Y offset","Z offset","red value","green value","blue value"]
+        defaults = [self.light_spacing.x,self.light_spacing.y,self.light_spacing.z,self.light_offset.x,self.light_offset.y,self.light_offset.z,self.light_color.x,self.light_color.y,self.light_color.z]
+        for i,label in enumerate(labels):
+            y=0.7 - i*0.15
+            DirectLabel(text=label, scale=0.05, pos=(-0.4,0,y), parent=self.menu_frame)
+            entry=DirectEntry(text=str(defaults[i]), scale=0.05, pos=(0.2,0,y-0.02), numLines=1, focus=0, parent=self.menu_frame)
+            entries[label]=entry
+        self.lighting_entries = entries
+        DirectButton(text="Apply", scale=0.07, pos=(-0.2,0,-0.75), command=self._apply_lighting, parent=self.menu_frame)
+        DirectButton(text="Back", scale=0.07, pos=(0.2,0,-0.75), command=self._build_options_menu, parent=self.menu_frame)
+    def _apply_lighting(self):
+        try:
+            self.light_spacing = Vec3(
+                float(self.lighting_entries["X spacing"].get()),
+                float(self.lighting_entries["Y spacing"].get()),
+                float(self.lighting_entries["Z spacing"].get())
+            )
+            self.light_offset = Vec3(
+                float(self.lighting_entries["X offset"].get()),
+                float(self.lighting_entries["Y offset"].get()),
+                float(self.lighting_entries["Z offset"].get())
+            )
+            self.light_color = Vec3(
+                float(self.lighting_entries["red value"].get()),
+                float(self.lighting_entries["green value"].get()),
+                float(self.lighting_entries["blue value"].get())
+            )
+        except ValueError:
+            print("Invalid lighting parameters")
+            return
+        if hasattr(self, "compute_np"):
+            self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
+            self.compute_np.set_shader_input("u_light_offset", self.light_offset)
+            self.compute_np.set_shader_input("u_light_color", self.light_color)
+
+
 
     def _setup_compute(self):
         width = self.win.getXSize()
@@ -130,8 +191,9 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("u_color", Vec3(1, 1, 1))
         self.compute_np.set_shader_input("u_roughness", 0.5)
         self.compute_np.set_shader_input("u_R0", 0.04)
-        self.compute_np.set_shader_input("u_light_spacing", Vec3(10, 4, 10))
-        self.compute_np.set_shader_input("u_light_color", Vec3(1, 1, 1))
+        self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
+        self.compute_np.set_shader_input("u_light_offset", self.light_offset)
+        self.compute_np.set_shader_input("u_light_color", self.light_color)
 
         cm = CardMaker("fullscreen")
         cm.set_frame_fullscreen_quad()
@@ -153,13 +215,22 @@ class MainMenuApp(ShowBase):
         return task.cont
 
     def _on_launch(self):
-
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
+        props = WindowProperties()
+        props.setCursorHidden(True)
+        self.win.requestProperties(props)
         self.controller = FirstPersonController(self)
         self._setup_compute()
+
     def _on_settings(self):
-        print("Settings selected (placeholder)")
+        self._build_options_menu()
+
+    def _on_sdf(self):
+        print("SDF options not implemented")
+
+    def _on_materials(self):
+        print("Material options not implemented")
 
 
 if __name__ == "__main__":
