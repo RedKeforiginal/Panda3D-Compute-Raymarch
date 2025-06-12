@@ -268,6 +268,9 @@ class RaymarchApp(ShowBase):
         self.center_y = int(self.win.get_y_size() / 2)
         self.win.movePointer(0, self.center_x, self.center_y)
 
+        # Start out looking along the negative Z axis so that the XZ plane
+        # corresponds to the ground plane and Y is up.
+        self.camera.set_hpr(0, -90, 0)
         self.heading = self.camera.get_h()
         self.pitch = self.camera.get_p()
         self.sensitivity = 0.2
@@ -289,14 +292,17 @@ class RaymarchApp(ShowBase):
             y -= self.center_y
             self.win.movePointer(0, self.center_x, self.center_y)
 
-        self.heading -= x * self.sensitivity
-        self.pitch = _clamp(self.pitch + y * self.sensitivity, -90.0, 90.0)
+        # Apply standard mouse look behaviour.  Positive mouse motion
+        # to the right turns the camera to the right and upward motion
+        # looks upward.
+        self.heading += x * self.sensitivity
+        self.pitch = _clamp(self.pitch - y * self.sensitivity, -89.9, 89.9)
         self.camera.set_hpr(self.heading, self.pitch, 0)
 
         quat = self.camera.get_quat(self.render)
-        forward = quat.get_forward()
-        right = quat.get_right()
-        up = quat.get_up()
+        forward = quat.getForward()
+        right = quat.getRight()
+        up = quat.getUp()
 
         direction = Vec3(0, 0, 0)
         if self.key_map["forward"]:
