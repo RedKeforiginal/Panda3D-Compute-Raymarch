@@ -11,6 +11,8 @@ Version 0.1 will:
 5. light the scene with a dynamic point light grid that is configurable by the user.
 6. provide a UI with an options menu to configure settings.
 
+For now, we will import the entire Panda3D library to encourage the use of its built-in functions.
+
 ## Procedural Materials
 
 Procedural PBR materials are generated at runtime using simplex noise and
