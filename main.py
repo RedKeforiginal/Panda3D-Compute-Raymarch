@@ -43,7 +43,9 @@ class RaymarchApp(ShowBase):
 
         # Matrix to convert Panda3D's Z-up world coordinates to the Y-up
         # coordinate system expected by the compute shader.
-        self.world_to_shader = Mat4.rotate_mat(-90, Vec3(1, 0, 0))
+        self.world_to_shader = Mat4.rotate_mat(90, Vec3(1, 0, 0))
+        # The previous value used a -90 degree rotation, which flipped
+        # the shader's forward axis and prevented rays from hitting the SDF.
 
         # Setup the main menu with launch, options and quit.
         self.menu = DirectFrame(frameColor=(0, 0, 0, 0))
