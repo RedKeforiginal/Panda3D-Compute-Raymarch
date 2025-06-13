@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Loading Particle Systems - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Loading Particle Systems</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Using_the_Particle_Panel.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Effect_Basic_Parameters.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The Panda3D engine uses text files for storing particle configurations, which are usually created with the Particle Panel. Before being able to use particles, you'll need to tell Panda3D to enable particles:
+</p>
+<pre class="python">base.<span style="color: black;">enableParticles</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>This function tells Panda3D to enable its built-in physics engine which is also used by particles.
+</p><p>To be able to create ParticleEffect objects, you'll need this import:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">particles</span>.<span style="color: black;">ParticleEffect</span> <span style="color: #ff7700;font-weight:bold;">import</span> ParticleEffect</pre>
+<p>Next, create a ParticleEffect object and tell it to use a particle configuration file.
+</p>
+<pre class="python">p = ParticleEffect<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />p.<span style="color: black;">loadConfig</span><span style="color: black;">&#40;</span>filename<span style="color: black;">&#41;</span></pre>
+<p>To start the ParticleEffect, do this:
+</p>
+<pre class="python">p.<span style="color: black;">start</span><span style="color: black;">&#40;</span>parent = render, renderParent = render<span style="color: black;">&#41;</span></pre>
+<p><code>start()</code> takes two arguments: <code>parent</code> is the node the particles will be "birth-relative" to. <code>renderParent</code> is the node level the particles will be rendered at. If you want your particles to spawn from your node, but not follow it around, set <code>renderParent</code> to something else like <code>render</code>.
+</p><p>ParticleEffect inherits from NodePath, so you can use NodePath methods like <code>setPos()</code> on it.
+</p><p>To reset the ParticleEffect, use:
+</p>
+<pre class="python">p.<span style="color: black;">reset</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>To stop the ParticleEffect, use:
+</p>
+<pre class="python">p.<span style="color: black;">disable</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>To completely remove the ParticleEffect, use:
+</p>
+<pre class="python">p.<span style="color: black;">cleanup</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Note that <code>cleanup()</code> calls <code>disable()</code> internally, so you don't need to call it yourself before calling <code>cleanup()</code>
+</p><p>Like <code>loadConfig()</code>, you can use <code>saveConfig()</code> to save the ParticleEffect to a particle configuration file (*.ptf):
+</p>
+<pre class="python">p.<span style="color: black;">saveConfig</span><span style="color: black;">&#40;</span>filename<span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 58/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2226-0!*!*!*!*!*!* and timestamp 20171008113340 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Using_the_Particle_Panel.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Effect_Basic_Parameters.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

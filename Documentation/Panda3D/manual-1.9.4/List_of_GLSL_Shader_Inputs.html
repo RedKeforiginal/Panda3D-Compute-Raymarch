@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>List of GLSL Shader Inputs - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: List of GLSL Shader Inputs</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="List_of_Possible_Cg_Shader_Inputs.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Shaders_and_Coordinate_Spaces.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In general, especially as of Panda3D version 1.9.0, the majority of GLSL shader input types can be specified from a Panda3D application using a call to <code>set_shader_input()</code>.  However, it is often desirable to let Panda3D automatically fill in the values of shader inputs, especially for inputs that derive their values from the render state or 3-D transformation of the currently rendered model. 
+</p><p>This page demonstrates which shader input names have a special meaning and will be automatically filled in by Panda3D when the shader is used.  Note that the names and types have to be copied verbatim.
+</p>
+<h2> <span class="mw-headline" id="Vertex_shader_attributes"> Vertex shader attributes </span></h2>
+<p>The following attributes are only permissible in vertex shaders.
+</p><p>These inputs use GLSL 1.40 syntax and above.  In versions below that, it may be necessary to replace the "in" keyword with "attribute".
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-glsl" style="font-family: monospace;"><pre><span style="color: #666666; font-style: italic;">// The position, normal vector and color of the currently processed vertex.</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec4</span> p3d_Vertex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Normal<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec4</span> p3d_Color<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// The texture coordinates associated with the Nth texture.</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> p3d_MultiTexCoord0<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> p3d_MultiTexCoord1<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> p3d_MultiTexCoord2<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// These are the tangent and binormal vectors, if present.  If an index is appended,</span>
+<span style="color: #666666; font-style: italic;">// it will use the set of binormals and tangents associated with the Nth texture.</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Binormal<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Binormal0<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Binormal1<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Tangent<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Tangent0<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec3</span> p3d_Tangent1<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// A vertex column named &quot;anything&quot;.  The number of components should match up with</span>
+<span style="color: #666666; font-style: italic;">// that of the vertex array.  &quot;uvec&quot; and &quot;ivec&quot; variants are allowed in Panda3D 1.9.0</span>
+<span style="color: #666666; font-style: italic;">// and above for integer vertex arrays to access un-normalized data.</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec4</span> anything<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// These two attributes will be present when hardware skinning is enabled.</span>
+<span style="color: #666666; font-style: italic;">// transform_index contains indices into the p3d_TransformTable array for the four most</span>
+<span style="color: #666666; font-style: italic;">// most influential joints, and transform_weight the corresponding weights.</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec4</span> transform_weight<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> uvec4 transform_index<span style="color: #000066;">;</span></pre></div></div>
+<h3> <span class="mw-headline" id="A_special_note_about_vertex_colors"> A special note about vertex colors </span></h3>
+<p>Before Panda3D 1.10, if p3d_Color was used but no vertex color information was present on the model, the values would be undefined (but usually (0, 0, 0, 0)).  This means that you could not use the same shader on objects with and without vertex colors, since objects without vertex colors would appear black instead of white.
+</p><p>In 1.10, p3d_Color respects the ColorAttrib rules that also applied to the fixed-function pipeline: p3d_Color will contain a white color if the vertex colors are absent or if colors are disabled using <code>set_color_off()</code>, and a flat color if one is applied using <code>set_color()</code>, even if vertex colors are present.
+</p><p>If you are absolutely certain that the model does not have vertex colors, you may also declare p3d_Color as a uniform instead of a vertex attribute.
+</p><p>If you would like to treat the color column as a generic vertex attribute with no special handling, you should use the name "color" instead of "p3d_Color", which will bind it without any special handling.
+</p>
+<h2> <span class="mw-headline" id="Uniform_shader_inputs"> Uniform shader inputs </span></h2>
+<p>The following shader inputs are <i>uniform</i>, which means that they are constant across the entire piece of geometry, rather than changing from vertex to vertex.  They have to be declared with the <code>uniform</code> qualifier, and may be accessed in any shader stage.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-glsl" style="font-family: monospace;"><pre><span style="color: #666666; font-style: italic;">// This is probably the most important uniform.  It transforms a model-space coordinate</span>
+<span style="color: #666666; font-style: italic;">// into a clip-space (ie. relative to the window) coordinate.  This is usually used in</span>
+<span style="color: #666666; font-style: italic;">// the vertex shader to transform p3d_Vertex and store the result in gl_Position.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ModelViewProjectionMatrix<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// These are parts of the above matrix.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ModelViewMatrix<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ProjectionMatrix<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// This is the upper 3x3 of the inverse transpose of the ModelViewMatrix.  It is used</span>
+<span style="color: #666666; font-style: italic;">// to transform the normal vector into view-space coordinates.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat3</span> p3d_NormalMatrix<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// These were added in Panda3D 1.9.0 and complement the existing range of matrices:</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ModelMatrix<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ViewMatrix<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ViewProjectionMatrix<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// It is possible to append Inverse, Transpose, or InverseTranspose to any of the above</span>
+<span style="color: #666666; font-style: italic;">// matrix names to get an inverse and/or transpose version of the respective matrix.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ProjectionMatrixInverse<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ProjectionMatrixTranspose<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ModelViewMatrixInverseTranspose<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// These access the Nth texture applied to the model.  The index matches up with the</span>
+<span style="color: #666666; font-style: italic;">// index used by p3d_MultiTexCoordN, p3d_TangentN, and p3d_BinormalN.</span>
+<span style="color: #666666; font-style: italic;">// The sampler type should be adjusted to match the type of the texture.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> p3d_Texture0<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> sampler2DArray p3d_Texture1<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler3D</span> p3d_Texture2<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">samplerCube</span> p3d_Texture3<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// Like above, but &quot;Shadow&quot; should be appended if the texture has a shadow filter.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2DShadow</span> p3d_Texture0<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.9.0.  Access the color scale applied to the node.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">vec4</span> p3d_ColorScale<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.9.0.  Access the material attributes assigned via a Material object.</span>
+<span style="color: #666666; font-style: italic;">// Unused struct parameters may be omitted without consequence.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">struct</span> <span style="color: #000066;">&#123;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> ambient<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> diffuse<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> emission<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> specular<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> shininess<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// These properties are new in 1.10.</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> baseColor<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> roughness<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> metallic<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> refractiveIndex<span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span> p3d_Material<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.9.0.  The sum of all active ambient light colors.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">struct</span> <span style="color: #000066;">&#123;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> ambient<span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span> p3d_LightModel<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.9.0.  Active clip planes, in apiview space.  If there is no clip</span>
+<span style="color: #666666; font-style: italic;">// plane for a given index, it is guaranteed to contain vec4(0, 0, 0, 0).</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">vec4</span> p3d_ClipPlane<span style="color: #000066;">&#91;</span><span style="color: #000066;">...</span><span style="color: #000066;">&#93;</span><span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.9.0.  Reports the frame time of the current frame, for animated shaders.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">float</span> osg_FrameTime<span style="color: #000066;">;</span>
+<span style="color: #666666; font-style: italic;">// The time elapsed since the previous frame.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">float</span> osg_DeltaFrameTime<span style="color: #000066;">;</span>
+<span style="color: #666666; font-style: italic;">// New in 1.10.0.  Contains the number of frames elapsed since the start of the program.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">int</span> osg_FrameNumber<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.9.1.  If hardware skinning is enabled, this contains the transform of each</span>
+<span style="color: #666666; font-style: italic;">// joint.  Superfluous array entries will contain the identity matrix.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_TransformTable<span style="color: #000066;">&#91;</span><span style="color: #000066;">...</span><span style="color: #000066;">&#93;</span><span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// New in 1.10.  Contains information for each non-ambient light.</span>
+<span style="color: #666666; font-style: italic;">// May also be used to access a light passed as a shader input.</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">struct</span> p3d_LightSourceParameters <span style="color: #000066;">&#123;</span>
+  <span style="color: #666666; font-style: italic;">// Primary light color.</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> color<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// Light color broken up into components, for compatibility with legacy shaders.</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> ambient<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> diffuse<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> specular<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// View-space position.  If w=0, this is a directional light, with</span>
+  <span style="color: #666666; font-style: italic;">// the xyz being -direction.</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> position<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// Spotlight-only settings</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> spotDirection<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> spotExponent<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> spotCutoff<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> spotCosCutoff<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// Individual attenuation constants</span>
+  <span style="color: #000066; font-weight: bold;">float</span> constantAttenuation<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> linearAttenuation<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> quadraticAttenuation<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// constant, linear, quadratic attenuation in one vector</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> attenuation<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// Shadow map for this light source</span>
+  <span style="color: #000066; font-weight: bold;">sampler2DShadow</span> shadowMap<span style="color: #000066;">;</span>
+&#160;
+  <span style="color: #666666; font-style: italic;">// Transforms view-space coordinates to shadow map coordinates</span>
+  <span style="color: #000066; font-weight: bold;">mat4</span> shadowViewMatrix<span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span> p3d_LightSource<span style="color: #000066;">&#91;</span><span style="color: #000066;">...</span><span style="color: #000066;">&#93;</span><span style="color: #000066;">;</span></pre></div></div>
+<p>Besides these predefined uniform inputs, it is possible to use most of the types available in GLSL in conjunction with <code>set_shader_input()</code> to pass custom data, including arrays and structs, to a certain named shader input.  You may not use <code>set_shader_input</code> to override any of the inputs with the <code>p3d_</code> prefix.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 62/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:51876-0!*!*!!*!*!* and timestamp 20171008053227 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="List_of_Possible_Cg_Shader_Inputs.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Shaders_and_Coordinate_Spaces.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

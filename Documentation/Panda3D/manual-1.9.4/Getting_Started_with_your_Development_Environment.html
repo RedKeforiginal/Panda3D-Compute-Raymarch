@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Getting Started with your Development Environment - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Getting Started with your Development Environment</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><br><small><i>This page is not in the table of contents.</i></small><br><p>
+</p>
+<h2> <span class="mw-headline" id="Creating_a_Program:_General_Outline">Creating a Program: General Outline</span></h2>
+<p>Panda3D is a library of subroutines; not an application. This means that
+unlike all the other programs on your computer, you won’t find any program
+icons or shortcuts to start it.  Instead, you must use a
+programmer's editor to create your program.  The basic steps are:
+</p>
+<ul><li> Create an empty directory for your program.
+</li><li> Obtain a programmer's editor.
+</li><li> Start the programmer's editor.
+</li><li> Type in a program into the editor.
+</li><li> Save the program in your program's directory.
+</li><li> Start a command prompt.
+</li><li> Change directory to your program's directory.
+</li><li> Run the program using 'python.exe'
+</li></ul>
+<p>These steps will be explained in more detail below.  The detailed descriptions are for windows users and cover only the PyPE editor.  Linux users, you're on your own.
+</p><p>Possible programmer's editors are:
+</p><p>Windows:
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://pype.sf.net/">PyPE</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.pspad.com/">PSPad</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.geany.org/">Geany</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.crimsoneditor.com/">Crimson Editor</a>
+</li><li> <a rel="nofollow" class="external text" href="http://notepad-plus.sf.net/">Notepad++</a>
+</li><li> <a rel="nofollow" class="external text" href="http://pythonide.blogspot.com/">Stani's Python Editor</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.eclipse.org">Eclipse</a> in combination with <a rel="nofollow" class="external text" href="http://pydev.sourceforge.net/">PyDev</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.sublimetext.com/">Sublime Text</a>
+</li></ul>
+<p>Linux:
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://www.geany.org/">Geany</a>
+</li><li> <a rel="nofollow" class="external text" href="http://pythonide.blogspot.com/">Stani's Python Editor</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.eclipse.org">Eclipse</a> in combination with <a rel="nofollow" class="external text" href="http://pydev.sourceforge.net/">PyDev</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.die-offenbachs.de/eric/index.html">Eric Python IDE</a>
+</li><li> <a rel="nofollow" class="external text" href="http://kate-editor.org/">Kate</a> (KDE only)
+</li><li> <a rel="nofollow" class="external text" href="http://scribes.sourceforge.net/">Scribes</a> or <a rel="nofollow" class="external text" href="http://www.gnome.org/projects/gedit/">gedit</a> in combination with <a rel="nofollow" class="external text" href="http://ipython.scipy.org/moin/">IPython</a>
+</li><li> <a rel="nofollow" class="external text" href="http://www.sublimetext.com/">Sublime Text</a>
+</li></ul>
+<p>The next part of this page will only explain usage with PyPE.
+</p>
+<h2> <span class="mw-headline" id="Creating_a_Directory_for_your_Program">Creating a Directory for your Program</span></h2>
+<p>So, you now need to create a place where you can save all your scripts. Panda3D  can run a script from anywhere on your computer, but it looks for models and other assets in the folder that it is run from. If those assets aren’t present, then you’ll get an error message when you try to run it. So, I believe that the easiest thing for the beginner to do, is to make a new folder in the main Panda3D directory itself (which already contains all the models and other assets that you’ll need).
+</p><p>To do this, click your computers ‘Start’ button, then ‘My Computer’. 
+</p><p><a href="File%253APic018kw.jpg.html" class="image"><img alt="Pic018kw.jpg" src="Pic018kw.jpg" width="383" height="507" /></a>
+</p><p>Then double-click ‘Local Disk (C)’ (if the contents of this drive are hidden, just click ‘Show the contents of this folder’). Now find the Panda3D folder and double-click on it to open it.
+</p><p>On the top menu bar click ‘File &gt; New &gt; Folder’. This will create a new folder in the Panda3D directory, backspace out the name and type a new name for it (I called mine mystuff).
+</p>
+<h2> <span class="mw-headline" id="Obtaining_a_Programmer.27s_Editor">Obtaining a Programmer's Editor</span></h2>
+<p>One of python’s strong points, is that you don’t need a compiler to write your scripts, however, you do need a good editor.  Do not try to use Windows Notepad or Wordpad: they are not designed for this.  Instead, you will need a programmer's editor. A well-known python editor is PyPE (which is completely free and makes writing python scripts a whole lot easier). You can download it from this location:
+</p><p><a rel="nofollow" class="external free" href="http://sourceforge.net/projects/pype/">http://sourceforge.net/projects/pype/</a>
+</p><p>If you're using Windows, download the PyPE-2.8-win-ansi.zip (as of writing this was the latest version). You don't need to install this program, you just download and unzip it somewhere, then open the unzipped folder and double-click on the PyPE icon to run it (or right-click on the icon and send it to the desktop as a shortcut, then simply run it by double-clicking the icon on your desktop).
+</p><p><a href="File%253APic036qj.jpg.html" class="image"><img alt="Pic036qj.jpg" src="Pic036qj.jpg" width="600" height="300" /></a>
+</p>
+<h2> <span class="mw-headline" id="Typing_your_Program_into_the_Editor">Typing your Program into the Editor</span></h2>
+<p>Open PyPE, then click ‘File &gt; New’ on the top menu bar to open a new work environment.  Now type the following code (or just copy and paste it):
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span><br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Notice that PyPE automatically highlights certain words and numbers the lines for you. This is a very nice feature which makes finding errors much easier. 
+</p><p><a href="File%253APic048lg.jpg.html" class="image"><img alt="Pic048lg.jpg" src="Pic048lg.jpg" width="600" height="420" /></a>
+</p><p>You’ve just written your first Panda3D script. It’s not much, but those few lines of code tell Panda3D to start. But before you can run this script, you must save it. So click ‘File &gt; Save As’ on the top menu bar and a new window should open.
+</p><p><a href="File%253APic053gq.jpg.html" class="image"><img alt="Pic053gq.jpg" src="Pic053gq.jpg" width="562" height="423" /></a>
+</p><p>At the top of this new window there is a ‘Save in:’ text box, which is pointing to ‘PyPE-2.8-win-ansi’, you DON’T want to save your script there, so click the little down arrow beside the text box, then scroll down the list and click ‘Local Disk (C)’, then double-click on the Panda3D folder to open it.  Find the ‘mystuff’ folder that we created earlier and double-click on it to open it. 
+</p><p><a href="File%253APic069he.jpg.html" class="image"><img alt="Pic069he.jpg" src="Pic069he.jpg" width="562" height="421" /></a>
+</p><p>Next, type a name for your script in the ‘File name:’ text box. I called mine myscript.py (make sure you put .py on the end of the name). Then click the ‘Save’ button. 
+</p><p><a href="File%253APic073oi.jpg.html" class="image"><img alt="Pic073oi.jpg" src="Pic073oi.jpg" width="564" height="420" /></a>
+</p><p>You can now close PyPE.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Using_NetBeans_IDE">Using NetBeans IDE</span></h2>
+<p>Download NetBeans IDE and install it.
+Start NetBeans.
+Select 'Tools'-&gt;'Python platforms'.
+Under Platforms (at the left of the screen) select 'New'
+A new browser window pops up, asking for an executable.
+Browse to your panda folder, for example C:\Panda3D-1.6.2\python
+and select python.exe
+</p><p>Now you have created a new platform you can use.
+</p><p>Now, create a new empty Python project.
+Then, under Projects, right click your project and select 'Properties'
+Under 'Categories', select Python.
+At the right, 'Python platform'-&gt; select your new platform.
+</p><p>Now you should be ready to compile your panda examples.
+</p><p><br />
+</p><p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 11/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1744-0!*!0!!en!2!* and timestamp 20171008032516 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

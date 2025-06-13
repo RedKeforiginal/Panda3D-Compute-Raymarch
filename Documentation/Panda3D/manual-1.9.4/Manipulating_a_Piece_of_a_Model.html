@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Manipulating a Piece of a Model - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Manipulating a Piece of a Model</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Common_State_Changes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Searching_the_Scene_Graph.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Every model, when loaded, becomes a <code>ModelNode</code> in the scene graph.  Beneath the <code>ModelNode</code> are one or more <code>GeomNodes</code> containing the actual polygons.  If you want to manipulate a piece of a model, for instance, if you want to change the texture of just part of a model, you need a pointer to the relevant GeomNode.
+</p><p>In order to obtain such a pointer, you must first ensure that the relevant geometry is in a <code>GeomNode</code> of its own (and not merged with all the other geometry).  In other words, you must ensure that panda's optimization mechanisms do not cause the geometry to be merged with the geometry of the rest of the model. While normally this optimization is a good thing, if you want to change textures on a specific part of the model (for example, just a character's face) you will need this geometry to be separate.
+</p><p>There are two different ways that you should do this, according to the type of model it is.
+</p>
+<h2> <span class="mw-headline" id="Animated_.28skeleton_animation.29_models">Animated (skeleton animation) models</span></h2>
+<p>If your model is animated via keyframe animation in a package such as 3DSMax or Maya--that is, the sort of model you expect to load in via the <a href="Actors_and_Characters.html" title="Actors and Characters" class="mw-redirect">Actor</a> interface--then Panda will be aggressive in combining all of the geometry into as few nodes as possible.  In order to mark particular geometry to be kept separate, you should use the <code>egg-optchar</code> program.
+</p><p>The name "optchar" is short for "optimize character", since the egg-optchar program is designed to optimize an animated character for runtime performance by removing unused and unneeded joints.  However, in addition to this optimization, it also allows you to label a section of a model for later manipulation.  Once you have labeled a piece of geometry, Panda's optimization mechanisms will not fold it in to the rest of the model.
+</p><p>Your first step is to note the name of the object in your modeling program.  For example, suppose you want to control the texture of a model's head, and suppose (hypothetically) the head is labeled "Sphere01" in your modeling program.  Use egg-optchar to tell panda that "Sphere01" deserves to be kept separate and labeled:
+</p>
+<pre class="bash">egg-optchar <span style="color: #660033;">-d</span> outputDir <span style="color: #660033;">-flag</span> <span style="color: #007800;">Sphere01=</span>theHead modelFile.egg anim1.egg anim2.egg</pre>
+<p>Note that you must always supply the model file(s) and all of its animation files to egg-optchar at the same time.  This is so it can examine all of the joints and determine which joints are actually animated; and it can remove joints by operating on all the files at once.  The output of egg-optchar is written into the directory named by the "-d" parameter.
+</p><p>The "-flag" switch will ensure that panda does not rearrange the geometry for the named polyset, folding it into the model as a whole.  It also assigns the polyset a meaningful name.  Once you have labeled the relevant piece of geometry, you can obtain a pointer to it using the <code>find</code> method:
+</p>
+<pre class="python">myModelsHead = myModel.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;**/theHead&quot;</span><span style="color: black;">&#41;</span></pre>
+
+<p>With this NodePath, you can manipulate the head separately from the rest of the model.  For example, you can move the piece using <code>setPos</code>, or change its texture using <code>setTexture</code>, or for that matter, do anything that you would do to any other scene graph node.
+</p>
+<h2> <span class="mw-headline" id="Unanimated_.28environment.29_models">Unanimated (environment) models</span></h2>
+<p>Other kinds of models, those that do not contain any skeleton or animations, are not optimized as aggressively by the Panda loader, on the assumption that the model's hierarchy was structured the way it is intentionally, to maximize culling (see <a href="Pipeline_Tips.html" title="Pipeline Tips">Pipeline Tips</a>).  Thus, only certain nodes are combined with others, so it's quite likely that an object that you modeled as a separate node in your modeling package will still be available under the same name when you load it in Panda.  But Panda doesn't promise that it will never collapse together nodes that it thinks need to be combined for optimization purposes, unless you tell it not to.
+</p><p>In the case of an unanimated model, the way to protect a particular node is to insert the <code><Model></code> flag into the egg file within the particular group.  The way to do this depends on your modeling package (and this documentation still needs to be written).
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 110/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1080-0!*!0!!*!*!* and timestamp 20171008055313 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Common_State_Changes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Searching_the_Scene_Graph.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

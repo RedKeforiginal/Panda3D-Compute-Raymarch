@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Log Messages - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Log Messages</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Debugging.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_Python_Debugger.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Panda periodically outputs log messages for debugging purposes.  A typical log message might look like this:
+</p>
+<pre class="codeblock">
+:util(warning): Adjusting global clock's real time by -3.3 seconds.
+</pre>
+<p>The first part of the message, <code>util</code>, is the name of the module that generated the message. The second part, <code>warning</code>, indicates the severity. The severity levels are, in decreasing order: fatal, error, warning, info, debug, and spam. The panda configuration file (Config.prc) contains these directives:
+</p>
+<pre class="text">notify-level warning<br />default-directnotify-level warning</pre>
+<p>Directives like these tell panda which messages to show, and which to suppress.  In the default configuration (shown above), all messages whose severity is <code>warning</code> or above are shown, all messages whose severity is less are suppressed.
+</p>
+<div style="border: 1px solid orange; padding: 1em;">
+<big><b>Note:</b></big>There are two kinds of notifiers: the C++ one and a Pythonic (therefore 'direct'notify). You can distinguish them by the category name. Where C++ categories are always lowercase, Python categories are starting with a capital letter by convention (e.g. util, and ShowBase). The only differences in practice is that you set (all) Python notifiers with the prc option <b>default-notify-level</b> and C++ with <b>notify-level</b>, and Pythonic notifiers don't know the <i>spam</i> and <i>fatal</i> levels.</div>
+<p><br />
+</p><p>Sometimes it is interesting and educational to change the configuration to this:
+</p>
+<pre class="text">notify-level spam<br />default-directnotify-level info</pre>
+<p>If you do this, panda will print out vast amounts of information while it runs. These informational messages can be useful for debugging.  However, there are so many print-statements that it slows panda down to a crawl.  So it may be desirable to tell panda to narrow it down a little.  The way to do that is to name a particular module in the panda config file.  For example, you might do this:
+</p>
+<pre class="text">notify-level warning<br />notify-level-glgsg spam<br />default-directnotify-level warning</pre>
+<p>This tells panda that module "glgsg" should print out everything it can, but that every other module should only print warnings and errors.  By the way, module <code>glgsg</code> is a particularly interesting module to investigate.  This is the module that invokes OpenGL.  If you tell it to spam you, it will tell you what it's setting the MODELVIEW and PROJECTION matrices to, and lots of other interesting information.
+</p>
+<h2> <span class="mw-headline" id="Generating_your_own_Log_Messages"> Generating your own Log Messages </span></h2>
+<p>You can use the <code>Notify</code> class to output your own log messages.
+</p><p>In Python this would look something like this:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">directnotify</span>.<span style="color: black;">DirectNotify</span> <span style="color: #ff7700;font-weight:bold;">import</span> DirectNotify<br /><span style="color: black;">&#40;</span>...<span style="color: black;">&#41;</span><br />notify = DirectNotify<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">newCategory</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;MyCategory&quot;</span><span style="color: black;">&#41;</span><br /><span style="color: black;">&#40;</span>...<span style="color: black;">&#41;</span><br />notify.<span style="color: black;">warning</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Put some informational text here.&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>First you create a new notify category, which may be whatever you want, e.g. "PlayerMovement". It's a convention to have such a notifier for each bigger class or module. In the last line there is a warning() call, which indicates that the given text will be only printed if the severity level for this category is <i>warning</i> or <i>debug</i>. If the severity isn't set for this particular category, then the default-directnotify-level setting is taken.
+</p>
+<h2> <span class="mw-headline" id="Redirecting_Log_Messages_to_a_File"> Redirecting Log Messages to a File </span></h2>
+<p>If you wish, you can redirect all of panda's log messages into a file.  The following snippet will do the trick:
+</p>
+<pre class="python">nout = MultiplexStream<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />Notify.<span style="color: black;">ptr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setOstreamPtr</span><span style="color: black;">&#40;</span>nout, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />nout.<span style="color: black;">addFile</span><span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;out.txt&quot;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>Alternatively you may want to use the notify-output prc option, which expects a filename as argument:
+</p>
+<pre class="text">notify-output mygame-log.txt</pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 104/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1742-0!*!*!!*!*!* and timestamp 20171008025337 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Debugging.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_Python_Debugger.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

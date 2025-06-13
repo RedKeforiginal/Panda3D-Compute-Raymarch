@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Main Loop - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Main Loop</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Event_Handlers.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Text_and_Image_Rendering.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>A typical form of a Panda program might look like:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span>.<span style="color: black;">DirectObject</span> <span style="color: #ff7700;font-weight:bold;">import</span> DirectObject <span style="color: #808080; font-style: italic;"># To listen for Events </span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">class</span> World<span style="color: black;">&#40;</span>DirectObject<span style="color: black;">&#41;</span>:<br />   <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />      <span style="color: #808080; font-style: italic;">#initialize instance self. variables here</span><br />   <span style="color: #ff7700;font-weight:bold;">def</span> method1<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>: <br />      <span style="color: #808080; font-style: italic;"># Panda source goes here</span><br />&#160;<br />w = World<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># main loop</span></pre>
+<p><code>run()</code> is a function that never returns.  It is the main loop.
+</p><p>For an alternative, <code>run()</code> could not be called at all. Panda doesn't really need to own the main loop. 
+</p><p>Instead, <code>taskMgr.step()</code> can be called intermittently, which will run through one iteration of Panda's loop. In fact, <code>run()</code> is basically just an infinite loop that calls <code>Task.step()</code> repeatedly. 
+</p><p><code>taskMgr.step()</code> must be called quickly enough after the previous call to <code>taskMgr.step()</code>. This must be done quick enough to be faster than the frame rate.  
+</p><p>This may useful when an imported third party python module that also has its own event loop wants and wants to be in control of program flow. A third party example may be Twisted, the event-driven networking framework.  
+</p><p>The solution to this problem is to let Panda3D's loop be controlled entirely by twisted's event loop. You will need to use the LoopingCall method to add Panda's <code>taskMgr.step()</code> method to twisted's event loop. Then, you need to call <code>reactor.run()</code> instead of Panda3D's <code>run()</code> method to run twisted's event loop. Here's an example on how this will work:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> twisted.<span style="color: black;">internet</span>.<span style="color: black;">task</span> <span style="color: #ff7700;font-weight:bold;">import</span> LoopingCall<br /><span style="color: #ff7700;font-weight:bold;">from</span> twisted.<span style="color: black;">internet</span> <span style="color: #ff7700;font-weight:bold;">import</span> reactor<br />&#160;<br />LoopingCall<span style="color: black;">&#40;</span>taskMgr.<span style="color: black;">step</span><span style="color: black;">&#41;</span>.<span style="color: black;">start</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span> / Desired_FPS<span style="color: black;">&#41;</span><br />reactor.<span style="color: black;">run</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>You will need to replace Desired_FPS by the desired framerate, that is, how many times you want Panda3D to redraw the frame per second.
+Please note that <code>reactor.run()</code> is blocking, just like Panda's run() method.
+</p><p>Another third party example is wxPython GUI, that is a blending of the wxWidgets C++ class library with the Python programming language. Panda's run() function, and wx's <code>app.MainLoop()</code> method, both are designed to handle all events and never return. They are each supposed to serve as the one main loop of the application. Two main loops can not effectively run an application. 
+</p><p>wxPython also supplies a method that can be called occasionally, instead of a function that never returns. In wx's case, it's <code>app.Dispatch()</code>.
+</p><p>A choice can be made whether or not to make wx handle the main loop, and call <code>taskMgr.step()</code> intermittently, or whether or not to make Panda handle the main loop, and call <code>app.Dispatch()</code> intermittently. The better performance choice is to have Panda handle the main loop.
+</p><p>In the case that Panda handles the main loop, a task needs to be started to call app.Dispatch() every frame, if needed. Instead of calling wxPython's <code>app.MainLoop()</code>, do something like the following: 
+</p>
+<pre class="python">app = wx.<span style="color: black;">App</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span> <br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> handleWxEvents<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>: <br />   <span style="color: #ff7700;font-weight:bold;">while</span> app.<span style="color: black;">Pending</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>: <br />      app.<span style="color: black;">Dispatch</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <br />   <span style="color: #ff7700;font-weight:bold;">return</span> Task.<span style="color: black;">cont</span> <br />&#160;<br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>handleWxEvents, <span style="color: #483d8b;">'handleWxEvents'</span><span style="color: black;">&#41;</span> <br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># Panda handles the main loop</span></pre>
+<p><br />
+In the case that wxPython handles the main loop using <code>app.MainLoop()</code>, to keep the framerate quick and reduce the CPU, add <code>sleep(0.001)</code> in the body of the program. This will yield to Panda. After the sleep is over, control will return to wxPython. wxPython can then check for user events. wxPython's user generated callback events are generally generated only at infrequent intervals (based on when the user is interacting with the window). This is appropriate for a 2-D application that is completely response-driven, but not very useful for a 3-D application that continues to be active even when a user is not interacting with it.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 64/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1728-0!*!*!*!*!*!* and timestamp 20171008095523 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Event_Handlers.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Text_and_Image_Rendering.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

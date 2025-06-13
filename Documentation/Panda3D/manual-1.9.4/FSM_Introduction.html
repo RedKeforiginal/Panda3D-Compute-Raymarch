@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>FSM Introduction - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: FSM Introduction</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Finite_State_Machines.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simple_FSM_Usage.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>
+</p>
+<p>In Panda3D, FSM's are frequently used in game code to automatically
+handle the cleanup logic in game state changes.  For instance, suppose
+you are writing a game in which the avatar spends most of his time
+walking around, but should go into swim mode when he enters the water.
+While he is walking around, you want certain animations and sound
+effects to be playing, and certain game features to be active; but
+while he is swimming, there should be a different set of animations,
+sound effects, and game features (this is just an example, of course):</p>
+<center><table style="border-collapse: separate; border-spacing: 20pt 0pt">
+<tr><td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p><b>Walk state</b>
+</p>
+<ul>
+<li>Should be playing "walk" animation
+<li>Should hear footsteps sound effect
+<li>Collision detection with doors should be active
+</ul></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p><b>Swim state</b>
+</p>
+<ul>
+<li>Should be playing "swim" animation
+<li>Should hear underwater sound effect
+<li>Should have fog on camera
+<li>Should have an air timer running
+</ul></td></tr>
+</table></center>
+<p>So, when your avatar switches from walking to swimming, you would
+need to stop the footsteps sound effect, disable the door collisions,
+start playing the "swim" animation, start the underwater sound effect,
+enable the fog on the camera, and start the air timer.</p>
+<p>You could do all this by hand, of course.  But using an FSM can
+make it easier.  In this simple model, you could define an FSM with
+two states, "Walk" and "Swim".  This might be represented graphically
+like this:</p>
+<center><table style="border-collapse: separate; border-spacing: 1pt 0pt">
+<tr><td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Walk
+</p>
+</td>
+<td><big>&#8592;&#8594;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Swim
+</p>
+</td>
+</tr>
+</table></center>
+<p>To implement this as a Panda3D FSM, you would declare an new class
+that inherits from FSM, and within this class you would define four
+methods: <code>enterWalk()</code>, <code>exitWalk()</code>, <code>enterSwim()</code>, and <code>exitSwim()</code>.  This might look something like this:</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">fsm</span>.<span style="color: black;">FSM</span> <span style="color: #ff7700;font-weight:bold;">import</span> FSM<br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">class</span> AvatarFSM<span style="color: black;">&#40;</span>FSM<span style="color: black;">&#41;</span>:<br />    <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<span style="color: #808080; font-style: italic;">#optional because FSM already defines __init__</span><br />        <span style="color: #808080; font-style: italic;">#if you do write your own, you *must* call the base __init__&#160;:</span><br />        FSM.<span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, <span style="color: #483d8b;">'AvatarFSM'</span><span style="color: black;">&#41;</span><br />        <span style="color: #808080; font-style: italic;">##do your init code here</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> enterWalk<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        avatar.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'walk'</span><span style="color: black;">&#41;</span><br />        footstepsSound.<span style="color: black;">play</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        enableDoorCollisions<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> exitWalk<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        avatar.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        footstepsSound.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        disableDoorCollisions<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> enterSwim<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        avatar.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'swim'</span><span style="color: black;">&#41;</span><br />        underwaterSound.<span style="color: black;">play</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        render.<span style="color: black;">setFog</span><span style="color: black;">&#40;</span>underwaterFog<span style="color: black;">&#41;</span><br />        startAirTimer<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> exitSwim<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        avatar.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        underwaterSound.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        render.<span style="color: black;">clearFog</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        stopAirTimer<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />myfsm = AvatarFSM<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Keep in mind this is just an imaginary example, but it should give you an idea of what an FSM class looks like.</p>
+<p>Note that each enter method activates everything that is important for
+its particular state, and--this is the important part--the
+corresponding exit method turns off or undoes <em>everything</em> that
+was turned on by the enter method.  This means that whenever the FSM
+leaves a particular state, you can be confident that it will
+completely disable anything it started when it entered that state.</p>
+<p>Now to switch from Walk state to Swim state, you would just need to
+request a transition, like this:</p>
+<pre class="python">myfsm.<span style="color: black;">request</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'Swim'</span><span style="color: black;">&#41;</span></pre>
+<p>This FSM is a very simple example.  Soon you will find the need for
+more than two states.  For instance, you might want to play a
+transition animation while the avatar is moving from Walk state to
+Swim state and back again, and these can be encoded as separate
+states.  There might be a "drowning" animation if the avatar stays too
+long underwater, which again might be another state.  Graphically,
+this now looks like this:</p>
+<center><table style="border-collapse: separate; border-spacing: 1pt 0pt">
+<tr>
+<td style="text-align: center"><big>&#8599;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Walk2Swim
+</p>
+</td>
+<td style="text-align: center"><big>&#8600;</big></td><td></td><td></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Walk
+</p>
+</td>
+<td></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Swim
+</p>
+</td><td></td>
+<td><big>&#8594;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Drowning
+</p>
+</td>
+</tr>
+<tr>
+<td style="text-align: center"><big>&#8598;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Swim2Walk
+</p>
+</td>
+<td style="text-align: center"><big>&#8601;</big></td><td></td><td></td>
+</tr>
+</table></center>
+<p>In a real-world example, you might easily find you have a need for
+dozens of states.  This is when using the FSM class to manage all of
+these transitions for you can really make things a lot simpler; if you
+had to keep all of that cleanup code in your head, it can very quickly
+get out of hand.</p>
+<p>
+
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 36/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1713-0!*!*!*!*!*!* and timestamp 20171008083619 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Finite_State_Machines.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simple_FSM_Usage.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

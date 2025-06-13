@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Installing Panda3D in Linux - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Installing Panda3D in Linux</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Installing_Panda3D_in_Windows.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="General_Preparation.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="The_Installation_Process_-_Linux">The Installation Process - Linux</span></h2>
+<p>The easiest way to install panda is to use the
+RPM or DEB packages.  This is only possible if your version of Linux
+is one of the provided versions of Linux.  If not, you will need to
+<a href="Building_Panda3D_from_Source.html" title="Building Panda3D from Source">compile from source</a>.  If there is an installer available, download
+and install the RPM or DEB appropriate to your version of Linux. 
+</p><p>After installing Panda, you should run the sample programs to verify that the installation is good. To do so, you need to change directory to the Panda samples directory, select a sample program, change directory to that sample, and run the sample using Python:
+</p>
+<pre class="codeblock">
+$ cd /usr/share/panda3d/samples
+$ ls
+Asteroids
+Ball-in-Maze
+Boxing-Robots
+Carousel
+Cartoon-Shader
+Chessboard
+Disco-Lights
+Fireflies
+Fractal-Plants
+Glow-Filter
+GUI
+Infinite-Tunnel
+Looking-and-Gripping
+Media-Player
+Motion-Trails
+Music-Box
+Normal-Mapping
+Particles
+Procedural-Cube
+Roaming-Ralph
+Shadows
+Solar-System
+Teapot-on-TV
+Texture-Swapping
+$ cd Boxing-Robots
+$ python Tut-Boxing-Robots.py
+</pre>
+<p><b>Using an Unsupported Linux Distribution or an Unsupported Python</b>
+</p><p>Python packages need to be compiled for a particular variant of Python.  For example, a package that works with Python 2.4 will not work with Python 2.5.  A package that works with 32-bit Python will not work with 64-bit Python.  A package that works with UCS2 Python will not work with UCS4 Python.  And so forth.  In short, a Python package must be carefully aligned, feature-for-feature, with one particular Python interpreter.  That package will not work with any other Python interpreter.
+</p><p>Fortunately for you, our prepackaged copies of Panda3D are already carefully matched.  For example, our Panda3D for Ubuntu is already perfectly matched to the Python interpreter that comes with that version of Ubuntu.  So normally, you don't need to worry about this at all.
+</p><p>If your Linux Distribution is not listed, you will need to build your own copy of Panda3D.  The build process will automatically create a copy of Panda3D which perfectly matches your Linux Distribution's Python interpreter.  This is easy to do, but it does require a time-consuming compile.  On the other hand, trying to use an RPM or a DEB from some other Distribution is very unlikely to work, because of this need for an exact feature-for-feature match  between the Python package (Panda3D) and the Python interpreter.
+</p><p>If you are using a copy of Python other than the one that came with the Linux Distribution, you have a bigger problem.  Panda3D's build-scripts automatically build Panda3D for the system's native Python interpreter, not for some other Python interpreter.  To get Panda3D to build for some other Python interpreter, you will have to edit the build scripts.
+</p><p><b>What to do if you see the Error Message:</b>
+</p><p>If you see this error:
+</p>
+<pre class="codeblock">
+display(error): The application requested hardware acceleration, but your OpenGL
+display(error): driver, GDI Generic, only supports software rendering.
+display(error): You need to install a hardware-accelerated OpenGL driver, or,
+display(error): if you actually *want* to use a software renderer, then
+display(error): alter the hardware/software configuration in your Config.prc file.
+display(error): Window wouldn't open; abandoning window.
+</pre>
+<p>This error is fairly self-explanatory: it means your video drivers are inadequate.  Obtain better drivers.
+</p><p><br />
+<b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+ImportError: No module named direct.directbase.DirectStart
+</pre>
+<p>This error means it couldn't find the Python modules -- please make sure you are running the correct version of Python (probably Python 2.7, that depends on the Panda3D version) and that the panda3d.pth is located inside the Python site-packages directory.
+</p><p><br />
+<b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+ImportError: /usr/lib/panda3d/libpandaexpress.so: undefined symbol: PyUnicodeUCS4_AsWideChar</pre>
+<p>This could mean that your version of Python is compiled with the flag <code>Py_UNICODE_SIZE</code> set to <code>2</code>. Please find a Python version compiled with Py_UNICODE_SIZE set to 4 (which is usually the default).
+See <a rel="nofollow" class="external text" href="http://www.panda3d.org/phpbb2/viewtopic.php?t=3904#20510">this forum topic</a> for a more detailed explanation about this problem.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 56/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2153-0!*!0!*!*!*!* and timestamp 20171008072724 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Installing_Panda3D_in_Windows.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="General_Preparation.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

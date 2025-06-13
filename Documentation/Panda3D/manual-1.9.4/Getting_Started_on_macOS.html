@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Getting Started on macOS - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Getting Started on macOS</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Cheat_Sheets.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="More_Panda3D_Resources.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Congratulations! You've installed Panda3D on your machine. Now, what next?
+</p><p>First of all, you should <a href="General_Preparation.html" title="General Preparation">prepare</a> by learning Python. You can also use C++ with Panda3D, but since most of its users use Python, and it is a very easy language to master, Python is the most recommended choice.
+</p><p>Then, you can dive into the <a href="Main_Page.html" title="Main Page">Manual</a> and try the Hello World samples. The manual is a great resource for learning Panda3D and getting in-depth information about various subjects. However, for more concrete examples, you can dive into the <a href="Sample_Programs.html" title="Sample Programs" class="mw-redirect">Sample Programs</a>, which ship with the Panda3D build.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Running_the_Sample_Programs"> Running the Sample Programs </span></h2>
+<p>Panda3D comes with a handful of Sample Programs, which are stored in /Developer/Examples/Panda3D (for Panda3D 1.6.x, they are stored in /Applications/Panda3D/1.6.0/samples). After opening a terminal window navigate to the directory of the sample program you want to see.
+</p><p>Then, you can run the program by using the 'ppython' command: (For Panda3D 1.6.x, use '/usr/bin/python' rather than 'ppython')
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>ppython Tut-Asteroids.<span style="color: black;">py</span></pre></div></div>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Troubleshooting_Common_Issues"> Troubleshooting Common Issues </span></h2>
+<p><b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+dyld: Library not loaded: @executable_path/../Library/Frameworks/Cg.framework/Cg
+Referenced from: /Applications/Panda3D/1.6.0/lib/libpanda.dylib
+Reason: image not found
+Trace/BPT trap
+</pre>
+<p>This means you need to download and install the <a rel="nofollow" class="external text" href="http://developer.nvidia.com/object/cg_toolkit.html#downloads">NVIDIA Cg Toolkit</a> before you will be able to use Panda3D.
+</p><p><b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+Fatal Python error: Interpreter not initialized (version mismatch?)
+Abort trap
+</pre>
+<p>Or the following:
+</p>
+<pre class="codeblock">
+Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    import direct.directbase.DirectStart
+ImportError: No module named direct.directbase.DirectStart
+</pre>
+<p>You are running a version of Python that is not compatible with the version Panda3D has been compiled with. However, macOS always ships with a system version of Python that should be compatible. The fact that it doesn't work simply indicates that the wrong copy of python is ran.
+</p><p>You need to make sure you are running Apple's version of Python. Fortunately, Panda3D ships with a file called 'ppython' that is a mere symlink to /usr/bin/python, where Apple's copy of Python resides. So, instead of 'python', you should call 'ppython'.
+</p><p><b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+display(error): The application requested hardware acceleration, but your OpenGL
+display(error): driver, GDI Generic, only supports software rendering.
+display(error): You need to install a hardware-accelerated OpenGL driver, or,
+display(error): if you actually *want* to use a software renderer, then
+display(error): alter the hardware/software configuration in your Config.prc file.
+display(error): Window wouldn't open; abandoning window.
+</pre>
+<p>This error is fairly self-explanatory: it means your video drivers are inadequate. Obtain updated drivers by running Software Update or, if you have installed a 3rd party video card, installing new drivers from the video card vendor.
+</p><p>Alternatively, you can use Panda3D in software rendering mode, You will not be able to use fancy shaders and it will be much slower than in hardware mode. However, if you still want to use it, you need to edit your Config.prc file (which can be found in the "etc" dir of your Panda3D installation) and find this line:
+</p>
+<pre class="codeblock">
+load-display pandagl
+</pre>
+<p>Replace that line with this instead:
+</p>
+<pre class="codeblock">
+load-display p3tinydisplay
+</pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 34/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2311-0!*!0!!*!*!* and timestamp 20171008003407 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Cheat_Sheets.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="More_Panda3D_Resources.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

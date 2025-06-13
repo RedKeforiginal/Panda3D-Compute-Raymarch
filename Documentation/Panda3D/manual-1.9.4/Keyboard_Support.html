@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Keyboard Support - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Keyboard Support</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Hardware_support.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Mouse_Support.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Keyboard_Support.html#Keyboard_events"><span class="tocnumber">1</span> <span class="toctext">Keyboard events</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Keyboard_Support.html#Modifier_keys"><span class="tocnumber">2</span> <span class="toctext">Modifier keys</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Keyboard_Support.html#Polling_interface"><span class="tocnumber">3</span> <span class="toctext">Polling interface</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Keyboard_Support.html#Keystroke_events"><span class="tocnumber">4</span> <span class="toctext">Keystroke events</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Keyboard_Support.html#Raw_keyboard_events"><span class="tocnumber">5</span> <span class="toctext">Raw keyboard events</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Keyboard_events"> Keyboard events </span></h2>
+<p>Panda3D has keyboard support built-in.  Keyboard presses send <a href="Event_Handling.html" title="Event Handling" class="mw-redirect">Events</a>.  Each keyboard key will send an event when it is first pressed down, when it is released, and one repeatedly while its pressed.
+</p><p>The events can be accepted with the following code:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">&lt;</span>event name<span style="color: #66cc66;">&gt;</span>, <span style="color: #66cc66;">&lt;</span>function<span style="color: #66cc66;">&gt;</span><span style="color: black;">&#41;</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">&lt;</span>event name<span style="color: #66cc66;">&gt;</span>, <span style="color: #66cc66;">&lt;</span>function<span style="color: #66cc66;">&gt;</span>, <span style="color: #66cc66;">&lt;</span>parameters list<span style="color: #66cc66;">&gt;</span><span style="color: black;">&#41;</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">acceptOnce</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">&lt;</span>event name<span style="color: #66cc66;">&gt;</span>, <span style="color: #66cc66;">&lt;</span>function<span style="color: #66cc66;">&gt;</span><span style="color: black;">&#41;</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">acceptOnce</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">&lt;</span>event name<span style="color: #66cc66;">&gt;</span>, <span style="color: #66cc66;">&lt;</span>function<span style="color: #66cc66;">&gt;</span>, <span style="color: #66cc66;">&lt;</span>parameters list<span style="color: #66cc66;">&gt;</span><span style="color: black;">&#41;</span></pre></div></div>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-cpp" style="font-family: monospace;"><pre>framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #000080;">&lt;</span>event name<span style="color: #000080;">&gt;</span>, <span style="color: #000080;">&lt;</span>description<span style="color: #000080;">&gt;</span>, <span style="color: #000080;">&lt;</span>function<span style="color: #000080;">&gt;</span>, <span style="color: #0000ff;">NULL</span><span style="color: #008000;">&#41;</span><span style="color: #008080;">;</span>
+framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #000080;">&lt;</span>event name<span style="color: #000080;">&gt;</span>, <span style="color: #000080;">&lt;</span>description<span style="color: #000080;">&gt;</span>, <span style="color: #000080;">&lt;</span>function<span style="color: #000080;">&gt;</span>, <span style="color: #000080;">&lt;</span>data<span style="color: #000080;">&gt;</span><span style="color: #008000;">&#41;</span><span style="color: #008080;">;</span></pre></div></div>
+<p>&lt;event name&gt; is a string that labels the event.
+&lt;function&gt; is a python function to be called when the event is sent.
+&lt;parameters list&gt; is a python list of parameters to use to call &lt;function&gt;. 
+</p><p>If you're wondering which events are being fired for certain keyboard activity, it is advised to call <code>base.messenger.toggleVerbose()</code>.  This will cause Panda3D to print out all the events that are being sent to the command-line prompt.  This way, you can find out which keyboard key corresponds to which event name.
+</p><p>In general, the keyboard event naming follows the following rules:
+</p><p>1. Keys that type a character are named that character. It is always lowercase, even when shift or caps lock is pressed. (Shift and other modifiers are explained below.)
+</p><p>e.g.
+</p>
+<pre class="codeblock">
+ &quot;a&quot;, &quot;b&quot;, &quot;3&quot;, &quot;[&quot;, etc.
+</pre>
+<p>not 
+</p>
+<pre class="codeblock">
+ &quot;A&quot;, &quot;B&quot;, &quot;#&quot;, &quot;{&quot;
+</pre> 
+<p>2. The key down event is named for the key.
+</p><p>3. As of 1.3.0 The keyboard autorepeat is named for the key + "-repeat" e.g.
+</p>
+<pre class="codeblock">
+ &quot;a-repeat&quot;, &quot;2-repeat&quot;, &quot;[-repeat&quot;
+</pre>
+<p>4. The key up event is named for the key + "-up" e.g.
+</p>
+<pre class="codeblock">
+ &quot;a-up&quot;, &quot;2-up&quot;, &quot;[-up&quot;
+</pre>
+<p>5. All key events (including "-up") have a corresponding time event labeled
+</p>
+<pre class="codeblock">  
+&quot;time-&quot; + &lt;key name&gt;
+</pre>
+<p>Here is an example of time reading in code:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">class</span> ReadKeys<span style="color: black;">&#40;</span>DirectObject.<span style="color: black;">DirectObject</span><span style="color: black;">&#41;</span>:
+  <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:
+      <span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'time-a-repeat'</span>, <span style="color: #008000;">self</span>.<span style="color: black;">printRepeat</span><span style="color: black;">&#41;</span>
+&#160;
+  <span style="color: #ff7700;font-weight:bold;">def</span> printRepeat<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, when<span style="color: black;">&#41;</span>:
+      <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;repeat a&quot;</span>, when</pre></div></div>
+<p>that send a time argument corresponding to the time that event was fired
+</p><p>6. Keys that don't type a character are labeled as follows:
+</p>
+<pre class="codeblock">
+&quot;escape&quot;, &quot;f&quot;+&quot;1-12&quot; (e.g. &quot;f1&quot;,&quot;f2&quot;,...&quot;f12&quot;), &quot;print_screen&quot; &quot;scroll_lock&quot;
+&quot;backspace&quot;, &quot;insert&quot;, &quot;home&quot;, &quot;page_up&quot;, &quot;num_lock&quot;
+&quot;tab&quot;,  &quot;delete&quot;, &quot;end&quot;, &quot;page_down&quot;
+&quot;caps_lock&quot;, &quot;enter&quot;, &quot;arrow_left&quot;, &quot;arrow_up&quot;, &quot;arrow_down&quot;, &quot;arrow_right&quot;
+&quot;shift&quot;, &quot;lshift&quot;, &quot;rshift&quot;,
+&quot;control&quot;, &quot;alt&quot;, &quot;lcontrol&quot;, &quot;lalt&quot;, &quot;space&quot;, &quot;ralt&quot;, &quot;rcontrol&quot;
+</pre>
+<p>Note that some key combinations (like <code>print_screen</code> on Windows) may be intercepted by the operating system and may therefore not be available.  If you want to be able to catch these keys, you need to find some way to prevent the system from intercepting the events. (however, "print_screen-up" is still available in most cases.)
+</p><p>7. Some physical keys are distinguishable from the events that they fire, and some are not. The modifier keys distinguish between left and right, but send a neutral event as well. (e.g. the left shift key sends both "lshift" and "shift" events when pressed) Save for "num_lock", "*", and "+" the numpad keys are indistinguishable from the main keyboard counterparts. (e.g. when Num Lock is on the both the numpad and keyboard 1 keys send "1")
+</p><p>Here are some examples in code:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'k'</span>, <span style="color: #008000;">self</span>.__spam<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># calls the function __spam() on the k key event.</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'k-up'</span>, <span style="color: #008000;">self</span>.__spam, <span style="color: black;">&#91;</span>eggs, sausage, bacon,<span style="color: black;">&#93;</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># calls __spam(eggs,sausage,bacon)</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'escape'</span>, <span style="color: #dc143c;">sys</span>.<span style="color: black;">exit</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># exit on esc</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'arrow_up'</span>, <span style="color: #008000;">self</span>.<span style="color: black;">spamAndEggs</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># call spamAndEggs when up is pressed</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'arrow_up-repeat'</span>, <span style="color: #008000;">self</span>.<span style="color: black;">spamAndEggs</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># and at autorepeat if held</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'arrow_up-up'</span>, <span style="color: #008000;">self</span>.<span style="color: black;">spamAndEggs</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># calls when the up arrow key is released</span></pre></div></div>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-cpp" style="font-family: monospace;"><pre>framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #FF0000;">&quot;k&quot;</span>, <span style="color: #FF0000;">&quot;call k&quot;</span> __spam, <span style="color: #0000ff;">NULL</span><span style="color: #008000;">&#41;</span> <span style="color: #339900;"># calls the function __spam(const Event* eventPtr, void* dataPtr) on the k key event.</span>
+framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #FF0000;">&quot;k&quot;</span>, <span style="color: #FF0000;">&quot;call k&quot;</span> __spam, <span style="color: #000040;">&amp;</span>data<span style="color: #008000;">&#41;</span> <span style="color: #339900;"># calls the function __spam(const Event* eventPtr, void* dataPtr) on the k key event.</span>
+framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #FF0000;">&quot;escape&quot;</span>, <span style="color: #FF0000;">&quot;sys Exit&quot;</span>, <span style="color: #0000dd;">exit</span><span style="color: #008000;">&#40;</span><span style="color: #0000dd;">0</span><span style="color: #008000;">&#41;</span>, <span style="color: #0000ff;">NULL</span><span style="color: #008000;">&#41;</span> <span style="color: #339900;"># exit on esc</span>
+framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #FF0000;">&quot;arrow_up&quot;</span>, <span style="color: #FF0000;">&quot;spam and egg&quot;</span>, spamAndEggs, <span style="color: #0000ff;">NULL</span><span style="color: #008000;">&#41;</span> <span style="color: #339900;"># call spamAndEggs(const Event* eventPtr, void* dataPtr) when up is pressed</span>
+framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #FF0000;">&quot;arrow_up-repeat&quot;</span>, <span style="color: #FF0000;">&quot;spam and egg&quot;</span>, spamAndEggs, <span style="color: #0000ff;">NULL</span><span style="color: #008000;">&#41;</span> <span style="color: #339900;"># and at autorepeat if held</span>
+framework<span style="color: #000040;">-</span><span style="color: #000080;">&gt;</span>define_key<span style="color: #008000;">&#40;</span><span style="color: #FF0000;">&quot;arrow_up-up&quot;</span>, <span style="color: #FF0000;">&quot;spam and egg&quot;</span>, spamAndEggs, <span style="color: #0000ff;">NULL</span><span style="color: #008000;">&#41;</span> <span style="color: #339900;"># calls when the up arrow key is released</span></pre></div></div>
+<p>Please, note then when the Panda window is minimized or Panda3D loses focus somehow else, "-up" event is sent for all keys.  Read this forum thread to learn more: <a rel="nofollow" class="external free" href="http://www.panda3d.org/forums/viewtopic.php?t=4630">https://www.panda3d.org/forums/viewtopic.php?t=4630</a>
+</p>
+<h2> <span class="mw-headline" id="Modifier_keys"> Modifier keys </span></h2>
+<p>When a key is pressed while a modifier key is pressed, such as shift, control or alt, it is not sent in the usual way.  Instead, the event name is modified by prepending the name of the modifier key to the event name, separated by a dash, in the order "shift", "control", "alt", for example:
+</p>
+<pre class="codeblock">  
+&quot;shift-a&quot; &quot;shift-control-alt-a&quot; &quot;shift-alt-a&quot;
+</pre>
+<p>These compound events don't send a "time-" event. If you need one, use the "time-" event sent by one of the keys in the combination.
+</p><p>The modifier compound events may optionally be turned off, in which case the "a" event and the "shift" event will be sent separately:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">set_modifier_buttons</span><span style="color: black;">&#40;</span>ModifierButtons<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>
+base.<span style="color: black;">buttonThrowers</span><span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">set_modifier_buttons</span><span style="color: black;">&#40;</span>ModifierButtons<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Polling_interface"> Polling interface </span></h2>
+<p>The above interfaces make use of events to cause a method to be called when the key pressed or released.  However, in some situations, it may be more desirable to instead ask Panda every frame whether or not a certain key is pressed.  In this situation, you can use the polling interface instead, via the <code>is_button_down</code> method on the MouseWatcher node.  (The name of this class is a bit misleading - it listens for keyboard events as well.)
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>forward_speed = <span style="color: #ff4500;">5.0</span> <span style="color: #808080; font-style: italic;"># units per second</span>
+backward_speed = <span style="color: #ff4500;">2.0</span>
+forward_button = KeyboardButton.<span style="color: black;">ascii_key</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'w'</span><span style="color: black;">&#41;</span>
+backward_button = KeyboardButton.<span style="color: black;">ascii_key</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'s'</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #ff7700;font-weight:bold;">def</span> move_task<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, task<span style="color: black;">&#41;</span>:
+    speed = <span style="color: #ff4500;">0.0</span>
+&#160;
+    <span style="color: #808080; font-style: italic;"># Check if the player is holding W or S</span>
+    is_down = base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">is_button_down</span>
+&#160;
+    <span style="color: #ff7700;font-weight:bold;">if</span> is_down<span style="color: black;">&#40;</span>forward_button<span style="color: black;">&#41;</span>:
+        speed += forward_speed
+&#160;
+    <span style="color: #ff7700;font-weight:bold;">if</span> is_down<span style="color: black;">&#40;</span>backward_button<span style="color: black;">&#41;</span>:
+        speed -= backward_speed
+&#160;
+    <span style="color: #808080; font-style: italic;"># Move the player</span>
+    y_delta = speed <span style="color: #66cc66;">*</span> globalClock.<span style="color: black;">get_dt</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+    <span style="color: #008000;">self</span>.<span style="color: black;">player</span>.<span style="color: black;">set_y</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">player</span>, y_delta<span style="color: black;">&#41;</span></pre></div></div>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Keystroke_events"> Keystroke events </span></h2>
+<p>The interfaces described above are useful for listening for predetermined key presses, like navigational keys or hot keys, but not for text input.  Not only are there no events for fancy keys in foreign languages, but a single key press may not necessarily associate with a single letter to be entered in a text field.  This is because some international characters can only be typed using multiple key presses.
+</p><p>Therefore, Panda3D has a concept of a <i>keystroke event</i>, which is used for text input.  Panda3D uses this under the hood for all GUI text entry.  If you are writing your own GUI widgets, it may be desirable for you to catch your own keystroke events.  To do this, it is first necessary to inform Panda3D which event name should be sent when a keystroke occurs, after which you can accept it as you would with any other event:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>base.<span style="color: black;">buttonThrowers</span><span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setKeystrokeEvent</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'keystroke'</span><span style="color: black;">&#41;</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'keystroke'</span>, <span style="color: #008000;">self</span>.<span style="color: black;">myFunc</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #ff7700;font-weight:bold;">def</span> myFunc<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, keyname<span style="color: black;">&#41;</span>:
+    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">&#40;</span>keyname<span style="color: black;">&#41;</span></pre></div></div>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Raw_keyboard_events"> Raw keyboard events </span></h2>
+<p>Normally, when you listen for a keyboard event, the user's configured keyboard layout is taken into account.  This may present problems for key bindings that are determined by <i>position</i> on the keyboard.  For instance, when using the popular WASD control scheme for navigating the player, someone who's using an AZERTY or dvorak keyboard layout may have to bend their fingers in an unnatural way in order to use this scheme!
+</p><p>In light of this, Panda3D 1.9.0 introduces some features that will help to solve this problem.  The easiest way to fix this problem is to instead refer to the keys by how they would appear on an ANSI US (QWERTY) keyboard layout.  To do this, you can prepend the <code>raw-</code> prefix to any key event.  This will cause Panda3D to <i>ignore</i> the user's configured keyboard layout, and instead report the key as if the user had set his keyboard layout to ANSI US.  It does this by interpreting the raw scancode as sent by the hardware, rather than the virtual key as reported by the operating system.  (Note that raw events do not have prefixes for modifier keys.)
+</p><p>This works for simple cases, but it is often necessary to have more specific information about the way the keys are mapped in the user's system.  For example, showing "press W to move forward" may be confusing on someone with an AZERTY layout, in which case it is more appropriate to say "press Z to move forward".  When the application has a configuration screen for the keyboard control scheme, acquiring more information about the mapping may also be necessary.
+</p><p>This can be done using the <code>get_keyboard_map()</code> on the GraphicsWindow object, returning a ButtonMap object, which can be used to find out which virtual key event will be fired for a certain raw keyboard button:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #808080; font-style: italic;"># Get the current keyboard layout.</span>
+<span style="color: #808080; font-style: italic;"># This may be a somewhat expensive operation, so don't call</span>
+<span style="color: #808080; font-style: italic;"># it all the time, instead storing the result when possible.</span>
+<span style="color: #008000;">map</span> = base.<span style="color: black;">win</span>.<span style="color: black;">get_keyboard_map</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Use this to print all key mappings</span>
+<span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">&#40;</span><span style="color: #008000;">map</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Find out which virtual key is associated with the ANSI US &quot;w&quot;</span>
+w_button = <span style="color: #008000;">map</span>.<span style="color: black;">get_mapped_button</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;w&quot;</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Get a textual representation for the button</span>
+w_label = <span style="color: #008000;">map</span>.<span style="color: black;">get_mapped_button_label</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;w&quot;</span><span style="color: black;">&#41;</span>
+<span style="color: #ff7700;font-weight:bold;">if</span> w_label:
+    <span style="color: #808080; font-style: italic;"># There is none, use the event name instead.</span>
+    w_label = <span style="color: #008000;">str</span><span style="color: black;">&#40;</span>w_button<span style="color: black;">&#41;</span>
+w_label = w_label.<span style="color: black;">capitalize</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Use this label to tell the player which button to press.</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">tutorial_text</span> = <span style="color: #483d8b;">&quot;Press&#160;%s to move forward.&quot;</span> <span style="color: #66cc66;">%</span> <span style="color: black;">&#40;</span>w_label<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Poll to check if the button is pressed...</span>
+<span style="color: #ff7700;font-weight:bold;">if</span> base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">is_button_down</span><span style="color: black;">&#40;</span>w_button<span style="color: black;">&#41;</span>:
+    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;%s is currently pressed&quot;</span> <span style="color: #66cc66;">%</span> <span style="color: black;">&#40;</span>w_label<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># ...or register event handlers</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;%s&quot;</span> <span style="color: #66cc66;">%</span> <span style="color: black;">&#40;</span>w_button<span style="color: black;">&#41;</span>, <span style="color: #008000;">self</span>.<span style="color: black;">start_moving_forward</span><span style="color: black;">&#41;</span>
+<span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;%s-up&quot;</span> <span style="color: #66cc66;">%</span> <span style="color: black;">&#40;</span>w_button<span style="color: black;">&#41;</span>, <span style="color: #008000;">self</span>.<span style="color: black;">stop_moving_forward</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>The above code example also illustrates the use of the <code>get_mapped_button_label</code> function to get a textual representation for the button, if the operating system provides it.  This is most useful for keys like "shift" or "enter", which may be called differently on different keyboards or in different languages.  However, this is both system-dependent and locale-dependent.  You should not rely on it being present, and if it is, you should not rely on consistent formatting or capitalization.
+</p><p>Of course, it is always advisable to still add in a configuration screen so that users can customize key bindings in case they find a particular control scheme difficult to use.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 201/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:987-0!*!0!!en!*!* and timestamp 20171007162538 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Hardware_support.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Mouse_Support.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

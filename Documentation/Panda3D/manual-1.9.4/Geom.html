@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Geom - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Geom</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="GeomPrimitive.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="GeomNode.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The <b>Geom</b> object collects together a <a href="GeomVertexData.html" title="GeomVertexData">GeomVertexData</a> and one or more
+<a href="GeomPrimitive.html" title="GeomPrimitive">GeomPrimitive</a> objects, to make a single renderable piece of geometry.
+In fact, an individual Geom is the smallest piece into which Panda
+will subdivide the scene for rendering; in any given frame, either an
+entire Geom is rendered, or none of it is.
+</p><p>Fundamentally, a Geom is very simple; it contains a pointer to a
+single GeomVertexData, and a list of one or more GeomPrimitives, of
+various types, as needed.  All the associated GeomPrimitives index
+into the same GeomVertexData.
+</p>
+<center><table>
+<tr><td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Geom
+</p>
+<table>
+<tr><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>GeomVertexData
+</p>
+</td></tr>
+</table>
+<table>
+<tr><td style="border: 1px solid black; background: #acb1ed; padding: 5pt">
+<p>GeomTriangles
+</p>
+</td></tr>
+<tr><td style="border: 1px solid black; background: #acb1ed; padding: 5pt">
+<p>GeomTriangles
+</p>
+</td></tr>
+<tr><td style="border: 1px solid black; background: #acb1ed; padding: 5pt">
+<p>GeomTristrips
+</p>
+</td></tr>
+</table>
+</td></tr>
+</table></center>
+<p>The GeomVertexData pointer may be unique to each Geom, or one
+GeomVertexData may be shared among many different Geoms (each of which
+might use a different subset of its vertices).  Also, although the
+GeomPrimitive objects are usually unique to each Geom, they may
+also be shared between different Geoms.
+</p><p>Although a Geom can have any number of GeomPrimitives associated with
+it, all of the GeomPrimitives must be of the same fundamental
+primitive type: triangles, lines, or points.  A particular Geom might
+have GeomTriangles, GeomTristrips, and GeomTrifans; or it might have
+GeomLines and GeomLinestrips; or it might have GeomPoints.  But no one
+Geom can have primitives from two different fundamental types.  You
+can call <b>geom.getPrimitiveType()</b> to determine the fundamental
+primitive type stored within a particular Geom.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 6/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1093-0!*!0!*!*!*!* and timestamp 20171008060543 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="GeomPrimitive.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="GeomNode.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

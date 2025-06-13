@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Installing Panda3D in Windows - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Installing Panda3D in Windows</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Introduction_to_Panda3D.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Installing_Panda3D_in_Linux.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>If you have already installed Panda previously, you
+should uninstall it before installing a new version.
+Once your machine is clean of all previous versions
+of Panda, you should download the windows
+installer from the <a rel="nofollow" class="external text" href="http://www.panda3d.org/download.php">download</a> page.
+Run the installer, and follow the prompts:
+</p><p><br /><br />
+<a href="File%253AInstall-1.jpg.html" class="image"><img alt="Install-1.jpg" src="Install-1.jpg" width="513" height="399" /></a>
+<br /><br />
+</p><p>After installing Panda, you should run the sample programs to verify
+that the installation is good.  Under Windows, the easiest way to run
+a sample program is to find it in the Start Menu:
+</p><p><br /><br />
+<a href="File%253AInstall-2.jpg.html" class="image"><img alt="Install-2.jpg" src="Install-2.jpg" width="263" height="516" /></a>
+<br /><br />
+</p><p>But you can also run a sample program manually, using a command prompt.
+</p><p>Open a command prompt, then change directory to the location where you
+installed Panda.  Then, change to the samples subdirectory.
+There, you will find a large number of samples:
+</p><p><br /><br />
+<a href="File%253AInstall-3.jpg.html" class="image"><img alt="Install-3.jpg" src="Install-3.jpg" width="677" height="510" /></a>
+<br /><br />
+</p><p>Change directory into one of the sample program directories, then use
+Python to run the sample program in question:
+</p><p><br /><br />
+<a href="File%253AInstall-4.jpg.html" class="image"><img alt="Install-4.jpg" src="Install-4.jpg" width="676" height="342" /></a>
+<br /><br />
+</p><p>If the test programs don't run, then usually, you need to update
+your video drivers.  If you want to know exactly why a program didn't run,
+you may need to run it using the command prompt - this will enable you
+to see the error messages.
+</p><p><b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+display(error): The application requested hardware acceleration, but your OpenGL
+display(error): driver, GDI Generic, only supports software rendering.
+display(error): You need to install a hardware-accelerated OpenGL driver, or,
+display(error): if you actually *want* to use a software renderer, then
+display(error): alter the hardware/software configuration in your Config.prc file.
+display(error): Window wouldn't open; abandoning window.
+</pre>
+<p>This error is fairly self-explanatory: it means your video drivers are inadequate.  Obtain better drivers.
+</p><p><b>What to do if you see the Error Message:</b>
+</p>
+<pre class="codeblock">
+python is not a recognized internal command
+</pre>
+<p>This error message means that the command prompt was not able to locate
+python.  Normally, during the panda installation process,
+the PATH environment variable is configured to indicate the location of
+python.  However, some PCs have unusual security configurations that
+prevent the installer from modifying the PATH.  This can result in the
+error message shown above.  
+</p><p>To solve this problem, it may be necessary to modify the PATH manually. Click on the "My Computer" icon on your desktop and select Properties. Choose the tab "Advanced".  Click the Button "Environment Variables":
+</p><p><a href="File%253AEnvironvariables.png.html" class="image"><img alt="Environvariables.png" src="Environvariables.png" width="426" height="474" /></a>
+</p><p>If you have administrator access to the PC, select the PATH line in the list under System Variables, otherwise, select the PATH line in the list of personal environment Variables.
+</p><p><a href="File%253AEnvironvariables2.png.html" class="image"><img alt="Environvariables2.png" src="Environvariables2.png" width="394" height="436" /></a>
+</p><p>Now double click the PATH (or Path) line. a small window opens containing a series of directories separated by semicolons.  Add Panda3D's bin and python directories to the end of the PATH.
+</p><p><a href="File%253AEnvironvariables3.png.html" class="image"><img alt="Environvariables3.png" src="Environvariables3.png" width="406" height="458" /></a>
+</p><p>It may be necessary to log off and log back in to obtain the updated settings.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:930-0!*!*!*!*!2!* and timestamp 20171007124526 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Introduction_to_Panda3D.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Installing_Panda3D_in_Linux.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

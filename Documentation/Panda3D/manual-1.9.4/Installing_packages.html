@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Installing packages - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Installing packages</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Standard_packages.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="More_about_referencing_packages.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>A package file is a Panda3D multifile.  When a package is installed onto a user's machine, it means the multifile is downloaded and placed in its own subdirectory of the Panda3D installation directory (e.g. ~/Library/Caches/Panda3d, on Mac).  This directory name is then stored in the environment variable PACKAGENAME_ROOT, where PACKAGENAME is the name of the package converted to uppercase, e.g. PANDA3D_ROOT or ODE_ROOT.  (You can query this environment variable name at runtime with ExecutionEnvironment.getEnvironmentVariable('PANDA3D_ROOT').)
+</p><p>The multifile is also automatically "mounted" using Panda's VirtualFileSystem, onto the same directory, so that it is as if all of the contents of the multifile are actually available as individual files within the PACKAGENAME_ROOT directory, even though the individual files may not actually appear on disk at all.  Furthermore, the PACKAGENAME_ROOT directory is added to Python's sys.path, as well as to Panda's model-path, so that any Python modules can be imported, and any model files can be imported, directly from the package.  In addition, any prc files in the PACKAGENAME_ROOT directory will be automatically loaded.
+</p><p>Some file types, such as DLL files, really do need to be extracted to disk to be used, because they are loaded directly by the operating system and not by Panda.  These files are extracted automatically when the package is installed and left within the PACKAGENAME_ROOT directory (or within a subdirectory if the filename so indicates).
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 1/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2407-0!*!*!*!*!*!* and timestamp 20171007194807 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Standard_packages.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="More_about_referencing_packages.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

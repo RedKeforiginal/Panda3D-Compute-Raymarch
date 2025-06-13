@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Intervals - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Intervals</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multi-Channel.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Lerp_Intervals.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Panda3D's Interval system is a sophisticated mechanism for playback of scripted actions.  With the use of Intervals, you can build up a complex interplay of animations, sound effects, or any other actions, and play the script on demand.
+</p><p>The core of system is the <code>Interval</code> class.  There are several different kinds of Intervals, which will be discussed in detail in the following pages, but all of them have in common the following property: each Interval represents an action (or a series of actions) that occur over a specific, finite interval of time (hence the name).
+</p><p>The real power of the Interval system comes from <a href="Sequences_and_Parallels.html" title="Sequences and Parallels">Sequences and Parallels</a>, which are a special kind of Interval that can contain nested Intervals of any kind (including additional Sequences and/or Parallels).  By using these grouping Intervals, you can easily assemble complex scripts from the basic atoms.
+</p>
+<h2> <span class="mw-headline" id="Using_Intervals">Using Intervals</span></h2>
+<p>In any Panda3D module that uses Intervals, you should first import the interval module:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">interval</span>.<span style="color: black;">IntervalGlobal</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span></pre>
+<p>There are a handful of methods that all Intervals have in common.
+</p><p>To start an Interval playing, use one of the following:
+</p>
+<pre class="python">interval.<span style="color: black;">start</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />interval.<span style="color: black;">start</span><span style="color: black;">&#40;</span>startT, endT, playRate<span style="color: black;">&#41;</span><br />interval.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />interval.<span style="color: black;">loop</span><span style="color: black;">&#40;</span>startT, endT, playRate<span style="color: black;">&#41;</span></pre>
+<p>The three parameters are optional.  The startTime and endTime parameters define the subset of the interval to play; these should be given as times in seconds, measured from the start of the interval.  The playRate, if specified, allows you play the interval slower or faster than real time; the default is 1.0, to play at real time.
+</p><p>Normally, an Interval will play to the end and stop by itself, but you
+can stop a playing Interval prematurely:
+</p>
+<pre class="python">interval.<span style="color: black;">finish</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>This will stop the interval and move its state to its final state, as if it had played to the end.  This is a very important point, and it allows you to define critical cleanup actions within the interval itself, which are guaranteed to have been performed by the time the interval is finished.
+</p><p>You can also temporarily pause and resume an interval:
+</p>
+<pre class="python">interval.<span style="color: black;">pause</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />interval.<span style="color: black;">resume</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>If you pause an interval and never resume or finish it, the remaining
+actions in the interval will not be performed.
+</p><p>And you can jump around in time within an interval:
+</p>
+<pre class="python">interval.<span style="color: black;">setT</span><span style="color: black;">&#40;</span><span style="color: #dc143c;">time</span><span style="color: black;">&#41;</span></pre>
+<p>This causes the interval to move to the given time, in seconds since the beginning of the interval.  The interval will perform all of the actions between its current time and the new time; there is no way to skip in time without performing the intervening actions.
+</p><p>It is legal to set the time to an earlier time; the interval will do its best to reset its state to the previous state.  In some cases this may not be possible (particularly if a <a href="Function_Intervals.html" title="Function Intervals">Function Interval</a> is involved).
+</p>
+<pre class="python">interval.<span style="color: black;">setPlayRate</span><span style="color: black;">&#40;</span>playRate<span style="color: black;">&#41;</span></pre>
+<p>With this you can change the play rate of the interval when it is already running.
+</p><p>Finally, there are a handful of handy query methods:
+</p>
+<pre class="python">interval.<span style="color: black;">getDuration</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Returns the length of the interval in seconds.
+</p>
+<pre class="python">interval.<span style="color: black;">getT</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Returns the current elapsed time within the interval, since the beginning of the interval.
+</p>
+<pre class="python">interval.<span style="color: black;">isPlaying</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Returns true if the interval is currently playing, or false if it was not started, has already finished, or has been explicitly paused or finished.
+</p>
+<pre class="python">interval.<span style="color: black;">isStopped</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Returns true if the interval has not been started, has already played to its completion, or has been explicitly stopped via finish().  This is not quite the same this as <code>(not interval.isPlaying())</code>, since it does not return true for a paused interval.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 110/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:985-0!*!0!*!*!*!* and timestamp 20171008024657 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multi-Channel.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Lerp_Intervals.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

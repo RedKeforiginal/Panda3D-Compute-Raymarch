@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Level of Detail - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Level of Detail</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Controlling_a_Joint_Procedurally.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Render_Attributes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Using multiple levels of detail for a part of your scene can help improve performance. For example you could use LOD to simplify an Actor that is far away, saving on costly vertex skinning operations. Another use would be to combine several small objects into a simplified single object, or to apply a cheaper shader. LOD can also be used to hide objects when they are far away.
+</p><p>
+<p>To create an LODNode and NodePath:
+
+</p>
+<pre class="python">lod = LODNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'my LOD node'</span><span style="color: black;">&#41;</span><br />lod_np = NodePath<span style="color: black;">&#40;</span>lod<span style="color: black;">&#41;</span><br />lod_np.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span></pre>
+<p>
+<p>To add a level of detail to the LODNode:
+
+</p>
+<pre class="python">lod.<span style="color: black;">addSwitch</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">50.0</span>, <span style="color: #ff4500;">0.0</span><span style="color: black;">&#41;</span><br />my_model.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>lod_np<span style="color: black;">&#41;</span></pre>
+<p>
+<p>my_model can be any NodePath you like.
+</p><p>Note that the first argument is the "far" distance after which this LOD will disappear, and the second argument is the "near" distance at which it will appear.
+</p><p>Continue this pattern to add as many levels of detail as you like. For your lowest level of LOD the far distance will be where the model will disappear. If you would prefer it to stay visible even when very far away then use a sufficiently large number for the far distance.
+</p><p>Note that the order in which the switches are added must be the same as the order in which the LODs are reparented to the LODNode's NodePath. This is important to remember if you are not reparenting the LOD immediately after adding the switch.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 16/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2627-0!*!*!*!*!*!* and timestamp 20171007233858 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Controlling_a_Joint_Procedurally.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Render_Attributes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

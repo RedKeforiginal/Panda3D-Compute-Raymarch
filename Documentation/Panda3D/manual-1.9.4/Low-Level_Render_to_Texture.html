@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Low-Level Render to Texture - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Low-Level Render to Texture</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Dynamic_Cube_Maps.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Panda3D_Rendering_Process.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><b>Render to Texture Basics</b>
+</p><p>In Panda3D, rendering to a texture consists of three basic steps:
+</p>
+<ul><li> Create a hidden window (class GraphicsBuffer).
+</li><li> Render into the hidden window.
+</li><li> Transfer the contents of the hidden window into a texture.
+</li></ul>
+<p>When I say "transfer" the contents of a window into a texture, I don't necessarily mean "copy."  There are other ways to transfer the contents of a window into a texture that may be faster.  For example, if the OpenGL implementation supports the ARB_pbuffers extension, then the transfer might be achieved using wglBindTexImageARB.  The Panda user does not need to worry about how the transfer is done.  It is only important that you know that Panda will use the fastest means available to transfer the contents of the window into the texture.
+</p><p>To generalize that a bit, although render-to-texture is usually done with a hidden window (class GraphicsBuffer), it can also be done with a visible window (class GraphicsWindow).  You can transfer the contents of any window, hidden or not, into a texture.  That's potentially useful - for example, you can transfer the contents of the main window into a texture, which you can then use when rendering the next frame. This can be used to create accumulation-buffer-like effects without an accumulation buffer.
+</p><p><b>The Simple API: makeTextureBuffer</b>
+</p><p>Here is a short snippet of code that creates a hidden window, creates a camera that renders into that window, and creates a scene graph for that camera:
+</p>
+<pre class="python">mybuffer = base.<span style="color: black;">win</span>.<span style="color: black;">makeTextureBuffer</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;My Buffer&quot;</span>, <span style="color: #ff4500;">512</span>, <span style="color: #ff4500;">512</span><span style="color: black;">&#41;</span><br />mytexture = mybuffer.<span style="color: black;">getTexture</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mybuffer.<span style="color: black;">setSort</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-100</span><span style="color: black;">&#41;</span><br />mycamera = base.<span style="color: black;">makeCamera</span><span style="color: black;">&#40;</span>mybuffer<span style="color: black;">&#41;</span><br />myscene = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;My Scene&quot;</span><span style="color: black;">&#41;</span><br />mycamera.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>myscene<span style="color: black;">&#41;</span></pre>
+
+<p>The <code>makeTextureBuffer</code> is the simple interface to the render-to-texture functionality.  It creates a new hidden window (usually a GraphicsBuffer), creates a texture to render into, and connects the texture to the hidden window.  The (512, 512) in the function call specifies the size of the hidden window and texture.  Of course, you need to use a power-of-two size.  The <code>getTexture</code> method retrieves the texture, which will be rendered into every frame.
+</p><p>The <code>setSort</code> method sets a window's sort order.  This controls the order in which panda renders the various windows.  The main window's sort order is zero.  By setting the sort order of mybuffer to a negative number, we ensure that mybuffer will be rendered first.  That, in turn, ensures that mytexture will be ready to use by the time that the main window is rendered.
+</p><p>The new hidden window is not automatically connected to the scene graph.  In this example, we create a separate scene graph rooted at myscene, create a camera to view that scene graph, and connect the camera to mybuffer.
+</p><p>The function <code>makeTextureBuffer</code> usually creates a GraphicsBuffer (hidden window), but if the video card is not powerful enough to create an offscreen window, it may not be able to do so.  In that case, <code>makeTextureBuffer</code> will create a <code>parasiteBuffer</code> instead.  A parasite buffer is primarily a trick to emulate a GraphicsBuffer on video cards that are less powerful.  The trick is this: instead of rendering to an offscreen window and then transferring the data into a texture, panda renders into the <i>main</i> window and then copies the data into the texture.  The limitations of this trick are self-evident.  First, it garbles the contents of the main window.  This is usually no big deal, since the main window is usually cleared and rendered from scratch every frame anyway.  The other problem with this trick is that it fails if the main window is smaller than the desired texture.  Since neither of these problems is common in practice, <code>makeTextureBuffer</code> will use parasite buffers transparently if GraphicsBuffers are not available.
+</p><p>There is a debugging mode in which <code>makeTextureBuffer</code> will create a <i>visible</i> window (class GraphicsWindow) instead of a hidden one (class GraphicsBuffer). To enable this debugging mode, set the boolean variable "show-buffers #t" in your panda configuration file.
+</p><p><b>The Advanced API: addRenderTexture</b>
+</p><p>The simple API is convenient, but there are a few things it can not do.  For instance, it can not:
+</p>
+<ul><li> Copy the main window into a texture.
+</li><li> Copy the Z-buffer into a depth texture.
+</li><li> Copy the window into a texture, but not every frame.
+</li><li> Limit or force the use of Parasite buffers.
+</li></ul>
+<p>If you need this level of control, you need to use a lower-level API.  The low-level function that is called for the creation of all buffers and windows is makeOutput on the GraphicsEngine class.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>fb_prop = FrameBufferProperties<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+<span style="color: #808080; font-style: italic;"># Request 8 RGB bits, no alpha bits, and a depth buffer.</span>
+fb_prop.<span style="color: black;">setRgbColor</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span>
+fb_prop.<span style="color: black;">setRgbaBits</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+fb_prop.<span style="color: black;">setDepthBits</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">16</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Create a WindowProperties object set to 512x512 size.</span>
+win_prop = WindowProperties.<span style="color: black;">size</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">512</span>, <span style="color: #ff4500;">512</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Don't open a window - force it to be an offscreen buffer.</span>
+flags = GraphicsPipe.<span style="color: black;">BF_refuse_window</span>
+&#160;
+base.<span style="color: black;">graphicsEngine</span>.<span style="color: black;">make_output</span><span style="color: black;">&#40;</span>base.<span style="color: black;">pipe</span>, <span style="color: #483d8b;">&quot;My Buffer&quot;</span>, <span style="color: #ff4500;">-100</span>, fb_prop, win_prop, flags, base.<span style="color: black;">win</span>.<span style="color: black;">getGsg</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, base.<span style="color: black;">win</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>The method takes a FrameBufferProperties object describing the requested amount of bits that are available in GPU memory, as well as a WindowProperties object describing the properties of the window to be opened.  In the case of an offscreen buffer, which is acquired by passing BF_refuse_window as a flag, only the size setting of the WindowProperties object is used.
+</p><p>Offscreen buffers may require passing in a host window and a host GSG, since the graphics API may require an existing graphics context in order to create an offscreen buffer.  When creating a window, the last two parameters may be omitted.
+</p><p>For the meaning of the various flags, consult the GraphicsPipe API documentation.
+</p><p>Several of the <a href="Sample_Programs_in_the_Distribution.html" title="Sample Programs in the Distribution">Sample Programs</a> use
+the lower-level API.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 34/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1264-0!*!0!*!*!*!* and timestamp 20171007194709 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Dynamic_Cube_Maps.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Panda3D_Rendering_Process.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

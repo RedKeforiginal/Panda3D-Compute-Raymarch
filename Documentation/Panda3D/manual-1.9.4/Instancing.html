@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Instancing - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Instancing</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Searching_the_Scene_Graph.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_Configuration_File.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In the musical "A Chorus Line," the most well-known scene is when about 50 identical-looking young women line up left-to-right across the stage, and they all kick-left-kick-right in unison.  To implement this in Panda3D, you might do this:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">50</span><span style="color: black;">&#41;</span>:<br />  dancer = Actor.<span style="color: black;">Actor</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;chorus-line-dancer.egg&quot;</span>, <span style="color: black;">&#123;</span><span style="color: #483d8b;">&quot;kick&quot;</span>:<span style="color: #483d8b;">&quot;kick.egg&quot;</span><span style="color: black;">&#125;</span><span style="color: black;">&#41;</span><br />  dancer.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;kick&quot;</span><span style="color: black;">&#41;</span><br />  dancer.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>i<span style="color: #66cc66;">*</span><span style="color: #ff4500;">5</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />  dancer.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span></pre>
+<p>Here is the scene graph that we just created:
+</p>
+<center><a href="File%253AInstancing1.jpg.html" class="image"><img alt="Instancing1.jpg" src="Instancing1.jpg" width="500" height="179" /></a></center>
+<p>This works fine, but it is a little expensive.  Animating a model involves a lot of per-vertex matrix calculations.  In this case, we're animating 50 copies of the exact same model using 50 copies of the exact same animation.  That's a lot of redundant calculation.  It would seem that there <i>must</i> be some way avoid calculating the exact same values 50 times.  There is: the technique is called <i>instancing</i>.
+</p><p>The idea is this: instead of creating 50 separate dancers, create only one dancer, so that the engine only has to update her animation once.  Cause the engine to render her 50 times, by inserting her into the scene graph in 50 different places.  Here is how it is done:
+</p>
+<pre class="python">dancer = Actor.<span style="color: black;">Actor</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;chorus-line-dancer.egg&quot;</span>, <span style="color: black;">&#123;</span><span style="color: #483d8b;">&quot;kick&quot;</span>:<span style="color: #483d8b;">&quot;kick.egg&quot;</span><span style="color: black;">&#125;</span><span style="color: black;">&#41;</span><br />dancer.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;kick&quot;</span><span style="color: black;">&#41;</span><br />dancer.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">50</span><span style="color: black;">&#41;</span>:<br />  placeholder = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Dancer-Placeholder&quot;</span><span style="color: black;">&#41;</span><br />  placeholder.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>i<span style="color: #66cc66;">*</span><span style="color: #ff4500;">5</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />  dancer.<span style="color: black;">instanceTo</span><span style="color: black;">&#40;</span>placeholder<span style="color: black;">&#41;</span></pre>
+<p>Here is a diagram of the scene graph we just created:
+</p>
+<center><a href="File%253AInstancing2.jpg.html" class="image"><img alt="Instancing2.jpg" src="Instancing2.jpg" width="500" height="317" /></a></center>
+<p>It's not a tree any more, it is a directed acyclic graph.  But the renderer still traverses the graph using a recursive tree-traversal algorithm.  As a result, it ends up traversing the dancer node 50 times.  Here is a diagram of the depth-first traversal that the renderer takes through the graph.  Note that this is <i>not</i> a diagram of the scene graph - it's a diagram of the renderer's <i>path</i> through the scene graph:
+</p>
+<center><a href="File%253AInstancing3.jpg.html" class="image"><img alt="Instancing3.jpg" src="Instancing3.jpg" width="500" height="286" /></a></center>
+<p>In other words, the renderer visits the dancer actor 50 times.  It doesn't even notice that it's visiting the same actor 50 times, rather than visiting 50 different actors.  It's all the same to the renderer.
+</p><p>There are 50 placeholder nodes, lined up across the stage.  These are called <i>dummy nodes</i>.  They don't contain any polygons, they're little tiny objects used mainly for organization.  In this case, I'm using each placeholder as a platform on which a dancer can stand.
+</p><p>The position of the dancer is (0,0,0).  But that's relative to the position of the parent.  When the renderer is traversing placeholder 1's subtree, the dancer's position is treated as relative to placeholder 1.  When the renderer is traversing placeholder 2's subtree, the dancer's position is treated as relative to placeholder 2.  So although the position of the dancer is fixed at (0,0,0), it appears in multiple locations in the scene (on top of each placeholder).
+</p><p>In this way, it is possible to render a model multiple times without storing and animating it multiple times.
+</p>
+<h2> <span class="mw-headline" id="Advanced_Instancing">Advanced Instancing</span></h2>
+<p>Now, let's go a step further:
+</p>
+<pre class="python">dancer = Actor.<span style="color: black;">Actor</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;chorus-line-dancer.egg&quot;</span>, <span style="color: black;">&#123;</span><span style="color: #483d8b;">&quot;kick&quot;</span>:<span style="color: #483d8b;">&quot;kick.egg&quot;</span><span style="color: black;">&#125;</span><span style="color: black;">&#41;</span><br />dancer.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;kick&quot;</span><span style="color: black;">&#41;</span><br />dancer.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />chorusline = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">'chorusline'</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">50</span><span style="color: black;">&#41;</span>:<br />  placeholder = chorusline.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Dancer-Placeholder&quot;</span><span style="color: black;">&#41;</span><br />  placeholder.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>i<span style="color: #66cc66;">*</span><span style="color: #ff4500;">5</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />  dancer.<span style="color: black;">instanceTo</span><span style="color: black;">&#40;</span>placeholder<span style="color: black;">&#41;</span></pre>
+<p>This is the exact same code as before, except that instead of putting the 50 placeholders beneath <code>render</code>, I put them beneath a dummy node called <code>chorusline</code>.  So my line of dancers is not part of the scene graph yet.  Now, I can do this:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">3</span><span style="color: black;">&#41;</span>:<br />  placeholder = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Line-Placeholder&quot;</span><span style="color: black;">&#41;</span><br />  placeholder.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,i<span style="color: #66cc66;">*</span><span style="color: #ff4500;">10</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />  chorusline.<span style="color: black;">instanceTo</span><span style="color: black;">&#40;</span>placeholder<span style="color: black;">&#41;</span></pre>
+<p>Here is the scene graph I just created:
+</p>
+<center><a href="File%253AInstancing4.jpg.html" class="image"><img alt="Instancing4.jpg" src="Instancing4.jpg" width="500" height="405" /></a></center>
+<p>But when the renderer traverses it using a recursive tree-traversal algorithm, it will see 3 major subtrees (rooted at a line-placeholder), and each subtree will contain 50 placeholders and 50 dancers, for a grand total of 150 apparent dancers.
+</p>
+<h2> <span class="mw-headline" id="Instancing:_an_Important_Caveat">Instancing: an Important Caveat</span></h2>
+<p>Instancing saves panda quite a bit of CPU time when animating the model.  But that doesn't change the fact that the renderer still needs to render the model 150 times.  If the dancer is a 1000 polygon model, that's still 150,000 polygons.
+</p><p>Note that each instance has its own bounding box, each is occlusion-culled and frustum-culled separately.
+</p>
+<h2> <span class="mw-headline" id="The_NodePath:_a_Pointer_to_a_Node_plus_a_Unique_Instance_ID">The NodePath: a Pointer to a Node plus a Unique Instance ID</span></h2>
+<p>If I had a pointer to the chorus-line dancer model, and I tried to ask the question "where is the dancer," there would be no well-defined answer.  The dancer is not in one place, she is in 150 places.  Because of this, the data type <i>pointer to node</i> does not have a method that retrieves the net transform.
+</p><p>This is very inconvenient.  Being able to ask "where is this object located" is fundamental.  There are other incredibly useful queries that you cannot perform because of instancing.  For example, you cannot fetch the parent of a node.  You cannot determine its global color, or any other global attribute.  All of these queries are ill-defined, because a single node can have many positions, many colors, many parents.  Yet these queries are essential.  It was therefore necessary for the panda3d designers to come up with some way to perform these queries, even though a node can be in multiple locations at the same time.
+</p><p>The solution is based on the following observation: if I had a pointer to the chorus line-dancer model, and I <i>also</i> had a unique identifier that distinguishes one of the 150 instances from all the others, then I could meaningfully ask for the net transform of that particular instance of the node.
+</p><p>Earlier, it was noted that a NodePath contains a pointer to a node, plus some administrative information.  The purpose of that administrative information is to uniquely identify one of the instances.  There is no method <code>PandaNode.getNetTransform</code>, but there <i>is</i> a method <code>NodePath.getNetTransform</code>.  Now you know why.
+</p><p>To understand how NodePath got its name, think about what is necessary to uniquely identify an instance.  Each of the 150 dancers in the graph above corresponds to a single path through the scene graph.  For every possible path from root to dancer, there exists one dancer-instance in the scene.  In other words, to uniquely identify an instance, you need a <i>list of nodes</i> that starts at the leaf and goes up to the root.
+</p><p>The administrative information in a NodePath is a list of nodes.  You can fetch any node in the list, using the <code>NodePath.node(i)</code> method. The first one, <code>node(0)</code>, is the node to which the NodePath points.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 92/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1096-0!*!*!!*!2!* and timestamp 20171008080508 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Searching_the_Scene_Graph.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_Configuration_File.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

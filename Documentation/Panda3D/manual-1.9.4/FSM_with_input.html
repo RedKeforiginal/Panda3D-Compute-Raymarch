@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>FSM with input - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: FSM with input</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Simple_FSM_Usage.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Advanced_FSM_Tidbits.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>
+</p>
+<p>Another common use for FSM's is to provide an abstraction for AI
+state.  For this purpose, you would like to supply an "input" string
+to the FSM and let the FSM decide which state it should transition
+to rather than explicitly specifying the target state name.</p>
+<p>Consider the following FSM state diagram:</p>
+<center><table style="border-collapse: separate; border-spacing: 1pt 0pt; text-align: center">
+<tr>
+<td><big>&#8631;</big> straight</td>
+<td></td>
+<td><big>&#8630;</big> straight</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+North</td>
+<td><big>&#8592;</big> left</td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+East</td>
+</tr>
+<tr>
+<td><big>&#8595;</big> left</td>
+<td></td>
+<td><big>&#8593;</big> left</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+West</td>
+<td><big>&#8594;</big> left</td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+South</td>
+</tr>
+<tr>
+<td><big>&#8634;</big> straight</td>
+<td></td>
+<td><big>&#8635;</big> straight</td>
+</tr>
+</table></center>
+<p>Here the text next to an arrow represents the "input" string given
+to the FSM, and the direction of the arrow represents the state
+transition that should be made for that particular input string, from
+the indicated starting state.</p>
+<p>In this example, we have encoded a simple FSM that determines which
+compass direction a character will be facing after either turning left
+or continuing straight.  The input will be either "left" or
+"straight", and the result is a transition to a new state that
+represents the new compass direction, based on the previous compass
+direction.  If we request "left" from state North, the FSM transitions
+to state West.  On the other hand, if we request "left" from state
+South, the FSM transitions to state East.  If we request "straight"
+from any state, the FSM should remain in its current state.</p>
+<p>To implement this in Panda3D, we define a number of <b>filter
+functions</b>, one for each state.  The purpose of this function is to
+decide what state to transition to next, if any, on receipt of a
+particular input.</p>
+<p>A filter function is created by defining a python method named
+<code>filterStateName()</code>, where StateName is the name of the FSM
+state to which this filter function applies.  The filterStateName
+method receives two parameters, a string and a tuple of arguments (the
+arguments contain the optional additional arguments that might have
+been passed to the <code>fsm.request()</code> call; it's usually an
+empty tuple).  The filter function should return the name of the state
+to transition to.  If the transition should be disallowed, the filter
+function can either return None to quietly ignore it, or it can raise
+an exception.  For example:</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">class</span> CompassDir<span style="color: black;">&#40;</span>FSM<span style="color: black;">&#41;</span>:<br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> filterNorth<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, request, args<span style="color: black;">&#41;</span>:<br />        <span style="color: #ff7700;font-weight:bold;">if</span> request == <span style="color: #483d8b;">'straight'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'North'</span><br />        <span style="color: #ff7700;font-weight:bold;">elif</span> request == <span style="color: #483d8b;">'left'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'West'</span><br />        <span style="color: #ff7700;font-weight:bold;">else</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #008000;">None</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> filterWest<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, request, args<span style="color: black;">&#41;</span>:<br />        <span style="color: #ff7700;font-weight:bold;">if</span> request == <span style="color: #483d8b;">'straight'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'West'</span><br />        <span style="color: #ff7700;font-weight:bold;">elif</span> request == <span style="color: #483d8b;">'left'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'South'</span><br />        <span style="color: #ff7700;font-weight:bold;">else</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #008000;">None</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> filterSouth<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, request, args<span style="color: black;">&#41;</span>:<br />        <span style="color: #ff7700;font-weight:bold;">if</span> request == <span style="color: #483d8b;">'straight'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'South'</span><br />        <span style="color: #ff7700;font-weight:bold;">elif</span> request == <span style="color: #483d8b;">'left'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'East'</span><br />        <span style="color: #ff7700;font-weight:bold;">else</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #008000;">None</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> filterEast<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, request, args<span style="color: black;">&#41;</span>:<br />        <span style="color: #ff7700;font-weight:bold;">if</span> request == <span style="color: #483d8b;">'straight'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'East'</span><br />        <span style="color: #ff7700;font-weight:bold;">elif</span> request == <span style="color: #483d8b;">'left'</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #483d8b;">'North'</span><br />        <span style="color: #ff7700;font-weight:bold;">else</span>:<br />            <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #008000;">None</span></pre>
+<p>Note that input strings, by convention, should begin with a
+lowercase letter, as opposed to state names, which should begin with
+an uppercase letter.  This allows you to make the distinction between
+requesting a state directly, and feeding a particular input string to
+an FSM.  To feed input to this FSM, you would use the <code>request()</code> call,
+just as before:</p>
+<pre class="python">myfsm.<span style="color: black;">request</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># or myfsm.request_left()</span><br />myfsm.<span style="color: black;">request</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span><br />myfsm.<span style="color: black;">request</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'straight'</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># or myfsm.request_straight()</span><br />myfsm.<span style="color: black;">request</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span></pre>
+<p>If the FSM had been in state North originally, after the above
+sequence of operations it would now be in state East.</p>
+<h2> <span class="mw-headline" id="The_defaultFilter_method"> The defaultFilter method </span></h2>
+<p>Although defining a series of individual filter methods gives you
+the most flexibility, for many FSM's you may not need this much
+explicit control.  For these cases, you can simply define a
+defaultFilter method that does everything you need.  If a particular
+<code>filterStateName()</code> method does not exist, then the FSM
+will call the method named <code>defaultFilter()</code> instead; you
+can put any logic here that handles the general case.</p>
+<p>For instance, we could have defined the above FSM using just the
+defaultFilter method, and a lookup table:</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">class</span> CompassDir<span style="color: black;">&#40;</span>FSM<span style="color: black;">&#41;</span>:<br />    nextState = <span style="color: black;">&#123;</span><br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'North'</span>, <span style="color: #483d8b;">'straight'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'North'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'North'</span>, <span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'West'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'West'</span>, <span style="color: #483d8b;">'straight'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'West'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'West'</span>, <span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'South'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'South'</span>, <span style="color: #483d8b;">'straight'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'South'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'South'</span>, <span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'East'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'East'</span>, <span style="color: #483d8b;">'straight'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'East'</span>,<br />        <span style="color: black;">&#40;</span><span style="color: #483d8b;">'East'</span>, <span style="color: #483d8b;">'left'</span><span style="color: black;">&#41;</span>&#160;: <span style="color: #483d8b;">'North'</span>,<br />        <span style="color: black;">&#125;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> defaultFilter<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, request, args<span style="color: black;">&#41;</span>:<br />        key = <span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">state</span>, request<span style="color: black;">&#41;</span><br />        <span style="color: #ff7700;font-weight:bold;">return</span> <span style="color: #008000;">self</span>.<span style="color: black;">nextState</span>.<span style="color: black;">get</span><span style="color: black;">&#40;</span>key<span style="color: black;">&#41;</span></pre>
+<p>The base FSM class defines a <code>defaultFilter()</code> method
+that implements the default FSM transition rules (that is, allow all
+direct-to-state (uppercase) transition requests unless
+<code>self.defaultTransitions</code> is defined; in either case, quietly ignore
+input (lowercase) requests).</p>
+<p>In practice, you can mix-and-match the use of the defaultFilter
+method and your own custom methods.  The defaultFilter method will be
+called only if a particular state's custom filter method does not
+exist.  If a particular state's filterStateName method <em>is</em>
+defined, that method will be called upon a new request; it can do any
+custom logic you require (and it can call up to the defaultFilter
+method if you like).</p>
+<p>
+
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 69/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1715-0!*!*!*!*!*!* and timestamp 20171007230222 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Simple_FSM_Usage.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Advanced_FSM_Tidbits.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

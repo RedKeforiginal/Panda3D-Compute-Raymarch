@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>List of All Attributes - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: List of All Attributes</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Render_Attributes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Lighting.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="List_of_All_Attributes">List of All Attributes</span></h2>
+<p>The following is a concise list of all the RenderAttribs supported by Panda3D. Additional documentation can be found by clicking on the name of the RenderAttrib.
+</p>
+<ul><li><b><a href="Alpha_Testing.html" title="Alpha Testing">AlphaTestAttrib</a></b>: Hides part of the model, based on the texture's alpha channel.
+</li></ul>
+<ul><li><b><a href="Antialiasing.html" title="Antialiasing">AntialiasAttrib</a></b>: Controls full-screen antialiasing and polygon-edge antialiasing.
+</li></ul>
+<ul><li><b><a href="List_of_All_Attributes.html#Undocumented">AudioVolumeAttrib</a></b>: Applies a scale to audio volume for positional sounds.
+</li></ul>
+<ul><li><b><a href="Auxiliary_Bitplane_Control.html" title="Auxiliary Bitplane Control">AuxBitplaneAttrib</a></b>: Causes shader generator to produce extra data.
+</li></ul>
+<ul><li><b><a href="Clip_Planes.html" title="Clip Planes">ClipPlaneAttrib</a></b>: Slices off a piece of the model, using a clipping plane.
+</li></ul>
+<ul><li><b><a href="Tinting_and_Recoloring.html" title="Tinting and Recoloring">ColorAttrib</a></b>: Tints the model.  Only works if the model is not illuminated.
+</li></ul>
+<ul><li><b><a href="Transparency_and_Blending.html" title="Transparency and Blending">ColorBlendAttrib</a></b>: This specifies how colors are blended into the frame buffer, for special effects.
+</li></ul>
+<ul><li><b><a href="Tinting_and_Recoloring.html" title="Tinting and Recoloring">ColorScaleAttrib</a></b>: Modulates vertex colors with a flat color.
+</li></ul>
+<ul><li><b><a href="Color_Write_Masks.html" title="Color Write Masks">ColorWriteAttrib</a></b>: Causes the model to not affect the R, G, B, or A channel of the framebuffer.
+</li></ul>
+<ul><li><b>CullBinAttrib</b>: Controls the order in which Panda renders geometry.
+</li></ul>
+<ul><li><b><a href="Backface_Culling_and_Frontface_Culling.html" title="Backface Culling and Frontface Culling">CullFaceAttrib</a></b>: Causes backfaces or frontfaces of the model to be visible.
+</li></ul>
+<ul><li><b>DepthOffsetAttrib</b>: Causes the Z-buffer to treat the object as if it were closer or farther.
+</li></ul>
+<ul><li><b><a href="Depth_Test_and_Depth_Write.html" title="Depth Test and Depth Write">DepthTestAttrib</a></b>: Alters the way the Z-buffer affects the model.
+</li></ul>
+<ul><li><b><a href="Depth_Test_and_Depth_Write.html" title="Depth Test and Depth Write">DepthWriteAttrib</a></b>: Controls whether or not the model affects the Z-buffer.
+</li></ul>
+<ul><li><b><a href="Fog.html" title="Fog">FogAttrib</a></b>: Causes the model to be obscured by fog if it is far from the camera.
+</li></ul>
+<ul><li><b><a href="Lighting.html" title="Lighting">LightAttrib</a></b>: Causes the model to be illuminated by certain lights.
+</li></ul>
+<ul><li><b><a href="Light_Ramps.html" title="Light Ramps">LightRampAttrib</a></b>: Enables HDR tone mapping or cartoon shading.
+</li></ul>
+<ul><li><b><a href="Materials.html" title="Materials">MaterialAttrib</a></b>: Changes the way the model reflects light.
+</li></ul>
+<ul><li><b>RenderModeAttrib</b>: Used to enable wireframe rendering.
+</li></ul>
+<ul><li><b>RescaleNormalAttrib</b>: Can disable the automatic correction of non-unit normals.
+</li></ul>
+<ul><li><b>ShadeModelAttrib</b>: Can cause the model to appear faceted instead of smooth.
+</li></ul>
+<ul><li><b><a href="Pixel_and_Vertex_Shaders.html" title="Pixel and Vertex Shaders" class="mw-redirect">ShaderAttrib</a></b>: Gives almost unlimited control, but difficult to use.
+</li></ul>
+<ul><li><b><a href="Write_Attribute.html" title="Stencil Test/Write Attribute">StencilAttrib</a></b>: Causes the model to affect the stencil buffer, or be affected by the stencil buffer.
+</li></ul>
+<ul><li><b><a href="Automatic_Texture_Coordinates.html" title="Automatic Texture Coordinates">TexGenAttrib</a></b>: Causes the system to synthesize texture coordinates for the model.
+</li></ul>
+<ul><li><b><a href="Texture_Transforms.html" title="Texture Transforms">TexMatrixAttrib</a></b>: Alters the existing texture coordinates.
+</li></ul>
+<ul><li><b><a href="Texturing.html" title="Texturing">TextureAttrib</a></b>: Applies a texture map to the model.
+</li></ul>
+<ul><li><b><a href="Transparency_and_Blending.html" title="Transparency and Blending">TransparencyAttrib</a></b>: Causes the model to be partially transparent.
+</li></ul>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Undocumented">Undocumented</span></h2>
+<p>Unfortunately, the Panda3D manual is still a work in progress: there are many aspects of it that are not fully documented yet.  These attributes are not yet documented:
+</p><p>AudioVolumeAttrib, CullBinAttrib, DepthOffsetAttrib, RenderModeAttrib, RescaleNormalAttrib, ShadeModelAttrib
+</p><p>However, although the manual does not document these classes,
+the <a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=classes">Reference</a> documentation does. 
+</p>
+<h2> <span class="mw-headline" id="Incomplete_Section">Incomplete Section</span></h2>
+<p>Note: this section is incomplete.  It will be updated soon.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 9/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2214-0!*!0!!*!*!* and timestamp 20171007194610 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Render_Attributes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Lighting.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

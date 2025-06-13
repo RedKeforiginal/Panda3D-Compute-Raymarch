@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Light Ramps - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Light Ramps</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Portal_Culling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Auxiliary_Bitplane_Control.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Light_Ramps.html#Light_Ramps"><span class="tocnumber">1</span> <span class="toctext">Light Ramps</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Light_Ramps.html#HDR_Tone_Mapping"><span class="tocnumber">2</span> <span class="toctext">HDR Tone Mapping</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Light_Ramps.html#Cartoon_Shading_.28Quantized_Lighting.29"><span class="tocnumber">3</span> <span class="toctext">Cartoon Shading (Quantized Lighting)</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Light_Ramps.html#Future_Light_Ramps"><span class="tocnumber">4</span> <span class="toctext">Future Light Ramps</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Light_Ramps">Light Ramps</span></h2>
+<p>In standard OpenGL and DirectX lighting, the following calculations are performed:
+</p>
+<ul><li> the lighting value is calculated
+</li><li> it is clamped to the range 0-1
+</li><li> it is combined with the textures
+</li><li> it is clamped to the range 0-1 again
+</li><li> it is written to the frame buffer
+</li></ul>
+<p>This process contains two clamps.  The LightRampAttrib is a means to specify that you wish to replace these two clamping operators with something a little smarter.  This is particularly relevant for two major graphics algorithms: HDR tone mapping, and cartoon shading.
+</p><p>It must be emphasized that light ramps have no effect unless per-pixel
+lighting is enabled via <a href="The_Shader_Generator.html" title="The Shader Generator">the shader generator</a>.
+</p>
+<h2> <span class="mw-headline" id="HDR_Tone_Mapping">HDR Tone Mapping</span></h2>
+<p>In HDR tone mapping, the first clamp is removed entirely, and the second one is
+replaced with the tone mapping operator.  The tone mapping operator maps brightness values in the range 0-infinity to new brightness values in the range 0-1, however, it does so without clamping.  To turn on HDR tone mapping, use one of the following:
+</p>
+<pre class="python">np.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>LightRampAttrib.<span style="color: black;">makeHdr0</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />np.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>LightRampAttrib.<span style="color: black;">makeHdr1</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />np.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>LightRampAttrib.<span style="color: black;">makeHdr2</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>The HDR2 tone mapping operator is a familiar operator that is used in many systems.  It has the downside that it tends to reduce contrast a lot:
+</p>
+<ul><li> FINAL_RGB = (RGB) / (RGB + 1)
+</li></ul>
+<p>The HDR1 tone mapping operator is similar, but it allocates more of the contrast range to brightnesses in the range 0-1, and less to brightnesses in the range 1-infinity.  This yields a higher-contrast scene, but with more washout:
+</p>
+<ul><li> FINAL_RGB = (RGB^2 + RGB) / (RGB^2 + RGB + 1)
+</li></ul>
+<p>The HDR0 tone mapping operator allocates even more of the available contrast range to brightnesses in the range 0-1.  This is even more contrasty, but with even more washout:
+</p>
+<ul><li> FINAL_RGB = (RGB^3 + RGB^2 + RGB) / (RGB^3 + RGB^2 + RGB + 1)
+</li></ul>
+<h2> <span class="mw-headline" id="Cartoon_Shading_.28Quantized_Lighting.29">Cartoon Shading (Quantized Lighting)</span></h2>
+<p>In cartoon shading, the first clamp is removed entirely, and the second one is replaced with a quantization function.  This replaces a continuous gradient of brightness values with a discrete set of light levels.  This quantization function only applies to directional lights, not ambient ones.  
+</p><p>To enable quantized lighting, use one of these:
+</p>
+<pre class="python">np.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>LightRampAttrib.<span style="color: black;">makeSingleThreshold</span><span style="color: black;">&#40;</span>t0, l0<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />np.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>LightRampAttrib.<span style="color: black;">makeDoubleThreshold</span><span style="color: black;">&#40;</span>t0, l0, t1, l1<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>In a single-threshold system, the brightness of the diffuse lighting contribution is compared to the threshold <code>t0</code>.  If the threshold is not met, the diffuse light contribution is eliminated.  If it is met, the pixel's brightness is normalized to the specified level <code>l0</code>.  
+</p><p>In a double-threshold system, the brightness of the diffuse lighting contribution is compared to the thresholds <code>t0</code> and <code>t1</code>.  If neither is attained, the diffuse light contribution is eliminated.  If it is met, the pixel's brightness is normalized to either <code>l0</code> or <code>l1</code>, depending on which threshold was passed.
+</p>
+<h2> <span class="mw-headline" id="Future_Light_Ramps">Future Light Ramps</span></h2>
+<p>We are interested in knowing if there are any other light ramps you would like to see.  If so, please notify us on the forums.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 86/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2218-0!*!0!!en!*!* and timestamp 20171007175014 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Portal_Culling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Auxiliary_Bitplane_Control.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

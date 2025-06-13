@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Loading and Playing Sounds and Music - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Loading and Playing Sounds and Music</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Sound.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Manipulating_Sounds.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Loading_and_Playing_Sounds_and_Music.html#Architecture"><span class="tocnumber">1</span> <span class="toctext">Architecture</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Loading_and_Playing_Sounds_and_Music.html#Basics"><span class="tocnumber">2</span> <span class="toctext">Basics</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="Loading_and_Playing_Sounds_and_Music.html#Loading_a_Sound"><span class="tocnumber">2.1</span> <span class="toctext">Loading a Sound</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="Loading_and_Playing_Sounds_and_Music.html#Playing.2FStopping_a_Sound"><span class="tocnumber">2.2</span> <span class="toctext">Playing/Stopping a Sound</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="Loading_and_Playing_Sounds_and_Music.html#Querying_Sound_Status"><span class="tocnumber">2.3</span> <span class="toctext">Querying Sound Status</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="Loading_and_Playing_Sounds_and_Music.html#Setting_Volume"><span class="tocnumber">2.4</span> <span class="toctext">Setting Volume</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="Loading_and_Playing_Sounds_and_Music.html#Panning_a_Sound"><span class="tocnumber">2.5</span> <span class="toctext">Panning a Sound</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-8"><a href="Loading_and_Playing_Sounds_and_Music.html#Extra_Note"><span class="tocnumber">3</span> <span class="toctext">Extra Note</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Architecture"> Architecture </span></h2>
+<p>The implementation of the sound system in Panda3d allows for a division of audio into two categories - Sound Effects and Music. This division is only a convenience for programmers as Panda3d allows these two audio groups to be treated individually. These differences are explained on the next page.
+</p>
+<h2> <span class="mw-headline" id="Basics"> Basics </span></h2>
+<h3> <span class="mw-headline" id="Loading_a_Sound"> Loading a Sound </span></h3>
+<p>
+Loading sound is done through the <code>Loader</code> class by supplying the path to the sound file as a parameter for <code>loadSfx()</code>. Here's an example:
+</p>
+<pre class="python">base = ShowBase<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mySound = base.<span style="color: black;">loader</span>.<span style="color: black;">loadSfx</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;path/to/sound_file.ogg&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>These will return an object of the type <code>AudioSound</code>. It is necessary to put the extension in the sound filename. 
+</p><p><br />
+</p>
+<h3> <span class="mw-headline" id="Playing.2FStopping_a_Sound"> Playing/Stopping a Sound </span></h3>
+<p>To play sounds you can do the following:
+</p><p>
+</p>
+<pre class="python">mySound.<span style="color: black;">play</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>To stop a sound:
+</p><p>
+</p>
+<pre class="python">mySound.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p><br />
+</p>
+<h3> <span class="mw-headline" id="Querying_Sound_Status"> Querying Sound Status </span></h3>
+<p>To check the status of a sound, call <code>status()</code>:
+</p><p>
+</p>
+<pre class="python">status = mySound.<span style="color: black;">status</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p><code>status()</code> returns a constant depending on the status of the sound:
+</p>
+<table class="wikitable sortable" border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="width: 50px;">Constant
+</th>
+<th style="width: 200px;">Status
+</th></tr>
+<tr>
+<td> AudioSound.BAD
+</td>
+<td> The sound is not working properly.
+</td></tr>
+<tr>
+<td> AudioSound.READY
+</td>
+<td> The sound is not currently playing and is ready to be played on command.
+</td></tr>
+<tr>
+<td> AudioSound.PLAYING
+</td>
+<td> The sound is currently playing.
+</td></tr></table>
+<p>Example usage of this would be to stop a sound from playing only if it's currently playing.
+</p><p>
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">if</span> mySound.<span style="color: black;">status</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> == mySound.<span style="color: black;">PLAYING</span>:<br />    mySound.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p>
+<h3> <span class="mw-headline" id="Setting_Volume"> Setting Volume </span></h3>
+<p>The volume can be set between 0 and 1 and will linearly scale between these.
+</p><p>
+</p>
+<pre class="python">mySound.<span style="color: black;">setVolume</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p><br />
+</p>
+<h3> <span class="mw-headline" id="Panning_a_Sound"> Panning a Sound </span></h3>
+<p>You can change the balance of a sound. The range is between -1.0 to 1.0. Hard left is -1.0 and hard right is 1.0.
+</p><p>
+</p>
+<pre class="python">mySound.<span style="color: black;">setBalance</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>
+</p>
+<h2> <span class="mw-headline" id="Extra_Note"> Extra Note </span></h2>
+<p>If Panda3D is running from an interactive prompt, <code>update()</code> after you play a sound.
+</p><p><br />
+</p>
+<pre class="python">base.<span style="color: black;">sfxManagerList</span><span style="color: black;">&#91;</span>n<span style="color: black;">&#93;</span>.<span style="color: black;">update</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>This is because the <code>update()</code> command is called every frame to reset a sound's channel. 
+</p><p>In interactive mode, Panda3D's frame update is suspended and does not run automatically.
+
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 219/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1055-0!*!*!!en!*!* and timestamp 20171008111749 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Sound.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Manipulating_Sounds.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

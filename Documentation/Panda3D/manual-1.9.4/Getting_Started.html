@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Getting Started - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Getting Started</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Artificial_Intelligence_(PANDAI).html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Steering_Behaviors.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><b>The basics&#160;:</b>
+</p><p><b>Theory&#160;:</b>
+</p><p>The PandAI  library has been built upon the design pattern of composition.
+</p><p>There exists a main AIWorld Class which governs all updates of any AICharacters added to it. Each AICharacter has its own AIBehavior object which keeps track of all position and rotation updates based on the type of AI which is acting on that character.
+</p><p>So in short&#160;:  AIWorld -&gt; AICharacter -&gt; AIBehavior
+</p><p>Each AIBehavior object has the functionality to implement all the steering behaviors and pathfinding behaviors. So once you get a reference to this object from the AICharacter, it should give you the ability to call the respective functions.
+</p><p><b>Implementation&#160;:</b>
+</p><p>Following are the steps to get the basics of PandAI working. Don't worry if you can't understand some of them. 
+</p><p><b>Step 1&#160;:</b>
+</p><p>To use our AI library into your game you need to import PandAI into your game code via&#160;:  
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">ai</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span></pre>
+<p><b>Step 2&#160;:</b>
+</p><p>Create an object of the AIWorld class which defines your AI in your game world. 
+</p><p><b>Step 3&#160;:</b>   
+</p><p>Setup a task which runs continuously which keeps calling the 'Update()' function for your previously created AIWorld object 
+</p><p><b>Step 4&#160;:</b>   
+</p><p>To test this out let us also implement a simple call to the 'seek' behavior function in PandAI. To do this we need two objects: A seeker and a target. For this example, we will use Ralph (seeker) and an arrow model (target).
+</p><p><b>Step 5&#160;:</b>   
+</p><p>Create an <b>'AICharacter'</b> object and attach it to your AIWorld class (previously created). The AICharacter constructor looks for a NodePath, this can be a Model or an Actor or even an Empty NodePath.
+</p><p><b>Step 6&#160;:</b>
+</p><p>Get a reference to the AIBehaviors object of your previously created AICharacter class via the <b>'getAiBehaviors'</b> function().
+</p><p><b>Step 7&#160;:</b>
+</p><p>Call the <b>seek</b> function on your AIBehaviors reference (previously created). The seek function takes a NodePath or a Vector3 position to seek to.
+</p><p><b>Step 8&#160;:</b>
+</p><p>Start your AIWorld update task which you created earlier.
+</p><p><b>Step 9&#160;:</b>
+</p><p>Watch how your awesome seek function works&#160;!
+</p><p><b>The actual code&#160;:</b>
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span>.<span style="color: black;">DirectObject</span> <span style="color: #ff7700;font-weight:bold;">import</span> DirectObject<br /><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">task</span> <span style="color: #ff7700;font-weight:bold;">import</span> Task<br /><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">actor</span>.<span style="color: black;">Actor</span> <span style="color: #ff7700;font-weight:bold;">import</span> Actor<br /><span style="color: #808080; font-style: italic;">#for Pandai</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">ai</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">class</span> World<span style="color: black;">&#40;</span>DirectObject<span style="color: black;">&#41;</span>:<br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        base.<span style="color: black;">disableMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        base.<span style="color: black;">cam</span>.<span style="color: black;">setPosHpr</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">55</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">-90</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br />        <span style="color: #008000;">self</span>.<span style="color: black;">loadModels</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">setAI</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> loadModels<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        <span style="color: #808080; font-style: italic;"># Seeker</span><br />        ralphStartPos = Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-10</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">seeker</span> = Actor<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models/ralph&quot;</span>,<br />                                 <span style="color: black;">&#123;</span><span style="color: #483d8b;">&quot;run&quot;</span>:<span style="color: #483d8b;">&quot;models/ralph-run&quot;</span><span style="color: black;">&#125;</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">seeker</span>.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">seeker</span>.<span style="color: black;">setScale</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">seeker</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>ralphStartPos<span style="color: black;">&#41;</span><br />        <span style="color: #808080; font-style: italic;"># Target</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">target</span> = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models/arrow&quot;</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">target</span>.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">target</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">5</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">target</span>.<span style="color: black;">setScale</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">target</span>.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> setAI<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        <span style="color: #808080; font-style: italic;">#Creating AI World</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">AIworld</span> = AIWorld<span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />&#160;<br />        <span style="color: #008000;">self</span>.<span style="color: black;">AIchar</span> = AICharacter<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;seeker&quot;</span>,<span style="color: #008000;">self</span>.<span style="color: black;">seeker</span>, <span style="color: #ff4500;">100</span>, <span style="color: #ff4500;">0.05</span>, <span style="color: #ff4500;">5</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">AIworld</span>.<span style="color: black;">addAiChar</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">AIchar</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">AIbehaviors</span> = <span style="color: #008000;">self</span>.<span style="color: black;">AIchar</span>.<span style="color: black;">getAiBehaviors</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />        <span style="color: #008000;">self</span>.<span style="color: black;">AIbehaviors</span>.<span style="color: black;">seek</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">target</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">seeker</span>.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;run&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br />        <span style="color: #808080; font-style: italic;">#AI World update        </span><br />        taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">AIUpdate</span>,<span style="color: #483d8b;">&quot;AIUpdate&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #808080; font-style: italic;">#to update the AIWorld    </span><br />    <span style="color: #ff7700;font-weight:bold;">def</span> AIUpdate<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>,task<span style="color: black;">&#41;</span>:<br />        <span style="color: #008000;">self</span>.<span style="color: black;">AIworld</span>.<span style="color: black;">update</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>            <br />        <span style="color: #ff7700;font-weight:bold;">return</span> Task.<span style="color: black;">cont</span><br />&#160;<br />w = World<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<ul><li> <b>Note&#160;:</b>  It doesn't matter where your seek is first called (ie. before the AIWorld update or after) it should still work as soon as the Update starts processing.
+</li></ul>
+<ul><li> <b>Note&#160;:</b>  This above example is only for seek but if you go to each of the pages, a separate example is provided showing you each AI individually.
+</li></ul>
+<p><br />
+</p>
+<hr />
+<p><b> If you want to get a working demo of this tutorial, please visit&#160;:
+</p><p><a rel="nofollow" class="external free" href="https://sites.google.com/site/etcpandai/documentation/getting-started/PandAIBasicTutorial.zip?attredirects=0&amp;d=1">https://sites.google.com/site/etcpandai/documentation/getting-started/PandAIBasicTutorial.zip?attredirects=0&amp;d=1</a>
+</b>
+</p>
+<hr />
+<p><br />
+<b>Next Steps&#160;:</b>
+</p><p>Now that you have a basic working program of PandAI, you should proceed to the Steering Behaviors page and gain more knowledge of the system from there.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2580-0!*!*!*!*!*!* and timestamp 20171008113349 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Artificial_Intelligence_(PANDAI).html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Steering_Behaviors.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

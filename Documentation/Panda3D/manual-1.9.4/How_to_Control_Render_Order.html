@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>How to Control Render Order - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: How to Control Render Order</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multi-Pass_Rendering.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Panda3D_Utility_Functions.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In most simple scenes, you can naively attach geometry to the scene
+graph and let Panda decide the order in which objects should be
+rendered.  Generally, it will do a good enough job, but there are
+occasions in which it is necessary to step in and take control of the
+process.
+</p><p>To do this well, you need to understand the implications of render
+order.  In a typical OpenGL- or DirectX-style Z-buffered system, the
+order in which primitives are sent to the graphics hardware is
+theoretically unimportant, but in practice there are many important
+reasons for rendering one object before another.
+</p><p>Firstly, state sorting is one important optimization.  This means
+choosing to render things that have similar state (texture, color,
+etc.) all at the same time, to minimize the number of times the
+graphics hardware has to be told to change state in a particular
+frame.  This sort of optimization is particularly important for very
+high-end graphics hardware, which achieves its advertised theoretical
+polygon throughput only in the absence of any state changes; for many
+such advanced cards, each state change request will completely flush
+the register cache and force a restart of the pipeline.
+</p><p>Secondly, some hardware has a different optimization requirement, and
+may benefit from drawing nearer things before farther things, so that
+the Z-buffer algorithm can effectively short-circuit some of the
+advanced shading features in the graphics card for pixels that would
+be obscured anyway.  This sort of hardware will draw things fastest
+when the scene is sorted in order from the nearest object to the
+farthest object, or "front-to-back" ordering.
+</p><p>Finally, regardless of the rendering optimizations described above, a
+particular sorting order is required to render transparency properly
+(in the absence of the specialized transparency support that only a
+few graphics cards provide).  Transparent and semitransparent objects
+are normally rendered by blending their semitransparent parts with
+what has already been drawn to the framebuffer, which means that it is
+important that everything that will appear behind a semitransparent
+object must have already been drawn before the semitransparent parts
+of the occluding object is drawn.  This implies that all
+semitransparent objects must be drawn in order from farthest away to
+nearest, or in "back-to-front" ordering, and furthermore that the
+opaque objects should all be drawn before any of the semitransparent
+objects.
+</p><p>Panda achieves these sometimes conflicting sorting requirements
+through the use of bins.
+</p>
+<h2> <span class="mw-headline" id="Cull_Bins"> Cull Bins </span></h2>
+<p>The CullBinManager is a global object that maintains a list of all of
+the cull bins in the world, and their properties.  Initially, there
+are five default bins, and they will be rendered in the following
+order:
+</p>
+<table>
+<tr>
+<th>Bin Name
+</th>
+<th>Sort
+</th>
+<th>Type
+</th></tr>
+<tr>
+<td> background </td>
+<td> 10 </td>
+<td> BT_fixed
+</td></tr>
+<tr>
+<td> opaque     </td>
+<td> 20 </td>
+<td> BT_state_sorted
+</td></tr>
+<tr>
+<td> transparent</td>
+<td> 30 </td>
+<td> BT_back_to_front
+</td></tr>
+<tr>
+<td> fixed      </td>
+<td> 40 </td>
+<td> BT_fixed
+</td></tr>
+<tr>
+<td> unsorted   </td>
+<td> 50 </td>
+<td> BT_unsorted
+</td></tr></table>
+<p>When Panda traverses the scene graph each frame for rendering, it
+assigns each Geom it encounters into one of the bins defined in the
+CullBinManager.  (The above lists only the default bins.  Additional
+bins may be created as needed, using either the
+<code>CullBinManager::add_bin()</code> method, or the Config.prc <code>cull-bin</code>
+variable.)
+</p><p>You may assign a node or nodes to an explicit bin using the
+<code>NodePath::set_bin()</code> interface.  set_bin() requires two parameters, the
+bin name and an integer sort parameter; the sort parameter is only
+meaningful if the bin type is BT_fixed (more on this below), but it
+must always be specified regardless.
+</p><p>If a node is not explicitly assigned to a particular bin, then Panda
+will assign it into either the "opaque" or the "transparent" bin,
+according to whether it has transparency enabled or not.  (Note that
+the reverse is not true: explicitly assigning an object into the
+"transparent" bin does not automatically enable transparency for the
+object.)
+</p><p>When the entire scene has been traversed and all objects have been
+assigned to bins, then the bins are rendered in order according to
+their sort parameter.  Within each bin, the contents are sorted
+according to the bin type.
+</p><p>If you want simple geometry that's in back of something to render in front
+of something that it logically shouldn't, add the following code to the model that you want in front:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>model.<span style="color: black;">setBin</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;fixed&quot;</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+model.<span style="color: black;">setDepthTest</span><span style="color: black;">&#40;</span><span style="color: #008000;">False</span><span style="color: black;">&#41;</span>
+model.<span style="color: black;">setDepthWrite</span><span style="color: black;">&#40;</span><span style="color: #008000;">False</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>The above code will only work for simple models. If your model self occludes (parts of the model covers other parts of the model), the code will not work as expected. An alternative method is to use a <a href="Display_Regions.html" title="Display Regions">display region</a> with <code>displayRegion.clearDepthActive(True)</code>.
+</p><p>The following bin types may be specified:
+</p>
+<dl><dt>BT_fixed
+</dt><dd>Render all of the objects in the bin in a fixed order specified by the user.  This is according to the second parameter of the NodePath.set_bin() method; objects with a lower value are drawn first.
+</dd><dt>BT_state_sorted
+</dt><dd>Collects together objects that share similar state and renders them together, in an attempt to minimize state transitions in the scene.
+</dd><dt>BT_back_to_front
+</dt><dd>Sorts each Geom according to the center of its bounding volume, in linear distance from the camera plane, so that farther objects are drawn first.  That is, in Panda's default right-handed Z-up coordinate system, objects with large positive Y are drawn before objects with smaller positive Y.
+</dd><dt>BT_front_to_back
+</dt><dd>The reverse of back_to_front, this sorts so that nearer objects are drawn first.
+</dd><dt>BT_unsorted
+</dt><dd>Objects are drawn in the order in which they appear in the scene graph, in a depth-first traversal from top to bottom and then from left to right.
+</dd></dl>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 18/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1790-0!*!0!*!*!*!* and timestamp 20171008095429 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multi-Pass_Rendering.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Panda3D_Utility_Functions.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

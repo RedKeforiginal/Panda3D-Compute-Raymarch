@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Fog - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Fog</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Depth_Test_and_Depth_Write.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Alpha_Testing.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Fog.html#Basic_Fog"><span class="tocnumber">1</span> <span class="toctext">Basic Fog</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Fog.html#Fog_Modes"><span class="tocnumber">2</span> <span class="toctext">Fog Modes</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="Fog.html#Linear_Fog"><span class="tocnumber">2.1</span> <span class="toctext">Linear Fog</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="Fog.html#Exponential_Fog"><span class="tocnumber">2.2</span> <span class="toctext">Exponential Fog</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Basic_Fog">Basic Fog</span></h2>
+<p>To turn on fog, create an object of class <code>Fog</code>, and then apply it using the <code>setFog</code> operator:
+</p>
+<pre class="python">myFog = Fog<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Fog Name&quot;</span><span style="color: black;">&#41;</span><br />myFog.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>R,G,B<span style="color: black;">&#41;</span><br />myFog.<span style="color: black;">setExpDensity</span><span style="color: black;">&#40;</span>Float <span style="color: #ff4500;">0</span> to <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setFog</span><span style="color: black;">&#40;</span>myFog<span style="color: black;">&#41;</span></pre>
+<p>However, there is more here than meets the eye.  We have created a <i>fog node</i>, which goes into the scene graph.  Therefore, the fog has a position,
+a place where the fog is (conceptually) thickest.  
+</p><p>If the fog object is not parented into the scene graph (in the example above, for instance), then the fog's position is ignored, and the fog is
+camera-relative.  Likewise, if the fog is exponential, the fog's position
+is ignored, and the fog is camera-relative.
+</p><p>The <code>setFog</code> directive creates a fog attribute object.  Like any <a href="Render_Attributes.html" title="Render Attributes">Render Attribute</a>, the fog attribute affects the node that it is attached to, and any nodes below it in the scene graph.  So you can easily cause only a subset of the objects (or just a single model) to be affected by the fog, by calling <code>setFog</code> on the root of the subgraph you want to be affected.  To remove the fog attribute later, use the <code>clearFog</code> directive:
+</p>
+<pre class="python">render.<span style="color: black;">clearFog</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>While you have fog in effect, it is often desirable to set the background color to match the fog:
+</p>
+<pre class="python">base.<span style="color: black;">setBackgroundColor</span><span style="color: black;">&#40;</span> myFogColor <span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Fog_Modes">Fog Modes</span></h2>
+<p>There are three fog modes in Panda: <code>Fog.MExponential</code>, <code>Fog.MExponentialSquared</code> and <code>Fog.MLinear</code>. You can switch the mode of a <code>Fog</code> object using <code>fog.getMode()</code> and <code>fog.setMode(Fog.Mode)</code>. This explicit mode switching isn't normally necessary, as <code>Fog</code> methods implicitly switch the mode for you.
+</p><p>A <code>Fog</code> object in Panda3D is a <em>node</em> that can be parented into the scene graph with a position, colour and orientation like any other node (importantly, <code>Fog</code> is a subclass of <code>PandaNode</code>, not of <code>NodePath</code>) <em>(do <code>Fog</code> nodes have a scale?)</em>.
+</p><p>The position of a <code>Fog</code> node in the scene graph <em>does not determine which objects the fog affects</em>, it determines the origin and direction of the fog <em>when it is in linear mode</em>. When a fog node is in exponential mode its position and orientation in the scene graph are irrelevant. Either way, a <code>Fog</code> node must be activated by calling <code>nodePath.setFog(fogNode)</code> on some <code>NodePath</code> in the scene graph. Which <code>NodePath</code> you call the <code>setFog</code> method on determines which parts of the scene will be fogged: that <code>NodePath</code> and all its children.
+</p>
+<h3> <span class="mw-headline" id="Linear_Fog">Linear Fog</span></h3>
+<p>This is the default mode. In this mode the <i>position</i> and <i>orientation</i> of a <code>Fog</code> node are important. A linear-mode <code>Fog</code> node must first be parented into the scene graph, then activated by calling <code>setFog(fogNode)</code> on some <code>NodePath</code> in the scene graph.
+</p><p>Setup a linear fog node at the origin:
+</p>
+<pre class="python">colour = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.8</span>,<span style="color: #ff4500;">0.8</span><span style="color: black;">&#41;</span><br />linfog = Fog<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;A linear-mode Fog node&quot;</span><span style="color: black;">&#41;</span><br />linfog.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">*</span>colour<span style="color: black;">&#41;</span><br />linfog.<span style="color: black;">setLinearRange</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">320</span><span style="color: black;">&#41;</span><br />linfog.<span style="color: black;">setLinearFallback</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">45</span>,<span style="color: #ff4500;">160</span>,<span style="color: #ff4500;">320</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>linfog<span style="color: black;">&#41;</span><br />render.<span style="color: black;">setFog</span><span style="color: black;">&#40;</span>linfog<span style="color: black;">&#41;</span></pre>
+<p>In linear mode, the <em>onset</em> and <em>opaque</em> distances of the fog are defined as offsets <em>along the local forward (+Y) axis</em> of the fog node. The onset distance is the distance from the fog node at which the fog will begin to have effect, and the opaque distance is the distance from the fog node at which the fog will be completely opaque. From reading the API page for the <code>Fog</code> class, it sounds as if beyond this opaque point there is no fog (rather than continuing opaque fog up to the location of the fog node as you might expect): "the fog will be rendered as if it extended along the vector from the onset point to the opaque point."
+</p><p>These settings can be modified using the methods <code>getLinearOnsetPoint()</code>, <code>getLinearOpaquePoint()</code>, <code>setLinearOnsetPoint(float x,y,z)</code>, <code>setLinearOpaquePoint(Point3D pos)</code> and <code>setLinearRange(float onset, float opaque)</code> of <code>Fog</code>.
+</p><p>There is a hardware issue with rendering fog which means that linear fog can breakdown and vanish depending on the angle from which it is viewed:
+</p>
+<blockquote>
+"the underlying fog effect supported by hardware is generally only one-dimensional, and must be rendered based on linear distance from the camera plane. Thus, this in-the-world effect is most effective when the fog vector from onset point to opaque point is most nearly parallel to the camera&#8217;s eye vector. As the angle between the fog vector and the eye vector increases, the accuracy of the effect diminishes, up to a complete breakdown of the effect at a 90 degree angle."
+</blockquote>
+<p>The <code>Fog</code> method <code>setLinearFallback(float angle, float onset, float opaque)</code> defines how the fog should be rendered when the fog effect is diminished in this way. <code>angle</code> is the minimum viewing angle (angle between the camera direction and fog direction) at which the fallback effect will be employed. <code>onset</code> and <code>opaque</code> specify <em>camera-relative</em> onset and opaque distances that will be fallen back on, overriding the <code>Fog</code> node&#8217;s own onset and opaque distances.
+</p><p>The <code>setLinearFallback(float angle, float onset, float opaque)</code> workaround will only look good in certain situations, for example when the fog is deep inside a dark cave. So in general, exponential mode fog is more useful than the default linear mode fog.
+</p>
+<h3> <span class="mw-headline" id="Exponential_Fog">Exponential Fog</span></h3>
+<p>In exponential fog mode the position and orientation of your fog node in the scene graph and the onset and opaque points are ignored (in fact you don&#8217;t even have to put your fog node in the scene graph). Instead, fog is rendered camera relative according to a density factor: the fog begins at the camera and continues to infinity, with an exponentially increasing density determined by the density factor. The fog moves with the camera as the camera&#8217;s position and orientation changes:
+</p>
+<blockquote>
+"the onset point and opaque point are not used, and the fog effect is based on the value specified to <code>set_exp_density()</code>, and it doesn&#8217;t matter to which node the fog object is parented, or if it is parented anywhere at all."
+</blockquote>
+<p>The <code>fog.setExpDensity(float)</code> method determines the density value used for exponential fog calculations.
+</p><p>You activate an exponential fog effect by calling the <code>setFog(Fog)</code> method of <code>NodePath</code>, for example: <code>render.setFog(myFog)</code>:
+</p><p>Setup some scene-wide exponential fog:
+</p>
+<pre class="python">colour = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.8</span>,<span style="color: #ff4500;">0.8</span><span style="color: black;">&#41;</span><br />expfog = Fog<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Scene-wide exponential Fog object&quot;</span><span style="color: black;">&#41;</span><br />expfog.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">*</span>colour<span style="color: black;">&#41;</span><br />expfog.<span style="color: black;">setExpDensity</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.005</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setFog</span><span style="color: black;">&#40;</span>expfog<span style="color: black;">&#41;</span><br />base.<span style="color: black;">setBackgroundColor</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">*</span>colour<span style="color: black;">&#41;</span></pre>
+<p>The last line in the sample above doesn't actually affect the fog,
+however, it generally looks better if the scene background color
+matches the color of the fog.
+</p><p>Since <code>setFog</code> is called on <code>render</code> it effects
+the entire scene. <code>setFog</code> can just as easily be called on
+some other <code>NodePath</code> and will effect only that
+<code>NodePath</code> and its children.
+</p><p>The expontential fog effect can be turned off again using <code>clearFog</code>:
+</p>
+<pre class="python">render.<span style="color: black;">clearFog</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 467/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:981-0!*!0!!en!*!* and timestamp 20171007194612 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Depth_Test_and_Depth_Write.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Alpha_Testing.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

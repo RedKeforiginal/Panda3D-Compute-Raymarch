@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Loading Actors and Animations - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Loading Actors and Animations</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_Models.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Actor_Animations.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Loading_Actors_and_Animations.html#Actor_Basics"><span class="tocnumber">1</span> <span class="toctext">Actor Basics</span></a></li>
+<li class="toclevel-1"><a href="Loading_Actors_and_Animations.html#Using_Actors"><span class="tocnumber">2</span> <span class="toctext">Using Actors</span></a>
+<ul>
+<li class="toclevel-2"><a href="Loading_Actors_and_Animations.html#Required_Includes"><span class="tocnumber">2.1</span> <span class="toctext">Required Includes</span></a></li>
+<li class="toclevel-2"><a href="Loading_Actors_and_Animations.html#Load_the_Actor_Model"><span class="tocnumber">2.2</span> <span class="toctext">Load the Actor Model</span></a></li>
+<li class="toclevel-2"><a href="Loading_Actors_and_Animations.html#Load_the_Animation"><span class="tocnumber">2.3</span> <span class="toctext">Load the Animation</span></a></li>
+<li class="toclevel-2"><a href="Loading_Actors_and_Animations.html#Bind_the_Model_and_the_Animation"><span class="tocnumber">2.4</span> <span class="toctext">Bind the Model and the Animation</span></a></li>
+<li class="toclevel-2"><a href="Loading_Actors_and_Animations.html#Control_the_Animations"><span class="tocnumber">2.5</span> <span class="toctext">Control the Animations</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="Loading_Actors_and_Animations.html#Panda_Filename_Syntax"><span class="tocnumber">3</span> <span class="toctext">Panda Filename Syntax</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Actor_Basics">Actor Basics</span></h2>
+<p>
+The python class <code>Actor</code> is designed to hold an animatable model and
+a set of animations.  Since the Actor class inherits from the NodePath class,
+all NodePath functions are applicable to actors.
+</p><p>Note, however, that Actor is a Python class that extends the C++ NodePath class.  For the most part, you don't have to think about this: Actor inherits sensibly from NodePath and generally does what you expect.  There are a few subtle oddities, though.  When you attach an Actor into a scene graph, the low-level C++ Panda constructs only records the NodePath part of the Actor in the scene graph, which is fine as long as you also keep a pointer to the Actor instance in your Python objects.  If you let the Actor destruct, however, its visible geometry will remain, but it will cease animating (because it is no longer an Actor).  Also, even if you keep the Actor object around, if you retrieve a new pointer to the Actor from the scene graph (for instance, as returned by the collision system), you will get back just an ordinary NodePath, not an Actor.
+</p><p>The Actor interface provides a high-level interface on the low-level Panda constructs.  In Panda, the low-level node that performs the animation is called Character.  You can see the Character node in the scene graph when you call <code>actor.ls()</code>.
+</p><p>Do not confuse the Actor class with the <a href="Enabling_physics_on_a_node.html" title="Enabling physics on a node">ActorNode</a> class, which is used for physics.  They are completely unrelated classes with similar names.
+</p>
+<h2> <span class="mw-headline" id="Using_Actors">Using Actors</span></h2>
+<p>The Actor class must be imported before any loading or manipulation of actors.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">actor</span>.<span style="color: black;">Actor</span> <span style="color: #ff7700;font-weight:bold;">import</span> Actor</pre>
+<p>Once the model is loaded, the actor object must be constructed, and the model and animations must be loaded:
+</p><p>Loading each animation requires a tuple: the name one is giving the animation and the path to the animation. This entire process can be shortened to a single command:
+</p>
+<pre class="python">nodePath = Actor<span style="color: black;">&#40;</span><span style="color: #483d8b;">'Model Path'</span>, <span style="color: black;">&#123;</span><br />  <span style="color: #483d8b;">'Animation Name 1'</span>:<span style="color: #483d8b;">'Animation Path 1'</span>,<br />  <span style="color: #483d8b;">'Animation Name 2'</span>:<span style="color: #483d8b;">'Animation Path 2'</span>,<br /><span style="color: black;">&#125;</span><span style="color: black;">&#41;</span></pre>
+<p>Note that it is also possible to store the animations and model in the same file. In that case, just create the Actor with just the model as parameter.
+
+</p><p>
+</p><p>Although this is a rarely-used technique, it is possible to assemble a
+character model out of several separate pieces (separate models). This is further explained in the section <a href="Multi-Part_Actors.html" title="Multi-Part Actors">Multi-Part Actors</a>.
+</p><p>Panda3D supports both skeletal animation and morph animations.
+</p><p>It is also possible to load animations asynchronously, if your build of Panda has <a href="Threading.html" title="Threading">Threading</a> enabled (which is the case in version 1.6.1 and above).
+</p>
+<h2> <span class="mw-headline" id="Panda_Filename_Syntax">Panda Filename Syntax</span></h2>
+<p>The filenames used in the Actor constructor must follow Panda's filename
+conventions.  See <a href="Loading_Models.html" title="Loading Models">Loading Models</a> for more information.  Loading actors
+and animations utilizes the panda <i>model path</i>, the same as for
+static models.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 119/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:991-0!*!0!!en!*!* and timestamp 20171008113323 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_Models.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Actor_Animations.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

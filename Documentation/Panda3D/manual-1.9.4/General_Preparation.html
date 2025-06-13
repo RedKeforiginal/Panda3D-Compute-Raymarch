@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>General Preparation - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: General Preparation</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Installing_Panda3D_in_Linux.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Running_your_Program.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>You can use multiple programming languages with Panda3D. The most commonly used language is Python, followed by C++. Some manual pages offer both C++ and Python information - use the toggle button at the top of the manual page to toggle between C++ information and Python information.
+</p><p>For example, if you want this page to contain information about learning C++ instead of learning Python, just hit the "C++" link at the top of this page.
+
+</p><p>
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="General_Preparation.html#Learning_Python"><span class="tocnumber">1</span> <span class="toctext">Learning Python</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="General_Preparation.html#The_Copy_of_Python_that_comes_with_Panda"><span class="tocnumber">1.1</span> <span class="toctext">The Copy of Python that comes with Panda</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="General_Preparation.html#What_if_I_already_have_a_copy_of_Python.3F"><span class="tocnumber">1.2</span> <span class="toctext">What if I already have a copy of Python?</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="General_Preparation.html#Python_Programming_Resources"><span class="tocnumber">1.3</span> <span class="toctext">Python Programming Resources</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-5"><a href="General_Preparation.html#Learning_C.2B.2B"><span class="tocnumber">2</span> <span class="toctext">Learning C++</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Learning_Python">Learning Python</span></h2>
+<p>Since Panda3D is a library, and not a point-n-click game maker, it is needed to learn Python or C++ before you will be able to use it. Since this engine's main goal is to support Python, it would be a good idea to familiarize yourself with Python before continuing.
+</p><p>Python is an interpreted, interactive,
+object-oriented language comparable to Java or Perl. It is available
+on several platforms, including UNIX, Windows, OS/2, and Mac. Python
+also has a large number of modules outside of the standard Python
+installation, and additional modules can be created in C or
+C++. Because it is late-binding and requires minimal memory
+management, it is an ideal language for rapid prototyping.
+</p>
+<h3> <span class="mw-headline" id="The_Copy_of_Python_that_comes_with_Panda"> The Copy of Python that comes with Panda </span></h3>
+<p>On Windows, it is not necessary to install Python, because the Windows installer for Panda3D includes a copy.  This is a completely normal copy of Python, identical to what you would have if you installed Python using the standard Python installer.  Panda's built-in copy of Python is automatically added to the PATH environment variable.  This enables you to type "python" at the command prompt, and it will run the Python that comes with Panda.
+</p><p>On macOS, Python 2.7 already comes pre-installed on your system, so there is no need to install a second copy of Python.  The Panda3D builds on this web site will only work with the copy of Python already on your system.
+</p>
+<h3> <span class="mw-headline" id="What_if_I_already_have_a_copy_of_Python.3F"> What if I already have a copy of Python? </span></h3>
+<p>If you already have a copy of Python, and you wish to use that instead of the one provided with panda, it is easy to do so.  Simply create a "panda.pth" file inside your copy of Python, containing the path of the panda directory and the bin directory within it on separate lines (for example C:\Program Files\Panda3D-1.2.3 and C:\Program Files\Panda3D-1.2.3\bin).  This will enable your copy of Python to find the panda libraries.
+</p><p>For this to work, the version of Python that you use must match the version of Python included with panda.  The panda libraries are compiled for that particular version, and will not work with any other.
+</p><p>Of course, if you do use your own copy of Python, you may wish to delete panda's copy of Python, or at least, remove it from the PATH environment variable.  Otherwise, you will have two copies of Python, which can lead to confusion.
+</p>
+<h3> <span class="mw-headline" id="Python_Programming_Resources"> Python Programming Resources </span></h3>
+<p>There are a lot of other resources available for programming in Python.
+Here is a list of some of the best:
+</p><p>Links from the official Python website:
+</p>
+<ul>
+        <li><a rel="nofollow" class="external text" href="http://www.python.org">Official Website - http://www.python.org</a></li>
+        <li><a rel="nofollow" class="external text" href="http://docs.python.org/">Current Python Documentation </a></li>
+        <li><a rel="nofollow" class="external text" href="http://www.python.org/doc">Python Documentation</a></li>
+</ul>
+<p>Here are some other good links for learning Python:
+</p>
+<ul>
+        <li><a rel="nofollow" class="external text" href="http://www.swaroopch.com/notes/python/">Byte of Python</a></li>
+        <li><a rel="nofollow" class="external text" href="http://www.diveintopython.net">Dive Into Python</a></li>
+        <li><a rel="nofollow" class="external text" href="http://wiki.python.org/moin/BeginnersGuide">Beginner's Guide from Python's wiki</a></li>
+        <li><a rel="nofollow" class="external text" href="http://www.effbot.org/zone/librarybook-index.htm">The Standard Python Library</a></li>
+        <li><a rel="nofollow" class="external text" href="http://www.voidspace.org.uk/python/articles/OOP.shtml">Introduction to OOP with Python</a></li>
+</ul>
+<p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:932-0!*!0!!en!*!* and timestamp 20171007194557 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Installing_Panda3D_in_Linux.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Running_your_Program.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

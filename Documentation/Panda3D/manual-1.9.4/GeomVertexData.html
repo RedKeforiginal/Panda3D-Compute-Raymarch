@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>GeomVertexData - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: GeomVertexData</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="How_Panda3D_Stores_Vertices_and_Geometry.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="GeomVertexFormat.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The fundamental object used to store vertex information in Panda is the
+<b>GeomVertexData</b>.  This stores a list of vertices, organized
+conceptually as a table, where each row of the table represents a
+different vertex, and the columns of the table represent the different
+kinds of per-vertex data that may be associated with each vertex.  For
+instance, the following table defines four vertices, each with its own
+vertex position, normal vector, color, and texture coordinate
+pair:
+</p>
+<center><table style="border-collapse: collapse">
+<tr>
+<td></td>
+<td style="text-align: center">vertex</td>
+<td style="text-align: center">normal</td>
+<td style="text-align: center">color</td>
+<td style="text-align: center">texcoord</td>
+</tr>
+<tr><td style="padding-right: 5pt">0</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 0, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 0)</td>
+</tr>
+<tr><td style="padding-right: 5pt">1</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 1, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">2</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 1, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">3</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0)</td>
+</tr>
+</table></center>
+<p>Vertices are always numbered beginning at 0, and continue to the
+number of rows in the table (minus 1).
+</p><p>Not all GeomVertexData objects will use these same four columns; some
+will have fewer columns, and some will have more.  In fact, all
+columns, except for "vertex", which stores the vertex position, are
+optional.
+</p><p>The order of the columns is not meaningful, but the column names are.
+There are certain column names that are reserved for Panda, and
+instruct Panda what the meaning of each column is.  For instance, the
+vertex position column is always named "vertex", and the lighting
+normal column, if it is present, must be named "normal".  See
+<a href="GeomVertexFormat.html" title="GeomVertexFormat">GeomVertexFormat</a> for the complete list of reserved column names.
+</p><p>You can define your own custom columns.  If there are any columns that
+have a name that Panda does not recognize, Panda will not do anything
+special with the column, but it can still send it to the graphics
+card.  Of course, it is then up to you to write a <a href="Shader_Basics.html" title="Shader Basics">vertex shader</a> that
+understands what to do with the data in the column.
+</p><p>It is possible to break up a GeomVertexData into more than one array.
+A <b>GeomVertexArray</b> is table of vertex data that is stored in one
+contiguous block of memory.  Typically, each GeomVertexData consists
+of just one array; but it is also possible to distribute the data so
+that some columns are stored in one array, while other columns are
+stored in another array:
+</p>
+<center><table style="border-collapse: collapse">
+<tr>
+<td></td>
+<td style="text-align: center">vertex</td>
+<td style="text-align: center">texcoord</td>
+<td style="padding-right: 16pt"></td>
+<td style="text-align: center">normal</td>
+<td style="text-align: center">color</td>
+</tr>
+<tr><td style="padding-right: 5pt">0</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 0, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 0)</td>
+<td></td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">1</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 1, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 1)</td>
+<td></td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">2</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 1, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 1)</td>
+<td></td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">3</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0)</td>
+<td></td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+</tr>
+</table></center>
+<p>You might want to do this, for instance, if you have certain columns
+of data that are always the same between different blocks of vertices;
+you can put those columns in a separate array, and then use the same
+array within multiple different GeomVertexData objects.  There is no
+limit to the number of different arrays you can have within one
+GeomVertexData; you can make each column a separate array if you like.
+(There may be performance implications to consider.  Some graphics
+drivers may work better with one block of contiguous data--one
+array--while others may prefer many different arrays.  This
+performance difference is likely to be small, however.)
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 52/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1094-0!*!0!*!*!*!* and timestamp 20171008060521 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="How_Panda3D_Stores_Vertices_and_Geometry.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="GeomVertexFormat.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

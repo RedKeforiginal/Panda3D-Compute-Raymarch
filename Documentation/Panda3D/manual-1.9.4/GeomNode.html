@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>GeomNode - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: GeomNode</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Geom.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="BoundingVolume.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Finally, <b>GeomNode</b> is the glue that connects <a href="Geom.html" title="Geom">Geoms</a> into the scene
+graph.  A GeomNode contains a list of one or more Geoms.
+</p>
+<center><table>
+<tr><td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>GeomNode
+</p>
+<table>
+<tr><td><table style="border: 1px solid black; background: #acb1ed; padding: 5pt">
+<tr><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>Geom 
+</p>
+</td><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>RenderState 
+</p>
+</td></tr>
+</table></td></tr>
+<tr><td><table style="border: 1px solid black; background: #acb1ed; padding: 5pt">
+<tr><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>Geom 
+</p>
+</td><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>RenderState 
+</p>
+</td></tr>
+</table></td></tr>
+<tr><td><table style="border: 1px solid black; background: #acb1ed; padding: 5pt">
+<tr><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>Geom 
+</p>
+</td><td style="border: 1px solid black; background: #9197d8; padding: 5pt">
+<p>RenderState 
+</p>
+</td></tr>
+</table></td></tr>
+</table>
+</td></tr>
+</table></center>
+<p>The GeomNode class inherits from <a href="The_Scene_Graph.html" title="The Scene Graph">PandaNode</a>, so a GeomNode can be
+attached directly to the scene graph like any other node; and like any
+node, it inherits a transform and a render state from its parents in
+the scene graph.  This transform and state is then applied to each of
+the node's Geoms.
+</p><p>Furthermore, the GeomNode stores an additional render state definition
+for each Geom.  This allows each Geom within a given GeomNode to have
+its own unique state; for instance, each Geom may have a different
+texture applied.
+</p><p>When a model is loaded from an egg file, normally all the state
+definitions required to render the geometry will be stored on these
+per-Geom state definitions, rather than at the GeomNode level.  These
+per-Geom states will override any state that is inherited from the
+scene graph, unless that scene graph state has a priority higher than
+the default priority of zero.  (This is why it is necessary to specify
+a second parameter of 1 to the nodePath.setTexture() call, if you want
+to replace a texture that was applied to a model in the egg file.)
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 11/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1767-0!*!0!*!*!*!* and timestamp 20171008060548 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Geom.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="BoundingVolume.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

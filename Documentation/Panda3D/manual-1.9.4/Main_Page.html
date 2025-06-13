@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Main Page - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Main Page</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Table_of_Contents"> Table of Contents </span></h2>
+<ol><li> <a href="Introduction_to_Panda3D.html" title="Introduction to Panda3D">Introduction to Panda3D</a>
+<ol><li> <a href="Installing_Panda3D_in_Windows.html" title="Installing Panda3D in Windows">Installing Panda3D in Windows</a>
+</li><li> <a href="Installing_Panda3D_in_Linux.html" title="Installing Panda3D in Linux">Installing Panda3D in Linux</a>
+</li><li> <a href="General_Preparation.html" title="General Preparation">General Preparation</a>
+</li><li> <a href="Running_your_Program.html" title="Running your Program">Running your Program</a>
+</li><li> <a href="A_Panda3D_Hello_World_Tutorial.html" title="A Panda3D Hello World Tutorial">A Panda3D Hello World Tutorial</a>
+<ol><li> <a href="Starting_Panda3D.html" title="Starting Panda3D">Starting Panda3D</a>
+</li><li> <a href="Loading_the_Grassy_Scenery.html" title="Loading the Grassy Scenery">Loading the Grassy Scenery</a>
+</li><li> <a href="Controlling_the_Camera.html" title="Controlling the Camera">Controlling the Camera</a>
+</li><li> <a href="Loading_and_Animating_the_Panda_Model.html" title="Loading and Animating the Panda Model">Loading and Animating the Panda Model</a>
+</li><li> <a href="Using_Intervals_to_move_the_Panda.html" title="Using Intervals to move the Panda">Using Intervals to move the Panda</a>
+</li><li> <a href="Tutorial_End.html" title="Tutorial End">Tutorial End</a>
+</li></ol>
+</li><li> <a href="User_Contributed_Tutorials_and_Examples.html" title="User Contributed Tutorials and Examples">User Contributed Tutorials and Examples</a>
+</li><li> <a href="Video_Tutorials.html" title="Video Tutorials">Video Tutorials</a>
+</li></ol>
+</li><li> <a href="Programming_with_Panda3D.html" title="Programming with Panda3D">Programming with Panda3D</a>
+<ol><li> <a href="The_Scene_Graph.html" title="The Scene Graph">The Scene Graph</a>
+<ol><li> <a href="Scene_Graph_Manipulations.html" title="Scene Graph Manipulations">Scene Graph Manipulations</a>
+</li><li> <a href="Common_State_Changes.html" title="Common State Changes">Common State Changes</a>
+</li><li> <a href="Manipulating_a_Piece_of_a_Model.html" title="Manipulating a Piece of a Model">Manipulating a Piece of a Model</a>
+</li><li> <a href="Searching_the_Scene_Graph.html" title="Searching the Scene Graph">Searching the Scene Graph</a>
+</li><li> <a href="Instancing.html" title="Instancing">Instancing</a>
+</li></ol>
+</li><li> <a href="The_Configuration_File.html" title="The Configuration File">The Configuration File</a>
+<ol><li> <a href="Configuring_Panda3D.html" title="Configuring Panda3D">Configuring Panda3D</a>
+</li><li> <a href="List_of_All_Config_Variables.html" title="List of All Config Variables">List of All Config Variables</a>
+</li><li> <a href="Accessing_Config_Vars_in_a_Program.html" title="Accessing Config Vars in a Program">Accessing Config Vars in a Program</a>
+</li></ol>
+</li><li> <a href="Models_and_Actors.html" title="Models and Actors">Models and Actors</a>
+<ol><li> <a href="Loading_Models.html" title="Loading Models">Loading Models</a>
+</li><li> <a href="Loading_Actors_and_Animations.html" title="Loading Actors and Animations">Loading Actors and Animations</a>
+</li><li> <a href="Actor_Animations.html" title="Actor Animations">Actor Animations</a>
+</li><li> <a href="Multi-Part_Actors.html" title="Multi-Part Actors">Multi-Part Actors</a>
+</li><li> <a href="Attaching_an_Object_to_a_Joint.html" title="Attaching an Object to a Joint">Attaching an Object to a Joint</a>
+</li><li> <a href="Controlling_a_Joint_Procedurally.html" title="Controlling a Joint Procedurally">Controlling a Joint Procedurally</a>
+</li><li> <a href="Level_of_Detail.html" title="Level of Detail">Level of Detail</a>
+</li></ol>
+</li><li> <a href="Render_Attributes.html" title="Render Attributes">Render Attributes</a>
+<ol><li> <a href="List_of_All_Attributes.html" title="List of All Attributes">List of All Attributes</a>
+</li><li> <a href="Lighting.html" title="Lighting">Lighting</a>
+</li><li> <a href="Materials.html" title="Materials">Materials</a>
+</li><li> <a href="Depth_Test_and_Depth_Write.html" title="Depth Test and Depth Write">Depth Test and Depth Write</a>
+</li><li> <a href="Fog.html" title="Fog">Fog</a>
+</li><li> <a href="Alpha_Testing.html" title="Alpha Testing">Alpha Testing</a>
+</li><li> <a href="Color_Write_Masks.html" title="Color Write Masks">Color Write Masks</a>
+</li><li> <a href="Antialiasing.html" title="Antialiasing">Antialiasing</a>
+</li><li> <a href="Clip_Planes.html" title="Clip Planes">Clip Planes</a>
+</li><li> <a href="Tinting_and_Recoloring.html" title="Tinting and Recoloring">Tinting and Recoloring</a>
+</li><li> <a href="Backface_Culling_and_Frontface_Culling.html" title="Backface Culling and Frontface Culling">Backface Culling and Frontface Culling</a>
+</li><li> <a href="Occlusion_Culling.html" title="Occlusion Culling">Occlusion Culling</a>
+<ol><li> <a href="Polygon_Occluder_Culling.html" title="Polygon Occluder Culling">Polygon Occluder Culling</a>
+</li><li> <a href="Portal_Culling.html" title="Portal Culling">Portal Culling</a>
+</li></ol>
+</li><li> <a href="Light_Ramps.html" title="Light Ramps">Light Ramps</a>
+</li><li> <a href="Auxiliary_Bitplane_Control.html" title="Auxiliary Bitplane Control">Auxiliary Bitplane Control</a>
+</li><li> <a href="Write_Attribute.html" title="Stencil Test/Write Attribute">Stencil Test/Write Attribute</a>
+</li></ol>
+</li><li> <a href="Texturing.html" title="Texturing">Texturing</a>
+<ol><li> <a href="Simple_Texturing.html" title="Simple Texturing">Simple Texturing</a>
+</li><li> <a href="Choosing_a_Texture_Size.html" title="Choosing a Texture Size">Choosing a Texture Size</a>
+</li><li> <a href="Texture_Wrap_Modes.html" title="Texture Wrap Modes">Texture Wrap Modes</a>
+</li><li> <a href="Texture_Filter_Types.html" title="Texture Filter Types">Texture Filter Types</a>
+</li><li> <a href="Simple_Texture_Replacement.html" title="Simple Texture Replacement">Simple Texture Replacement</a>
+</li><li> <a href="Multitexture_Introduction.html" title="Multitexture Introduction">Multitexture Introduction</a>
+</li><li> <a href="Texture_Modes.html" title="Texture Modes">Texture Modes</a>
+</li><li> <a href="Texture_Order.html" title="Texture Order">Texture Order</a>
+</li><li> <a href="Texture_Combine_Modes.html" title="Texture Combine Modes">Texture Combine Modes</a>
+</li><li> <a href="Texture_Transforms.html" title="Texture Transforms">Texture Transforms</a>
+</li><li> <a href="Multiple_Texture_Coordinate_Sets.html" title="Multiple Texture Coordinate Sets">Multiple Texture Coordinate Sets</a>
+</li><li> <a href="Automatic_Texture_Coordinates.html" title="Automatic Texture Coordinates">Automatic Texture Coordinates</a>
+</li><li> <a href="Projected_Textures.html" title="Projected Textures">Projected Textures</a>
+</li><li> <a href="Simple_Environment_Mapping.html" title="Simple Environment Mapping">Simple Environment Mapping</a>
+</li><li> <a href="3-D_Textures.html" title="3-D Textures">3-D Textures</a>
+</li><li> <a href="Cube_Maps.html" title="Cube Maps">Cube Maps</a>
+</li><li> <a href="Environment_Mapping_with_Cube_Maps.html" title="Environment Mapping with Cube Maps">Environment Mapping with Cube Maps</a>
+</li><li> <a href="Automatic_Texture_Animation.html" title="Automatic Texture Animation">Automatic Texture Animation</a>
+</li><li> <a href="Playing_MPG_and_AVI_files.html" title="Playing MPG and AVI files">Playing MPG and AVI files</a>
+</li><li> <a href="Multiview_Textures.html" title="Stereo/Multiview Textures">Stereo/Multiview Textures</a>
+</li><li> <a href="Transparency_and_Blending.html" title="Transparency and Blending">Transparency and Blending</a>
+</li><li> <a href="Texture_Management.html" title="Texture Management">Texture Management</a>
+</li><li> <a href="Texture_Compression.html" title="Texture Compression">Texture Compression</a>
+</li></ol>
+</li><li> <a href="Shaders.html" title="Shaders">Shaders</a>
+<ol><li> <a href="Shader_Basics.html" title="Shader Basics">Shader Basics</a>
+</li><li> <a href="List_of_Possible_Cg_Shader_Inputs.html" title="List of Possible Cg Shader Inputs">List of Possible Cg Shader Inputs</a>
+</li><li> <a href="List_of_GLSL_Shader_Inputs.html" title="List of GLSL Shader Inputs">List of GLSL Shader Inputs</a>
+</li><li> <a href="Shaders_and_Coordinate_Spaces.html" title="Shaders and Coordinate Spaces">Shaders and Coordinate Spaces</a>
+</li><li> <a href="Known_Shader_Bugs_and_Limitations.html" title="Known Shader Bugs and Limitations">Known Shader Bugs and Limitations</a>
+</li><li> <a href="The_Shader_Generator.html" title="The Shader Generator">The Shader Generator</a>
+</li><li> <a href="Cg_Shader_Tutorial.html" title="Cg Shader Tutorial">Cg Shader Tutorial</a>
+<ol><li> <a href="Cg_Tutorial_Part_1.html" title="Cg Tutorial Part 1">Cg Tutorial Part 1</a>
+</li><li> <a href="Cg_Tutorial_Part_2.html" title="Cg Tutorial Part 2">Cg Tutorial Part 2</a>
+</li></ol>
+</li><li> <a href="Compute_Shaders.html" title="Compute Shaders">Compute Shaders</a>
+</li></ol>
+</li><li> <a href="Camera_Control.html" title="Camera Control">Camera Control</a>
+<ol><li> <a href="The_Default_Camera_Driver.html" title="The Default Camera Driver">The Default Camera Driver</a>
+</li><li> <a href="Lenses_and_Field_of_View.html" title="Lenses and Field of View">Lenses and Field of View</a>
+</li><li> <a href="Orthographic_Lenses.html" title="Orthographic Lenses">Orthographic Lenses</a>
+</li></ol>
+</li><li> <a href="Sound.html" title="Sound">Sound</a>
+<ol><li> <a href="Loading_and_Playing_Sounds_and_Music.html" title="Loading and Playing Sounds and Music">Loading and Playing Sounds and Music</a>
+</li><li> <a href="Manipulating_Sounds.html" title="Manipulating Sounds">Manipulating Sounds</a>
+</li><li> <a href="Audio_Managers.html" title="Audio Managers">Audio Managers</a>
+</li><li> <a href="DSP_Effects.html" title="DSP Effects">DSP Effects</a>
+</li><li> <a href="3D_Audio.html" title="3D Audio">3D Audio</a>
+</li><li> <a href="Multi-Channel.html" title="Multi-Channel">Multi-Channel</a>
+</li></ol>
+</li><li> <a href="Intervals.html" title="Intervals">Intervals</a>
+<ol><li> <a href="Lerp_Intervals.html" title="Lerp Intervals">Lerp Intervals</a>
+</li><li> <a href="Function_Intervals.html" title="Function Intervals">Function Intervals</a>
+</li><li> <a href="Actor_Intervals.html" title="Actor Intervals">Actor Intervals</a>
+</li><li> <a href="Sound_Intervals.html" title="Sound Intervals">Sound Intervals</a>
+</li><li> <a href="Motion_Path_and_Particle_Intervals.html" title="Motion Path and Particle Intervals">Motion Path and Particle Intervals</a>
+</li><li> <a href="Sequences_and_Parallels.html" title="Sequences and Parallels">Sequences and Parallels</a>
+</li><li> <a href="Position,_Rotation_and_Scale_Intervals.html" title="Position, Rotation and Scale Intervals">Position, Rotation and Scale Intervals</a>
+</li><li> <a href="Projectile_Intervals.html" title="Projectile Intervals">Projectile Intervals</a>
+</li></ol>
+</li><li> <a href="Tasks_and_Event_Handling.html" title="Tasks and Event Handling">Tasks and Event Handling</a>
+<ol><li> <a href="Tasks.html" title="Tasks">Tasks</a>
+</li><li> <a href="Task_Chains.html" title="Task Chains">Task Chains</a>
+</li><li> <a href="Event_Handlers.html" title="Event Handlers">Event Handlers</a>
+</li><li> <a href="Main_Loop.html" title="Main Loop">Main Loop</a>
+</li></ol>
+</li><li> <a href="Text_and_Image_Rendering.html" title="Text and Image Rendering">Text and Image Rendering</a>
+<ol><li> <a href="Text_Fonts.html" title="Text Fonts">Text Fonts</a>
+</li><li> <a href="Text_Node.html" title="Text Node">Text Node</a>
+</li><li> <a href="OnscreenText.html" title="OnscreenText">OnscreenText</a>
+</li><li> <a href="OnscreenImage.html" title="OnscreenImage">OnscreenImage</a>
+</li><li> <a href="Embedded_Text_Properties.html" title="Embedded Text Properties">Embedded Text Properties</a>
+</li></ol>
+</li><li> <a href="DirectGUI.html" title="DirectGUI">DirectGUI</a>
+<ol><li> <a href="DirectButton.html" title="DirectButton">DirectButton</a>
+</li><li> <a href="DirectCheckButton.html" title="DirectCheckButton">DirectCheckButton</a>
+</li><li> <a href="DirectRadioButton.html" title="DirectRadioButton">DirectRadioButton</a>
+</li><li> <a href="DirectDialog.html" title="DirectDialog">DirectDialog</a>
+</li><li> <a href="DirectEntry.html" title="DirectEntry">DirectEntry</a>
+</li><li> <a href="DirectFrame.html" title="DirectFrame">DirectFrame</a>
+</li><li> <a href="DirectLabel.html" title="DirectLabel">DirectLabel</a>
+</li><li> <a href="DirectOptionMenu.html" title="DirectOptionMenu">DirectOptionMenu</a>
+</li><li> <a href="DirectScrolledList.html" title="DirectScrolledList">DirectScrolledList</a>
+</li><li> <a href="DirectWaitBar.html" title="DirectWaitBar">DirectWaitBar</a>
+</li><li> <a href="DirectSlider.html" title="DirectSlider">DirectSlider</a>
+</li><li> <a href="DirectScrollBar.html" title="DirectScrollBar">DirectScrollBar</a>
+</li><li> <a href="DirectScrolledFrame.html" title="DirectScrolledFrame">DirectScrolledFrame</a>
+</li></ol>
+</li><li> <a href="Render_Effects.html" title="Render Effects">Render Effects</a>
+<ol><li> <a href="Compass_Effects.html" title="Compass Effects">Compass Effects</a>
+</li><li> <a href="Billboard_Effects.html" title="Billboard Effects">Billboard Effects</a>
+</li></ol>
+</li><li> <a href="Finite_State_Machines.html" title="Finite State Machines">Finite State Machines</a>
+<ol><li> <a href="FSM_Introduction.html" title="FSM Introduction">FSM Introduction</a>
+</li><li> <a href="Simple_FSM_Usage.html" title="Simple FSM Usage">Simple FSM Usage</a>
+</li><li> <a href="FSM_with_input.html" title="FSM with input">FSM with input</a>
+</li><li> <a href="Advanced_FSM_Tidbits.html" title="Advanced FSM Tidbits">Advanced FSM Tidbits</a>
+</li></ol>
+</li><li> <a href="Terrain.html" title="Terrain">Terrain</a>
+<ol><li> <a href="The_Heightfield_Tesselator.html" title="The Heightfield Tesselator">The Heightfield Tesselator</a>
+</li><li> <a href="Geometrical_MipMapping.html" title="Geometrical MipMapping">Geometrical MipMapping</a>
+</li></ol>
+</li><li> <a href="Advanced_operations_with_Panda3D's_internal_structures.html" title="Advanced operations with Panda3D's internal structures">Advanced operations with Panda3D's internal structures</a>
+<ol><li> <a href="How_Panda3D_Stores_Vertices_and_Geometry.html" title="How Panda3D Stores Vertices and Geometry">How Panda3D Stores Vertices and Geometry</a>
+<ol><li> <a href="GeomVertexData.html" title="GeomVertexData">GeomVertexData</a>
+</li><li> <a href="GeomVertexFormat.html" title="GeomVertexFormat">GeomVertexFormat</a>
+</li><li> <a href="GeomPrimitive.html" title="GeomPrimitive">GeomPrimitive</a>
+</li><li> <a href="Geom.html" title="Geom">Geom</a>
+</li><li> <a href="GeomNode.html" title="GeomNode">GeomNode</a>
+</li><li> <a href="BoundingVolume.html" title="BoundingVolume">BoundingVolume</a>
+</li></ol>
+</li><li> <a href="Procedurally_Generating_3D_Models.html" title="Procedurally Generating 3D Models">Procedurally Generating 3D Models</a>
+<ol><li> <a href="Defining_your_own_GeomVertexFormat.html" title="Defining your own GeomVertexFormat">Defining your own GeomVertexFormat</a>
+</li><li> <a href="Pre-defined_vertex_formats.html" title="Pre-defined vertex formats">Pre-defined vertex formats</a>
+</li><li> <a href="Creating_and_filling_a_GeomVertexData.html" title="Creating and filling a GeomVertexData">Creating and filling a GeomVertexData</a>
+</li><li> <a href="Creating_the_GeomPrimitive_objects.html" title="Creating the GeomPrimitive objects">Creating the GeomPrimitive objects</a>
+</li><li> <a href="Putting_your_new_geometry_in_the_scene_graph.html" title="Putting your new geometry in the scene graph">Putting your new geometry in the scene graph</a>
+</li></ol>
+</li><li> <a href="Other_Vertex_and_Model_Manipulation.html" title="Other Vertex and Model Manipulation">Other Vertex and Model Manipulation</a>
+<ol><li> <a href="Reading_existing_geometry_data.html" title="Reading existing geometry data">Reading existing geometry data</a>
+</li><li> <a href="Modifying_existing_geometry_data.html" title="Modifying existing geometry data">Modifying existing geometry data</a>
+</li><li> <a href="MeshDrawer.html" title="MeshDrawer">MeshDrawer</a>
+</li><li> <a href="More_about_GeomVertexReader,_GeomVertexWriter,_and_GeomVertexRewriter.html" title="More about GeomVertexReader, GeomVertexWriter, and GeomVertexRewriter">More about GeomVertexReader, GeomVertexWriter, and GeomVertexRewriter</a>
+</li><li> <a href="Creating_New_Textures_from_Scratch.html" title="Creating New Textures from Scratch">Creating New Textures from Scratch</a>
+</li><li> <a href="Writing_3D_Models_out_to_Disk.html" title="Writing 3D Models out to Disk">Writing 3D Models out to Disk</a>
+</li></ol>
+</li></ol>
+</li><li> <a href="Render-to-Texture_and_Image_Postprocessing.html" title="Render-to-Texture and Image Postprocessing">Render-to-Texture and Image Postprocessing</a>
+<ol><li> <a href="Common_Image_Filters.html" title="Common Image Filters">Common Image Filters</a>
+</li><li> <a href="Generalized_Image_Filters.html" title="Generalized Image Filters">Generalized Image Filters</a>
+</li><li> <a href="Dynamic_Cube_Maps.html" title="Dynamic Cube Maps">Dynamic Cube Maps</a>
+</li><li> <a href="Low-Level_Render_to_Texture.html" title="Low-Level Render to Texture">Low-Level Render to Texture</a>
+</li></ol>
+</li><li> <a href="Panda3D_Rendering_Process.html" title="Panda3D Rendering Process">Panda3D Rendering Process</a>
+<ol><li> <a href="Multithreaded_Render_Pipeline.html" title="Multithreaded Render Pipeline">Multithreaded Render Pipeline</a>
+</li><li> <a href="Introducing_Graphics_Classes.html" title="Introducing Graphics Classes">Introducing Graphics Classes</a>
+</li><li> <a href="The_Graphics_Pipe.html" title="The Graphics Pipe">The Graphics Pipe</a>
+</li><li> <a href="Creating_Windows_and_Buffers.html" title="Creating Windows and Buffers">Creating Windows and Buffers</a>
+</li><li> <a href="Display_Regions.html" title="Display Regions">Display Regions</a>
+</li><li> <a href="Creating_New_MouseWatchers_for_Display_Regions.html" title="Creating New MouseWatchers for Display Regions">Creating New MouseWatchers for Display Regions</a>
+</li><li> <a href="Clearing_Display_Regions.html" title="Clearing Display Regions">Clearing Display Regions</a>
+</li><li> <a href="The_2D_Display_Region.html" title="The 2D Display Region">The 2D Display Region</a>
+</li><li> <a href="Stereo_Display_Regions.html" title="Stereo Display Regions">Stereo Display Regions</a>
+</li><li> <a href="Multi-Pass_Rendering.html" title="Multi-Pass Rendering">Multi-Pass Rendering</a>
+</li><li> <a href="How_to_Control_Render_Order.html" title="How to Control Render Order">How to Control Render Order</a>
+</li></ol>
+</li><li> <a href="Panda3D_Utility_Functions.html" title="Panda3D Utility Functions">Panda3D Utility Functions</a>
+</li><li> <a href="Particle_Effects.html" title="Particle Effects">Particle Effects</a>
+<ol><li> <a href="Using_the_Particle_Panel.html" title="Using the Particle Panel">Using the Particle Panel</a>
+</li><li> <a href="Loading_Particle_Systems.html" title="Loading Particle Systems">Loading Particle Systems</a>
+</li><li> <a href="Particle_Effect_Basic_Parameters.html" title="Particle Effect Basic Parameters">Particle Effect Basic Parameters</a>
+</li><li> <a href="Particle_Factories.html" title="Particle Factories">Particle Factories</a>
+</li><li> <a href="Particle_Emitters.html" title="Particle Emitters">Particle Emitters</a>
+</li><li> <a href="Particle_Renderers.html" title="Particle Renderers">Particle Renderers</a>
+</li></ol>
+</li><li> <a href="Collision_Detection.html" title="Collision Detection">Collision Detection</a>
+<ol><li> <a href="Collision_Solids.html" title="Collision Solids">Collision Solids</a>
+</li><li> <a href="Collision_Handlers.html" title="Collision Handlers">Collision Handlers</a>
+</li><li> <a href="Collision_Entries.html" title="Collision Entries">Collision Entries</a>
+</li><li> <a href="Collision_Traversers.html" title="Collision Traversers">Collision Traversers</a>
+</li><li> <a href="Collision_Bitmasks.html" title="Collision Bitmasks">Collision Bitmasks</a>
+</li><li> <a href="Rapidly-Moving_Objects.html" title="Rapidly-Moving Objects">Rapidly-Moving Objects</a>
+</li><li> <a href="Pusher_Example.html" title="Pusher Example">Pusher Example</a>
+</li><li> <a href="Event_Example.html" title="Event Example">Event Example</a>
+</li><li> <a href="Bitmask_Example.html" title="Bitmask Example">Bitmask Example</a>
+</li><li> <a href="Clicking_on_3D_Objects.html" title="Clicking on 3D Objects">Clicking on 3D Objects</a>
+</li></ol>
+</li><li> <a href="Garbage_Collection.html" title="Garbage Collection">Garbage Collection</a>
+<ol><li> <a href="Removing_Custom_Class_Instances.html" title="Removing Custom Class Instances">Removing Custom Class Instances</a>
+</li></ol>
+</li><li> <a href="Hardware_support.html" title="Hardware support">Hardware support</a>
+<ol><li> <a href="Keyboard_Support.html" title="Keyboard Support">Keyboard Support</a>
+</li><li> <a href="Mouse_Support.html" title="Mouse Support">Mouse Support</a>
+</li><li> <a href="Joystick_Support.html" title="Joystick Support">Joystick Support</a>
+</li><li> <a href="VR_Helmets_and_Trackers.html" title="VR Helmets and Trackers">VR Helmets and Trackers</a>
+</li></ol>
+</li><li> <a href="Math_Engine.html" title="Math Engine">Math Engine</a>
+<ol><li> <a href="Matrix_Representation.html" title="Matrix Representation">Matrix Representation</a>
+</li></ol>
+</li><li> <a href="Physics.html" title="Physics">Physics</a>
+<ol><li> <a href="Panda3D_Physics_Engine.html" title="Panda3D Physics Engine">Panda3D Physics Engine</a>
+<ol><li> <a href="Enabling_physics_on_a_node.html" title="Enabling physics on a node">Enabling physics on a node</a>
+</li><li> <a href="Applying_physics_to_a_node.html" title="Applying physics to a node">Applying physics to a node</a>
+</li><li> <a href="Types_of_forces.html" title="Types of forces">Types of forces</a>
+</li><li> <a href="Notes_and_caveats.html" title="Notes and caveats">Notes and caveats</a>
+</li></ol>
+</li><li> <a href="Using_ODE_with_Panda3D.html" title="Using ODE with Panda3D">Using ODE with Panda3D</a>
+<ol><li> <a href="Worlds,_Bodies_and_Masses.html" title="Worlds, Bodies and Masses">Worlds, Bodies and Masses</a>
+</li><li> <a href="Simulating_the_Physics_World.html" title="Simulating the Physics World">Simulating the Physics World</a>
+</li><li> <a href="Attaching_Bodies_using_Joints.html" title="Attaching Bodies using Joints">Attaching Bodies using Joints</a>
+</li><li> <a href="Collision_Detection_with_ODE.html" title="Collision Detection with ODE">Collision Detection with ODE</a>
+</li></ol>
+</li><li> <a href="Using_Bullet_with_Panda3D.html" title="Using Bullet with Panda3D">Using Bullet with Panda3D</a>
+<ol><li> <a href="Bullet_Hello_World.html" title="Bullet Hello World">Bullet Hello World</a>
+</li><li> <a href="Bullet_Debug_Renderer.html" title="Bullet Debug Renderer">Bullet Debug Renderer</a>
+</li><li> <a href="Bullet_Collision_Shapes.html" title="Bullet Collision Shapes">Bullet Collision Shapes</a>
+</li><li> <a href="Bullet_Collision_Filtering.html" title="Bullet Collision Filtering">Bullet Collision Filtering</a>
+</li><li> <a href="Bullet_Continuous_Collision_Detection.html" title="Bullet Continuous Collision Detection">Bullet Continuous Collision Detection</a>
+</li><li> <a href="Bullet_Queries.html" title="Bullet Queries">Bullet Queries</a>
+</li><li> <a href="Bullet_Ghosts.html" title="Bullet Ghosts">Bullet Ghosts</a>
+</li><li> <a href="Bullet_Character_Controller.html" title="Bullet Character Controller">Bullet Character Controller</a>
+</li><li> <a href="Bullet_Constraints.html" title="Bullet Constraints">Bullet Constraints</a>
+</li><li> <a href="Bullet_Vehicles.html" title="Bullet Vehicles">Bullet Vehicles</a>
+</li><li> <a href="Bullet_Softbodies.html" title="Bullet Softbodies">Bullet Softbodies</a>
+</li><li> <a href="Bullet_Softbody_Rope.html" title="Bullet Softbody Rope">Bullet Softbody Rope</a>
+</li><li> <a href="Bullet_Softbody_Patch.html" title="Bullet Softbody Patch">Bullet Softbody Patch</a>
+</li><li> <a href="Bullet_Softbody_Triangles.html" title="Bullet Softbody Triangles">Bullet Softbody Triangles</a>
+</li><li> <a href="Bullet_Softbody_Tetrahedron.html" title="Bullet Softbody Tetrahedron">Bullet Softbody Tetrahedron</a>
+</li><li> <a href="Bullet_Softbody_Config.html" title="Bullet Softbody Config">Bullet Softbody Config</a>
+</li><li> <a href="Bullet_Config_Options.html" title="Bullet Config Options">Bullet Config Options</a>
+</li><li> <a href="Bullet_FAQ.html" title="Bullet FAQ">Bullet FAQ</a>
+</li><li> <a href="Bullet_Samples.html" title="Bullet Samples">Bullet Samples</a>
+</li></ol>
+</li></ol>
+</li><li> <a href="Motion_Paths.html" title="Motion Paths">Motion Paths</a>
+</li><li> <a href="Timing.html" title="Timing">Timing</a>
+<ol><li> <a href="The_Global_Clock.html" title="The Global Clock">The Global Clock</a>
+</li></ol>
+</li><li> <a href="Networking.html" title="Networking">Networking</a>
+<ol><li> <a href="Datagram_Protocol.html" title="Datagram Protocol">Datagram Protocol</a>
+<ol><li> <a href="Client-Server_Connection.html" title="Client-Server Connection">Client-Server Connection</a>
+</li><li> <a href="Transmitting_Data.html" title="Transmitting Data">Transmitting Data</a>
+</li></ol>
+</li><li> <a href="Downloading_a_File.html" title="Downloading a File">Downloading a File</a>
+</li><li> <a href="Distributed_Networking.html" title="Distributed Networking">Distributed Networking</a>
+</li></ol>
+</li><li> <a href="Multifiles.html" title="Multifiles">Multifiles</a>
+<ol><li> <a href="Creating_Multifiles.html" title="Creating Multifiles">Creating Multifiles</a>
+</li><li> <a href="Patching.html" title="Patching">Patching</a>
+</li><li> <a href="Loading_resources_from_nonstandard_sources.html" title="Loading resources from nonstandard sources">Loading resources from nonstandard sources</a>
+</li></ol>
+</li><li> <a href="ShowBase.html" title="ShowBase">ShowBase</a>
+</li><li> <a href="File_Reading.html" title="File Reading">File Reading</a>
+</li><li> <a href="Threading.html" title="Threading">Threading</a>
+</li><li> <a href="Subclassing.html" title="Subclassing">Subclassing</a>
+</li><li> <a href="Table_of_features_supported_per_graphic_renderer.html" title="Table of features supported per graphic renderer">Table of features supported per graphic renderer</a>
+</li><li> <a href="Artificial_Intelligence_(PANDAI).html" title="Artificial Intelligence (PANDAI)">Artificial Intelligence (PANDAI)</a>
+<ol><li> <a href="Getting_Started.html" title="Getting Started">Getting Started</a>
+</li><li> <a href="Steering_Behaviors.html" title="Steering Behaviors">Steering Behaviors</a>
+<ol><li> <a href="Seek.html" title="Seek">Seek</a>
+</li><li> <a href="Flee.html" title="Flee">Flee</a>
+</li><li> <a href="Pursue.html" title="Pursue">Pursue</a>
+</li><li> <a href="Evade.html" title="Evade">Evade</a>
+</li><li> <a href="Wander.html" title="Wander">Wander</a>
+</li><li> <a href="Flock.html" title="Flock">Flock</a>
+</li><li> <a href="Obstacle_Avoidance.html" title="Obstacle Avoidance">Obstacle Avoidance</a>
+</li><li> <a href="Path_Follow.html" title="Path Follow">Path Follow</a>
+</li></ol>
+</li><li> <a href="Pathfinding.html" title="Pathfinding">Pathfinding</a>
+<ol><li> <a href="Mesh_Generation.html" title="Mesh Generation">Mesh Generation</a>
+</li><li> <a href="Static_Obstacles.html" title="Static Obstacles">Static Obstacles</a>
+</li><li> <a href="Dynamic_Obstacles.html" title="Dynamic Obstacles">Dynamic Obstacles</a>
+</li><li> <a href="Uneven_Terrain.html" title="Uneven Terrain">Uneven Terrain</a>
+</li></ol>
+</li><li> <a href="Source_Codes.html" title="Source Codes">Source Codes</a>
+</li></ol>
+</li></ol>
+</li><li> <a href="Distributing_Panda3D_Applications.html" title="Distributing Panda3D Applications">Distributing Panda3D Applications</a>
+<ol><li> <a href="Introduction_to_p3d_files.html" title="Introduction to p3d files">Introduction to p3d files</a>
+<ol><li> <a href="Using_packp3d.html" title="Using packp3d">Using packp3d</a>
+</li><li> <a href="Referencing_packages.html" title="Referencing packages">Referencing packages</a>
+</li><li> <a href="Running_p3d_files.html" title="Running p3d files">Running p3d files</a>
+</li></ol>
+</li><li> <a href="Distributing_via_the_web.html" title="Distributing via the web">Distributing via the web</a>
+<ol><li> <a href="Embedding_with_an_object_element.html" title="Embedding with an object element">Embedding with an object element</a>
+</li><li> <a href="Embedding_with_RunPanda3D.html" title="Embedding with RunPanda3D">Embedding with RunPanda3D</a>
+</li><li> <a href="About_certificates.html" title="About certificates">About certificates</a>
+<ol><li> <a href="Public_key,_private_key.html" title="Public key, private key">Public key, private key</a>
+</li><li> <a href="Self-signed_certificates.html" title="Self-signed certificates">Self-signed certificates</a>
+</li><li> <a href="HTTPS_(Apache)_certificates.html" title="HTTPS (Apache) certificates">HTTPS (Apache) certificates</a>
+</li><li> <a href="Email_certificates.html" title="Email certificates">Email certificates</a>
+</li></ol>
+</li><li> <a href="Signing_your_p3d_files.html" title="Signing your p3d files">Signing your p3d files</a>
+</li></ol>
+</li><li> <a href="P3D_file_config_settings.html" title="P3D file config settings">P3D file config settings</a>
+</li><li> <a href="Distributing_as_a_self-contained_installer.html" title="Distributing as a self-contained installer">Distributing as a self-contained installer</a>
+</li><li> <a href="The_runtime_Panda3D_directory.html" title="The runtime Panda3D directory">The runtime Panda3D directory</a>
+</li><li> <a href="The_package_system.html" title="The package system">The package system</a>
+<ol><li> <a href="Standard_packages.html" title="Standard packages">Standard packages</a>
+</li><li> <a href="Installing_packages.html" title="Installing packages">Installing packages</a>
+</li><li> <a href="More_about_referencing_packages.html" title="More about referencing packages">More about referencing packages</a>
+</li><li> <a href="Building_and_hosting_your_own_packages.html" title="Building and hosting your own packages">Building and hosting your own packages</a>
+<ol><li> <a href="Using_ppackage.html" title="Using ppackage">Using ppackage</a>
+</li><li> <a href="The_pdef_syntax.html" title="The pdef syntax">The pdef syntax</a>
+</li><li> <a href="Creating_multiple_packages.html" title="Creating multiple packages">Creating multiple packages</a>
+</li><li> <a href="Hosting_packages.html" title="Hosting packages">Hosting packages</a>
+</li><li> <a href="SSL_hosting.html" title="SSL hosting">SSL hosting</a>
+</li><li> <a href="Building_multiplatform_packages.html" title="Building multiplatform packages">Building multiplatform packages</a>
+</li><li> <a href="Building_patches.html" title="Building patches">Building patches</a>
+</li></ol>
+</li></ol>
+</li><li> <a href="Advanced_scripting_techniques.html" title="Advanced scripting techniques">Advanced scripting techniques</a>
+<ol><li> <a href="DetectPanda3D.js.html" title="DetectPanda3D.js">DetectPanda3D.js</a>
+</li><li> <a href="Advanced_object_tags.html" title="Advanced object tags">Advanced object tags</a>
+</li><li> <a href="Splash_window_tags.html" title="Splash window tags">Splash window tags</a>
+</li><li> <a href="Plugin_notify_callbacks.html" title="Plugin notify callbacks">Plugin notify callbacks</a>
+</li><li> <a href="AppRunner.html" title="AppRunner">AppRunner</a>
+<ol><li> <a href="The_appRunner.main_object.html" title="The appRunner.main object">The appRunner.main object</a>
+</li><li> <a href="The_appRunner.dom_object.html" title="The appRunner.dom object">The appRunner.dom object</a>
+</li><li> <a href="Reading_the_HTML_tokens.html" title="Reading the HTML tokens">Reading the HTML tokens</a>
+</li><li> <a href="Other_appRunner_members.html" title="Other appRunner members">Other appRunner members</a>
+</li></ol>
+</li><li> <a href="P3D_origin_security.html" title="P3D origin security">P3D origin security</a>
+</li><li> <a href="PackageInstaller.html" title="PackageInstaller">PackageInstaller</a>
+</li></ol>
+</li></ol>
+</li><li> <a href="Sample_Programs_in_the_Distribution.html" title="Sample Programs in the Distribution">Sample Programs in the Distribution</a>
+<ol><li> <a href="Sample_Programs%253A_Asteroids.html" title="Sample Programs: Asteroids">Sample Programs: Asteroids</a>
+</li><li> <a href="Sample_Programs%253A_Ball_in_Maze.html" title="Sample Programs: Ball in Maze">Sample Programs: Ball in Maze</a>
+</li><li> <a href="Sample_Programs%253A_Boxing_Robots.html" title="Sample Programs: Boxing Robots">Sample Programs: Boxing Robots</a>
+</li><li> <a href="Sample_Programs%253A_Carousel.html" title="Sample Programs: Carousel">Sample Programs: Carousel</a>
+</li><li> <a href="Sample_Programs%253A_Cartoon_Shader.html" title="Sample Programs: Cartoon Shader">Sample Programs: Cartoon Shader</a>
+</li><li> <a href="Sample_Programs%253A_Chessboard.html" title="Sample Programs: Chessboard">Sample Programs: Chessboard</a>
+</li><li> <a href="Sample_Programs%253A_Disco_Lights.html" title="Sample Programs: Disco Lights">Sample Programs: Disco Lights</a>
+</li><li> <a href="Sample_Programs%253A_Distortion.html" title="Sample Programs: Distortion">Sample Programs: Distortion</a>
+</li><li> <a href="Sample_Programs%253A_Fireflies.html" title="Sample Programs: Fireflies">Sample Programs: Fireflies</a>
+</li><li> <a href="Sample_Programs%253A_Fractal_Plants.html" title="Sample Programs: Fractal Plants">Sample Programs: Fractal Plants</a>
+</li><li> <a href="Sample_Programs%253A_Glow_Filter.html" title="Sample Programs: Glow Filter">Sample Programs: Glow Filter</a>
+</li><li> <a href="Sample_Programs%253A_Infinite_Tunnel.html" title="Sample Programs: Infinite Tunnel">Sample Programs: Infinite Tunnel</a>
+</li><li> <a href="Sample_Programs%253A_Looking_and_Gripping.html" title="Sample Programs: Looking and Gripping">Sample Programs: Looking and Gripping</a>
+</li><li> <a href="Sample_Programs%253A_Media_Player.html" title="Sample Programs: Media Player">Sample Programs: Media Player</a>
+</li><li> <a href="Sample_Programs%253A_Motion_Trails.html" title="Sample Programs: Motion Trails">Sample Programs: Motion Trails</a>
+</li><li> <a href="Sample_Programs%253A_Mouse_Modes.html" title="Sample Programs: Mouse Modes">Sample Programs: Mouse Modes</a>
+</li><li> <a href="Sample_Programs%253A_Music_Box.html" title="Sample Programs: Music Box">Sample Programs: Music Box</a>
+</li><li> <a href="Sample_Programs%253A_Normal_Mapping.html" title="Sample Programs: Normal Mapping">Sample Programs: Normal Mapping</a>
+</li><li> <a href="Sample_Programs%253A_Particles.html" title="Sample Programs: Particles">Sample Programs: Particles</a>
+</li><li> <a href="Sample_Programs%253A_Procedural_Cube.html" title="Sample Programs: Procedural Cube">Sample Programs: Procedural Cube</a>
+</li><li> <a href="Sample_Programs%253A_Roaming_Ralph.html" title="Sample Programs: Roaming Ralph">Sample Programs: Roaming Ralph</a>
+</li><li> <a href="Sample_Programs%253A_Shadows.html" title="Sample Programs: Shadows">Sample Programs: Shadows</a>
+</li><li> <a href="Sample_Programs%253A_Solar_System.html" title="Sample Programs: Solar System">Sample Programs: Solar System</a>
+</li><li> <a href="Sample_Programs%253A_Teapot_on_TV.html" title="Sample Programs: Teapot on TV">Sample Programs: Teapot on TV</a>
+</li><li> <a href="Sample_Programs%253A_Texture_Swapping.html" title="Sample Programs: Texture Swapping">Sample Programs: Texture Swapping</a>
+</li></ol>
+</li><li> <a href="Debugging.html" title="Debugging">Debugging</a>
+<ol><li> <a href="Log_Messages.html" title="Log Messages">Log Messages</a>
+</li><li> <a href="The_Python_Debugger.html" title="The Python Debugger">The Python Debugger</a>
+</li><li> <a href="Running_Panda3D_under_the_C++_Debugger.html" title="Running Panda3D under the C++ Debugger">Running Panda3D under the C++ Debugger</a>
+</li></ol>
+</li><li> <a href="Performance_Tuning.html" title="Performance Tuning">Performance Tuning</a>
+<ol><li> <a href="Basic_Performance_Diagnostics.html" title="Basic Performance Diagnostics">Basic Performance Diagnostics</a>
+</li><li> <a href="Measuring_Performance_with_PStats.html" title="Measuring Performance with PStats">Measuring Performance with PStats</a>
+</li><li> <a href="The_Rigid_Body_Combiner.html" title="The Rigid Body Combiner">The Rigid Body Combiner</a>
+</li><li> <a href="Performance_Issue%253A_Too_Many_Meshes.html" title="Performance Issue: Too Many Meshes">Performance Issue: Too Many Meshes</a>
+</li><li> <a href="Performance_Issue%253A_Too_Many_State_Changes.html" title="Performance Issue: Too Many State Changes">Performance Issue: Too Many State Changes</a>
+</li><li> <a href="Performance_Issue%253A_Too_Many_Text_Updates.html" title="Performance Issue: Too Many Text Updates">Performance Issue: Too Many Text Updates</a>
+</li><li> <a href="Performance_Issue%253A_Too_Many_Shader_Instructions.html" title="Performance Issue: Too Many Shader Instructions">Performance Issue: Too Many Shader Instructions</a>
+</li><li> <a href="Performance_Issue%253A_Excessive_Fill.html" title="Performance Issue: Excessive Fill">Performance Issue: Excessive Fill</a>
+</li><li> <a href="Performance_Issue%253A_Memory_Full.html" title="Performance Issue: Memory Full">Performance Issue: Memory Full</a>
+</li><li> <a href="Performance_Issue%253A_Python_Calculation.html" title="Performance Issue: Python Calculation">Performance Issue: Python Calculation</a>
+</li><li> <a href="Performance_Issue%253A_Failure_to_Garbage_Collect.html" title="Performance Issue: Failure to Garbage Collect">Performance Issue: Failure to Garbage Collect</a>
+</li><li> <a href="Performance_Issue%253A_Collision_System_Misuse.html" title="Performance Issue: Collision System Misuse">Performance Issue: Collision System Misuse</a>
+</li><li> <a href="Performance_Issue%253A_Motherboard_Integrated_Video.html" title="Performance Issue: Motherboard Integrated Video">Performance Issue: Motherboard Integrated Video</a>
+</li><li> <a href="Performance_Issue%253A_Too_Many_Polygons.html" title="Performance Issue: Too Many Polygons">Performance Issue: Too Many Polygons</a>
+</li><li> <a href="Performance_Issue%253A_Miscellaneous.html" title="Performance Issue: Miscellaneous">Performance Issue: Miscellaneous</a>
+</li></ol>
+</li><li> <a href="Using_C++.html" title="Using C++">Using C++</a>
+<ol><li> <a href="How_to_compile_a_C++_Panda3D_program.html" title="How to compile a C++ Panda3D program">How to compile a C++ Panda3D program</a>
+<ol><li> <a href="How_to_compile_a_C++_Panda3D_program_on_Linux.html" title="How to compile a C++ Panda3D program on Linux">How to compile a C++ Panda3D program on Linux</a>
+</li><li> <a href="How_to_compile_a_C++_Panda3D_program_on_macOS.html" title="How to compile a C++ Panda3D program on macOS">How to compile a C++ Panda3D program on macOS</a>
+</li></ol>
+</li><li> <a href="The_Window_Framework.html" title="The Window Framework">The Window Framework</a>
+</li><li> <a href="Texturing_in_C++.html" title="Texturing in C++">Texturing in C++</a>
+</li><li> <a href="Reference_Counting.html" title="Reference Counting">Reference Counting</a>
+</li></ol>
+</li><li> <a href="Panda3D_Tools.html" title="Panda3D Tools">Panda3D Tools</a>
+<ol><li> <a href="The_Scene_Graph_Browser.html" title="The Scene Graph Browser">The Scene Graph Browser</a>
+<ol><li> <a href="Enhanced_Mouse_Navigation.html" title="Enhanced Mouse Navigation">Enhanced Mouse Navigation</a>
+</li></ol>
+</li><li> <a href="Interrogate.html" title="Interrogate">Interrogate</a>
+</li><li> <a href="Pipeline_Tips.html" title="Pipeline Tips">Pipeline Tips</a>
+</li><li> <a href="Model_Export.html" title="Model Export">Model Export</a>
+<ol><li> <a href="Converting_from_3D_Studio_Max.html" title="Converting from 3D Studio Max">Converting from 3D Studio Max</a>
+</li><li> <a href="Converting_from_Maya.html" title="Converting from Maya">Converting from Maya</a>
+</li><li> <a href="Converting_from_Blender.html" title="Converting from Blender">Converting from Blender</a>
+</li><li> <a href="Converting_from_SoftImage.html" title="Converting from SoftImage">Converting from SoftImage</a>
+</li><li> <a href="Converting_from_Milkshape_3D.html" title="Converting from Milkshape 3D">Converting from Milkshape 3D</a>
+</li><li> <a href="Converting_from_GMax.html" title="Converting from GMax">Converting from GMax</a>
+</li><li> <a href="Converting_from_other_Formats.html" title="Converting from other Formats">Converting from other Formats</a>
+</li><li> <a href="Converting_Egg_to_Bam.html" title="Converting Egg to Bam">Converting Egg to Bam</a>
+</li><li> <a href="Parsing_and_Generating_Egg_Files.html" title="Parsing and Generating Egg Files">Parsing and Generating Egg Files</a>
+</li><li> <a href="Egg_Syntax.html" title="Egg Syntax">Egg Syntax</a>
+</li></ol>
+</li><li> <a href="Previewing_3D_Models_in_Pview.html" title="Previewing 3D Models in Pview">Previewing 3D Models in Pview</a>
+</li><li> <a href="List_of_Panda3D_Executables.html" title="List of Panda3D Executables">List of Panda3D Executables</a>
+</li></ol>
+</li><li> <a href="Building_Panda3D_from_Source.html" title="Building Panda3D from Source">Building Panda3D from Source</a>
+</li></ol>
+<ul><li> <a href="Cheat_Sheets.html" title="Cheat Sheets">Cheat Sheets</a>
+</li><li> <a href="Getting_Started_on_macOS.html" title="Getting Started on macOS">Getting Started on macOS</a>
+</li><li> <a href="More_Panda3D_Resources.html" title="More Panda3D Resources">More Panda3D Resources</a>
+</li><li> <a href="Third-party_dependencies_and_license_info.html" title="Third-party dependencies and license info">Third-party dependencies and license info</a>
+</li><li> <a href="The_IRC_Channel.html" title="The IRC Channel">The IRC Channel</a>
+</li><li> <a href="FAQ.html" title="FAQ">FAQ</a>
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1-0!*!0!*!*!*!* and timestamp 20171008104215 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

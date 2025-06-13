@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Geometrical MipMapping - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Geometrical MipMapping</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Heightfield_Tesselator.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Advanced_operations_with_Panda3D's_internal_structures.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The GeoMipTerrain generates terrain geometry from a heightfield image, but it does more than any bruteforce terrain generator: the GeoMipTerrain divides the terrain into multiple chunks, where each of them can have a different level of detail.
+The advantage of this approach is that, when the focal point (the place where the terrain has the highest quality, probably the camera) moves, not the entire terrain has to be regenerated to match the correct detail level, like the <a href="HeightfieldTesselator.html" title="HeightfieldTesselator" class="mw-redirect">HeightfieldTesselator</a>, but only the chunks that have a different LOD can be regenerated. Also, it improves culling and collision detection.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Geometrical_MipMapping.html#Basic_Usage"><span class="tocnumber">1</span> <span class="toctext">Basic Usage</span></a></li>
+<li class="toclevel-1"><a href="Geometrical_MipMapping.html#Dynamic_Terrains"><span class="tocnumber">2</span> <span class="toctext">Dynamic Terrains</span></a></li>
+<li class="toclevel-1"><a href="Geometrical_MipMapping.html#Advanced_Control"><span class="tocnumber">3</span> <span class="toctext">Advanced Control</span></a></li>
+<li class="toclevel-1"><a href="Geometrical_MipMapping.html#Notes"><span class="tocnumber">4</span> <span class="toctext">Notes</span></a></li>
+</ul>
+</td></tr></table>
+<h3> <span class="mw-headline" id="Basic_Usage">Basic Usage</span></h3>
+<p>Using the GeoMipTerrain is quite easy, it does not require to write much complicated calculations:
+</p>
+<pre class="python">terrain = GeoMipTerrain<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;mySimpleTerrain&quot;</span><span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">setHeightfield</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;yourHeightField.png&quot;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;">#terrain.setBruteforce(True)</span><br />terrain.<span style="color: black;">getRoot</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">generate</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<p>First, the code creates a GeoMipTerrain instance. The 
+<code>setHeightfield()</code>call loads in a heightfield image.
+Preferably this is a size of a power of two plus one (like 129, 257, 513, 1025, etc.), but if it is not, the GeoMipTerrain will automatically scale it up to the nearest correct size (which is quite slow). 
+<code>setHeightfield()</code> can take a <a href="PNMImage.html" title="PNMImage" class="mw-redirect">PNMImage</a>, Texture or <a href="Filename.html" title="Filename" class="mw-redirect">Filename</a> instance.
+</p><p><br />
+The <code>setBruteforce(True)</code> call sets the terrain to bruteforce rendering -- this means that the terrain is created at the highest quality (the lowest detail level), and LOD is not applied. In the next section we will explain how to set a LOD level and a Focal Point.
+The <code>getRoot()</code> call returns the NodePath of the terrain. It is then reparented to <code>render</code> to be a part of the scene graph. You can apply <a href="Common_State_Changes.html" title="Common State Changes">Common State Changes</a> to this NodePath.
+Finally, the <code>generate()</code> call generates the terrain geometry. Note that if the terrain is still quite flat, you will have to scale the terrain NodePath in the Z direction, because by default, the Z positions are between 0 and 1. To fix this, scale the terrain up in the Z direction (before generating it, otherwise it might require you to regenerate it):
+</p>
+<pre class="python">terrain.<span style="color: black;">getRoot</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setSz</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span></pre>
+
+<h3> <span class="mw-headline" id="Dynamic_Terrains">Dynamic Terrains</span></h3>
+<p>This code shows a dynamically updated terrain with LOD:
+
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># Set up the GeoMipTerrain</span><br />terrain = GeoMipTerrain<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;myDynamicTerrain&quot;</span><span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">setHeightfield</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;yourHeightField.png&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Set terrain properties</span><br />terrain.<span style="color: black;">setBlockSize</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">32</span><span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">setNear</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">40</span><span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">setFar</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">setFocalPoint</span><span style="color: black;">&#40;</span>base.<span style="color: black;">camera</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Store the root NodePath for convenience</span><br />root = terrain.<span style="color: black;">getRoot</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />root.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />root.<span style="color: black;">setSz</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Generate it.</span><br />terrain.<span style="color: black;">generate</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># Add a task to keep updating the terrain</span><br /><span style="color: #ff7700;font-weight:bold;">def</span> updateTask<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>:<br />  terrain.<span style="color: black;">update</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">cont</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>updateTask, <span style="color: #483d8b;">&quot;update&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>This code shows a dynamically updated terrain, which is updated every frame with the camera as focal point.
+You see that a few functions are called: The blocksize is set to 32. This means that GeoMipTerrain has to divide the terrain in chunks of 32x32 quads. Then, the near and far distances are set. The Near distance is the distance from the focal point to where the terrain starts to decrease in quality. The far clip is the distance where the terrain is lowest quality.
+Also, the focal point is set to the Camera's NodePath; you can specify any NodePath you want, but also a Point2 or Point3. If you specify the latter, please note that only the X and Y positions are used to calculate the distance; the Z position is disregarded.
+Note that you need to experiment with those values to get a good quality terrain while still maintaining a good performance.
+</p><p>Next, for convenience, the terrain root is stored in a separate variable, which is scaled and placed in the scene graph. The terrain is then initially generated, and a task is created which calls <code>terrain.update()</code> every frame. This function calculates the new LOD levels based on the movement of the focal point and updates the chunks which have got a new LOD level.
+</p>
+<h3> <span class="mw-headline" id="Advanced_Control">Advanced Control</span></h3>
+<p>The GeoMipTerrain provides some advanced features over the terrain:
+</p><p><b>Minimum Level</b><br />
+You can specify a minimum LOD level to GeoMipTerrain. You can do this if you find the terrain a bit too high quality near the focal point, and this could waste your performance. If you set a minimum LOD level, you can prevent this and force the chunks to have a minimum level of detail:
+</p>
+<pre class="python">terrain.<span style="color: black;">setMinLevel</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span></pre>
+
+<p>If you make the value higher, it will decrease the quality level near the focal point.
+</p><p><b>Automatic Flattening</b><br />
+Since flattening the terrain root might interfere with the updating system, GeoMipTerrain provides an auto-flattening function, which can be really useful if you have <a href="Performance_Issue%253A_Too_Many_Meshes.html" title="Performance Issue: Too Many Meshes">too many meshes</a> in your scene. This function calls one of NodePath's flattening functions every time the terrain is regenerated, and each time before the chunks are modified the terrain is restored from a backup node:
+</p>
+<pre class="python">terrain.<span style="color: black;">setAutoFlatten</span><span style="color: black;">&#40;</span>GeoMipTerrain.<span style="color: black;">AFMStrong</span><span style="color: black;">&#41;</span></pre>
+
+<p>There are multiple options: AFMStrong for <code>flattenStrong()</code>, AFMMedium for <code>flattenMedium()</code>, AFMLight for <code>flattenLight()</code>, and AFMOff for no flattening at all. After setting the AutoFlattenMode, GeoMipTerrain will automatically take care of it at the next <code>update()</code> call.
+</p>
+<h3> <span class="mw-headline" id="Notes">Notes</span></h3>
+<ul><li> For a full function overview, see the <a rel="nofollow" class="external text" href="http://www.panda3d.org/reference/python/classpanda3d_1_1core_1_1GeoMipTerrain.php">API page</a>.
+</li><li> The near and far settings are only available in Panda3D versions 1.6.0 and higher. For older versions, use <code>setFactor()</code>. This function is still available for backward compatibility.
+</li><li> The GeoMipTerrain generates texture coordinates between 0 and 1, making the texture stretched over the entire terrain. If you are using a shader, please do <b>not</b> directly base the coordinates on the <code>vtx_position</code>, because since the terrain can have multiple chunks the vertex position is relative to the chunk. Instead, base your shader calculations on the <code>vtx_texcoord0</code> generated by the GeoMipTerrain.
+</li><li> The GeoMipTerrain class implements part of the GeoMipMapping algorithm, described in <a rel="nofollow" class="external text" href="http://www.flipcode.com/archives/article_geomipmaps.pdf">this paper</a> by Willem H. de Boer.
+</li><li> In Panda3D versions 1.5.1 and 1.5.2 there is a bug in the bruteforce generator, which might cause your application to crash. It has been fixed in 1.5.3, please upgrade your Panda3D version if you are experiencing this crash.
+</li><li> PGMM / GeoMipTerrain is a community-contributed algorithm that is included in Panda3D from version 1.5.1. If you are using an older version of Panda3D, you can download a limited version at <a rel="nofollow" class="external text" href="http://www.panda3d.org/phpbb2/viewtopic.php?t=3028">the original forum topic</a>.
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 218/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2231-0!*!0!!en!*!* and timestamp 20171008094036 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Heightfield_Tesselator.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Advanced_operations_with_Panda3D's_internal_structures.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

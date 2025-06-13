@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>List of Possible Cg Shader Inputs - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: List of Possible Cg Shader Inputs</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Shader_Basics.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_GLSL_Shader_Inputs.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>In many cases, it is desirable to access information from the render state or from the 3-D transformation of the node that is currently being rendered.  Instead of having to pass all this information manually, it is possible to name your variables in a special way that Panda3D will recognize and automatically populate with the relevant data.
+</p><p>The following table describes the inputs that can be used in Cg shaders.
+</p>
+<table>
+<tr>
+<th style="width: 40%;"> CG Input
+</th>
+<th> Description
+</th></tr>
+<tr>
+<td> <pre class="codeblock">uniform sampler2D tex_0&#160;: TEXUNIT0</pre>
+</td>
+<td> The model's first texture.  This requires that the model be textured in the normal manner.  You may also use tex_1, tex_2, and so forth, if the model is multitextured.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">sampler3D or samplerCUBE</pre>
+</td>
+<td> If the model uses a 3D texture or a cubemap, use tex3D and texCUBE to access the color.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float3 vtx_position: POSITION</pre>
+</td>
+<td> Vertex Position. Vertex shader only.  You may also use float4, in which case (w==1).
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float3 vtx_normal: NORMAL</pre>
+</td>
+<td> Vertex Normal. Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float4 vtx_color&#160;: COLOR</pre>
+</td>
+<td> Vertex color. Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float2 vtx_texcoord0: TEXCOORD0</pre>
+</td>
+<td> UV(W) coordinate set associated with the model's first texture.  This requires that the model be textured in the normal manner.  You may also use vtx_texcoord1, vtx_texcoord2, and so forth if the model is multitextured.  Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float2 vtx_texcoord: TEXCOORD0</pre>
+</td>
+<td> From Panda3D 1.9 onward, this refers to the default (unnamed) set of UV(W) coordinates, if present, rather than being an alias for vtx_texcoord0.  Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float2 vtx_texcoord_x: TEXCOORD0</pre>
+</td>
+<td> From Panda3D 1.9 onward, this refers to a set of UV(W) coordinates with the given name.  Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float3 vtx_tangent0</pre>
+</td>
+<td> Tangent vector associated with the model's first texture.  This can only be used if the model has been textured in the normal manner, and if binormals have been precomputed.  You may also use vtx_tangent1, vtx_tangent2, and so forth if the model is multitextured.  Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">float3 vtx_binormal0</pre>
+</td>
+<td> Binormal vector associated with vtx_texcoord0.  This can only be used if the model has been textured in the normal manner, and if binormals have been precomputed.  You can also use vtx_binormal1, vtx_binormal2, and so forth if the model has been multitextured.  Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">floatX vtx_anything</pre>
+</td>
+<td> Panda makes it possible to store arbitrary columns of user-defined data in the vertex table; see <a href="GeomVertexData.html" title="GeomVertexData">GeomVertexData</a>.  You can access this data using this syntax.  For example, vtx_chicken will look for a column named "chicken" in the vertex array.  Vertex shader only.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 trans_x_to_y</pre>
+</td>
+<td> A matrix that transforms from coordinate system X to coordinate system Y.  See the section on <a href="Shaders_and_Coordinate_Spaces.html" title="Shaders and Coordinate Spaces">Shaders and Coordinate Spaces</a> for more information.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 tpose_x_to_y</pre>
+</td>
+<td> Transpose of trans_x_to_y
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 row0_x_to_y</pre>
+</td>
+<td> Row 0 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 row1_x_to_y</pre>
+</td>
+<td> Row 1 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 row2_x_to_y</pre>
+</td>
+<td> Row 2 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 row3_x_to_y</pre>
+</td>
+<td> Row 3 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 col0_x_to_y</pre>
+</td>
+<td> Col 0 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 col1_x_to_y</pre>
+</td>
+<td> Col 1 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 col2_x_to_y</pre>
+</td>
+<td> Col 2 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 col3_x_to_y</pre>
+</td>
+<td> Col 3 of trans_x_to_y.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 mstrans_x</pre>
+</td>
+<td> Model-Space Transform of X, aka trans_x_to_model
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 cstrans_x</pre>
+</td>
+<td> Clip-Space Transform of X, aka trans_x_to_clip
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 wstrans_x</pre>
+</td>
+<td> World-Space Transform of X, aka trans_x_to_world
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 vstrans_x</pre>
+</td>
+<td> View-Space Transform of X, aka trans_x_to_view
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 mspos_x</pre>
+</td>
+<td> Model-Space Position of X, aka row3_x_to_model
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 cspos_x</pre>
+</td>
+<td> Clip-Space Position of X, aka row3_x_to_clip
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 wspos_x</pre>
+</td>
+<td> World-Space Position of X, aka row3_x_to_world
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 vspos_x</pre>
+</td>
+<td> View-Space Position of X, aka row3_x_to_view
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 mat_modelview</pre>
+</td>
+<td> Modelview matrix, transforming model-space coordinates to camera-space coordinates.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 inv_modelview</pre>
+</td>
+<td> Inverse of the model-view Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 tps_modelview</pre>
+</td>
+<td> Transposed Modelview Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 itp_modelview</pre>
+</td>
+<td> Inverse Transposed Modelview Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 mat_projection</pre>
+</td>
+<td> Projection Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 inv_projection</pre>
+</td>
+<td> Inverse Projection Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 tps_projection</pre>
+</td>
+<td> Transposed Projection Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 itp_projection</pre>
+</td>
+<td> Inverse Transposed Projection Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 mat_modelproj</pre>
+</td>
+<td> Composed Modelview/Projection Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 inv_modelproj</pre>
+</td>
+<td> Inverse ModelProj Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 tps_modelproj</pre>
+</td>
+<td> Transposed ModelProj Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 itp_modelproj</pre>
+</td>
+<td> Inverse Transposed ModelProj Matrix
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 anything</pre>
+</td>
+<td> A constant vector that was stored using <code>setShaderInput</code>.  Parameter <i>anything</i> would match data supplied by the call <i>setShaderInput("anything", Vec4(x,y,z,w))</i>
+</td></tr>
+<tr>
+<td> <pre class="codeblock">
+uniform sampler2D anything
+uniform sampler3D anything
+uniform sampler2DArray anything
+</pre>
+</td>
+<td> A constant texture that was stored using <code>setShaderInput</code>.  Parameter <i>anything</i> would match data supplied by the call <code>setShaderInput("anything", myTex)</code>
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 anything</pre>
+</td>
+<td> A constant matrix that was stored using <code>setShaderInput</code>.  Parameter <i>anything</i> would match data supplied by the call <i>setShaderInput("anything", myNodePath)</i>.  The matrix supplied is the nodepath's <i>local</i> transform.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 texpad_x</pre>
+</td>
+<td> X must be the name of a texture specified via shaderInput. Contains the U,V coordinates of the center of the texture.  This will be (0.5,0.5) if the texture is not padded, but it will be less if the texture is padded.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 texpix_x</pre>
+</td>
+<td> X must be the name of a texture specified via shaderInput. Contains the U,V offset of a single pixel in the texture (ie, the reciprocal of the texture size).
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 attr_material</pre>
+</td>
+<td> The contents of the material attribute.  Row 0 is ambient, Row 1 is diffuse, Row 2 is emission, Row 3 is specular, with shininess in W.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 attr_color</pre>
+</td>
+<td> The contents of the color attribute.  This is white unless the model has a flat color applied.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 attr_colorscale</pre>
+</td>
+<td> The contents of the color scale attribute.  This is white unless the model has a color scale applied using nodePath.setColorScale.<br />This variable is only available in 1.6.2 and above.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 attr_fog</pre>
+</td>
+<td> The fog parameters, where applicable.  The values are in order: density, start, end, scale.  The density is for exponential fog only, the start, end and scale are for linear fog only.  The scale is equal to 1 / (end - start).<br />New in Panda3D 1.8.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 attr_fogcolor</pre>
+</td>
+<td> The fog color, if applicable.  New in Panda3D 1.8.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 alight_x</pre>
+</td>
+<td> X must be an AmbientLight specified via a shaderInput.  Contains the color of the light.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4x4 dlight_x</pre>
+</td>
+<td> X must be an DirectionalLight specified via a shaderInput.  Row 0 is color, row 1 is specular, row 2 is model-space direction, row 3 is model-space pseudo half-angle.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 plane_x</pre>
+</td>
+<td> X must be an PlaneNode specified via a shaderInput.  Contains the four terms of the plane equation.<br />This variable is only available in 1.6.2 and above.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float4 clipplane_0</pre>
+</td>
+<td> Contains the parameters of the first clipplane (also: clipplane_1, clipplane_2, etc. for subsequent clip planes) in world-space coordinates.<br />This variable is only available in 1.6.2 and above.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">uniform float sys_time</pre>
+</td>
+<td> Contains the frame time in seconds.<br />This variable is only available in 1.9.0 and above.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">floatX l_position: POSITION</pre>
+</td>
+<td> Linearly interpolated Position, as supplied by the vertex shader to the fragment shader. Declare "out" in the vertex shader, "in" in the fragment shader.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">floatX l_color0: COLOR0</pre>
+</td>
+<td> Linearly interpolated Primary color, as supplied by the vertex shader to the fragment shader. Declare "out" in the vertex shader, "in" in the fragment shader.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">floatX l_color1: COLOR1</pre>
+</td>
+<td> Linearly interpolated Secondary color, as supplied by the vertex shader to the fragment shader. Declare "out" in the vertex shader, "in" in the fragment shader.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">floatX l_texcoord0: TEXCOORD0</pre>
+</td>
+<td> Linearly interpolated Texture Coordinate 0, as supplied by the vertex shader to the fragment shader. You may also use l_texcoord1, l_texcoord2, and so forth. Declare "out" in the vertex shader, "in" in the fragment shader.
+</td></tr>
+<tr>
+<td> <pre class="codeblock">out floatX o_color: COLOR</pre>
+</td>
+<td> Output Color, as supplied by the fragment shader to the blending units. Fragment shader only. (COLOR0 is also accepted.)
+</td></tr>
+<tr>
+<td> <pre class="codeblock">out floatX o_aux: COLOR1</pre>
+</td>
+<td> Output auxiliary color. Only available if an auxiliary was obtained for the shaders target buffer/window. Fragment shader only.
+</td></tr></table>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Using_Custom_Shader_Inputs"> Using Custom Shader Inputs </span></h2>
+<p>As of Panda3D 1.8.0, the capabilities for passing numeric shader inputs have been greatly enhanced.  The available input types are as follows:
+</p>
+<pre class="codeblock">
+- Vec4
+- Vec3
+- Vec2
+- Point4
+- Point3
+- Point2
+- Mat4
+- Mat3
+- PTALMatrix4f
+- PTALMatrix3f
+- PTALVecBase4f
+- PTALVecBase3f
+- PTALVecBase2f
+- PTAFloat
+- PTADouble
+</pre>
+<p>(In Panda3D 1.9.0, the integer versions of these vectors and arrays are also supported.)
+</p><p>For definition let us consider the shader parameter float3. It's type is float and format is Vec3 (meaning it can hold 3 elements) and a float3x3 input is of type float and format Mat3 (meaning it can hold 9 elements)
+</p><p>The main concept of the shader inputs is that the Cg input format and type is independent to the Panda3D input. The only condition is that the number of elements passed by the user through the setShaderInput() function of Panda3D and the number of elements expected by the shader input should be the same. For example a parameter uniform float4x4 mat[4] (total of 16*4 elements) could be set with(the below list is just a sample and there are more ways to represent it): 
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>setShaderInput<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;input_name&quot;</span>,PTALMat4f<span style="color: black;">&#91;</span><span style="color: #ff4500;">4</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTALVecBase4f<span style="color: black;">&#91;</span><span style="color: #ff4500;">16</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTAFloat<span style="color: black;">&#91;</span><span style="color: #ff4500;">16</span><span style="color: #66cc66;">*</span><span style="color: #ff4500;">4</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTADouble<span style="color: black;">&#91;</span><span style="color: #ff4500;">16</span><span style="color: #66cc66;">*</span><span style="color: #ff4500;">4</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>But for some Cg input types there is no corresponding Panda3D type such as float3x2(Panda3D does not have a corresponding Mat3x2 class) Hence these input types can be initiated row-wise as
+</p><p>1 2 3
+</p><p>4 5 6
+</p><p>This row wise input can be sent to the Cg shader in any of the following ways(Note that the below list is just a sample and there are more ways to represent it)
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>&#160;
+setShaderInput<span style="color: black;">&#40;</span>PTAFloat<span style="color: black;">&#91;</span><span style="color: #ff4500;">6</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTADouble<span style="color: black;">&#91;</span><span style="color: #ff4500;">6</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTALVecBase3f<span style="color: black;">&#91;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTALVecBase2f<span style="color: black;">&#91;</span><span style="color: #ff4500;">3</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>Now, the issue of common input types such as float, double, int, long. The GPU registers generally can handle only floats. Hence even if we do send a double it will be automatically type casted into float. Hence for such type of inputs we can use above types. 
+</p><p>For example, input types such as 
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>&#160;
+float3 var
+bool3 var
+half3 var
+double3 var
+fixed3 var
+int3 var</pre></div></div>
+<p>Can be sent to your Cg shader program by (the below list is just a sample and there are more ways to represent it)
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>&#160;
+setShaderInput<span style="color: black;">&#40;</span>PTAFloat<span style="color: black;">&#91;</span><span style="color: #ff4500;">3</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+setShaderInput<span style="color: black;">&#40;</span>PTADouble<span style="color: black;">&#91;</span><span style="color: #ff4500;">3</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>Below is a sample code snippet that shows how you can use the new shader inputs. 
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>&#160;
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Vec4
+vec4 = Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.0</span>,<span style="color: #ff4500;">1.0</span>,<span style="color: #ff4500;">0.0</span>,<span style="color: #ff4500;">1.0</span><span style="color: black;">&#41;</span>
+myModel.<span style="color: black;">setShaderInput</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Inputs.vec4&quot;</span>,vec4<span style="color: black;">&#41;</span></pre></div></div>
+<p>First import the necessary header to use the type of input. In our case it's Vec4. The next statement shows a Vec4 input type. Then set the Vec4 as a shader input to your model.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 616/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1719-0!*!0!*!*!*!* and timestamp 20171008045745 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Shader_Basics.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_GLSL_Shader_Inputs.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

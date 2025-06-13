@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Lighting - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Lighting</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="List_of_All_Attributes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Materials.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Lighting.html#Lighting_Basics"><span class="tocnumber">1</span> <span class="toctext">Lighting Basics</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Lighting.html#Lots_of_Lights:_Performance_Implications"><span class="tocnumber">2</span> <span class="toctext">Lots of Lights: Performance Implications</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Lighting.html#Colored_Lights"><span class="tocnumber">3</span> <span class="toctext">Colored Lights</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Lighting.html#Point_Lights"><span class="tocnumber">4</span> <span class="toctext">Point Lights</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Lighting.html#Attenuation"><span class="tocnumber">5</span> <span class="toctext">Attenuation</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="Lighting.html#Directional_Lights"><span class="tocnumber">6</span> <span class="toctext">Directional Lights</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="Lighting.html#Ambient_Lights"><span class="tocnumber">7</span> <span class="toctext">Ambient Lights</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="Lighting.html#Spotlights"><span class="tocnumber">8</span> <span class="toctext">Spotlights</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="Lighting.html#Putting_it_all_Together"><span class="tocnumber">9</span> <span class="toctext">Putting it all Together</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="Lighting.html#Shadow_Mapping"><span class="tocnumber">10</span> <span class="toctext">Shadow Mapping</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Lighting_Basics">Lighting Basics</span></h2>
+<p>In the real world, if you put a light in a room, objects in that room are 
+illuminated.  For example, if you put a table lamp in your living room, that
+lamp automatically illuminates your sofa and your chair.  In a 3D engine like Panda3D, lights don't illuminate things automatically.  Instead, you must tell the chair and the sofa to <i>be illuminated</i> by the lamp.  
+</p><p>So to reiterate, lighting a scene in Panda3D consists of two steps:
+<br />1. Creating lights, and positioning them within the scene.
+<br />2. Telling the other objects to <i>be illuminated</i> by the lights.
+</p><p>Panda3D defines four different kinds of light objects: point,
+directional, ambient, and spotlight.  Each of these is a node that
+should be attached somewhere within the scene graph. Like anything you put into the scene, lights have a position and orientation, which is determined by the basic scene graph operations like <code>setPos()</code>, <code>setHpr()</code>, etc.  The <code>lookAt()</code> method is particularly useful for pointing spotlights and directional lights at a particular object. The following code inserts a directional light into the scene:
+</p>
+<pre class="python">dlight = DirectionalLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'my dlight'</span><span style="color: black;">&#41;</span><br />dlnp = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>dlight<span style="color: black;">&#41;</span></pre>
+
+<p>Note that, unlike a real, physical light bulb, the light objects are not themselves directly visible.  Although you can't see a Panda light itself, you <i>can</i> see the effect it has on the geometry around it.  If you want to make a light visible, one simple trick is to load a simple model (like a sphere) and parent it directly to the light itself.
+</p><p>Creating the light and putting it in the scene graph doesn't, by itself, have any visible effect.  Your next step is to tell some object to be illuminated
+by the light.  To do this, use the <code>nodePath.setLight()</code> method, which turns on the light for the indicated NodePath and everything below it in the scene graph.
+</p><p>In the simplest case, you want all of your lights to illuminate everything they can, so you turn them on at render, the top of the scene graph:
+</p>
+<pre class="python">render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>plnp<span style="color: black;">&#41;</span></pre>
+
+<p>You can remove the light setting from render:
+</p>
+<pre class="python">render.<span style="color: black;">clearLight</span><span style="color: black;">&#40;</span>plnp<span style="color: black;">&#41;</span></pre>
+
+<p>You could also apply the <code>setLight()</code> call to a sub-node in the scene graph, so that a given light only affects a particular object or group of objects:
+</p>
+<pre class="python">sofa.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>plnp<span style="color: black;">&#41;</span></pre>
+
+<p><br />
+Note that there are two (or more) different NodePaths involved here: the NodePath of the light itself, which defines the position and/or orientation of the light, and the NodePath(s) on which you call <code>setLight()</code>, which determines what subset of the scene graph the light illuminates.  There's no requirement for these two NodePaths to be related in any way.
+</p>
+<h2> <span class="mw-headline" id="Lots_of_Lights:_Performance_Implications">Lots of Lights: Performance Implications</span></h2>
+<p>Each light slows down rendering a little.  Using a half-dozen lights to illuminate an object is no problem at all.  However, if you were to use a hundred lights to illuminate an object, that object would render slowly.
+</p><p>Because of this, when you create a big virtual world, you need to pick and choose which lights affect which objects.  For example, if you had a dungeon
+containing a hundred torches, it would not be practical to tell every object
+to be illuminated by every torch.  Instead, for each object in the dungeon,
+you would want to search for the three or four nearest torches, and tell
+the object to be illuminated only by those three or four torches.
+</p><p>When per-pixel lighting is enabled, lights are considerably more costly.
+</p>
+<h2> <span class="mw-headline" id="Colored_Lights">Colored Lights</span></h2>
+<p>All lights have a color, which is specified by <code>light.setColor((r, g, b, a))</code>.  The default color is full white: <code>setColor((1, 1, 1, 1))</code>.  The alpha component is largely irrelevant.
+</p><p>The color of the specular highlight can be set individually using <code>light.setSpecularColor((r, g, b, a))</code>, however, this should not be done as this will produce an unnatural effect.  This method is deprecated and may be removed in a future version of Panda3D.  By default, the specular color of a light is automatically set from its regular color.
+</p><p><b>Note:</b> The R, G, B values can be larger than 1, if you want brighter lights!  However, you can't use lighting to make a model brighter than its texture color.
+</p>
+<h2> <span class="mw-headline" id="Point_Lights">Point Lights</span></h2>
+<p>Point lights are the easiest kind of light to understand: a point
+light simulates a light originating from a single point in space and
+shining in all directions, like a very tiny light bulb.  A point
+light's position is important, but its orientation doesn't matter.
+</p>
+<pre class="python">plight = PointLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'plight'</span><span style="color: black;">&#41;</span><br />plight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />plnp = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>plight<span style="color: black;">&#41;</span><br />plnp.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">20</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>plnp<span style="color: black;">&#41;</span></pre>
+<p>
+</p>
+<h2> <span class="mw-headline" id="Attenuation">Attenuation</span></h2>
+<p>You can set the attenuation coefficients, which causes the light to drop off gradually with distance. There are three attenuation coefficients: constant, linear, and quadratic.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>plight.<span style="color: black;">setAttenuation</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span>c, l, q<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>The default values for these constants are (1, 0, 0), respectively.  This means that the intensity of a light is by default not dependent on the distance to the light source.
+</p><p>In real-life, lighting conforms to what is known as the inverse-square law.  This means that the light falls off proportional to the inverse of the square of the distance.  To achieve this effect, you need to set the quadratic coefficient to 1:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>plight.<span style="color: black;">setAttenuation</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>One disadvantage of this is that the light intensity will approach infinity as the distance approaches zero.  A common way to avoid this in real-time rendering is to set the constant coefficient to 1.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>plight.<span style="color: black;">setAttenuation</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>This will make the light intensity smoothly reach 1 as the distance to the light source approaches zero.
+</p>
+<h2> <span class="mw-headline" id="Directional_Lights">Directional Lights</span></h2>
+<p>A directional light is an infinite wave of light, always in the same
+direction, like sunlight.  A directional light's position doesn't
+matter, but its orientation is important.  The default directional
+light is shining down the forward (+Y) axis; you can use
+<code>nodePath.setHpr()</code> or <code>nodePath.lookAt()</code> to
+rotate it to face in a different direction.
+</p>
+<pre class="python">dlight = DirectionalLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'dlight'</span><span style="color: black;">&#41;</span><br />dlight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.8</span>, <span style="color: #ff4500;">0.8</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />dlnp = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>dlight<span style="color: black;">&#41;</span><br />dlnp.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-60</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>dlnp<span style="color: black;">&#41;</span></pre>
+
+<h2> <span class="mw-headline" id="Ambient_Lights">Ambient Lights</span></h2>
+<p>An ambient light is used to fill in the shadows on the dark side of an
+object, so it doesn't look completely black.  The light from an
+ambient light is uniformly distributed everywhere in the world, so the
+ambient light's position and orientation are irrelevant.
+</p><p>Usually you don't want to create an ambient light without also
+creating one of the other kinds of lights, since an object illuminated
+solely by ambient light will be completely flat shaded and you won't
+be able to see any of its details.  Typically, ambient lights are
+given a fairly dark gray color, so they don't overpower the other
+lights in the scene.
+</p>
+<pre class="python">alight = AmbientLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'alight'</span><span style="color: black;">&#41;</span><br />alight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />alnp = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>alight<span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>alnp<span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Spotlights">Spotlights</span></h2>
+<p>Spotlights represent the most sophisticated kind of light.  A spotlight has
+both a point and a direction, and a field-of-view.  In fact, a
+spotlight contains a lens, just like a camera does; the lens should be
+a PerspectiveLens and is used to define the area of effect of the
+light (the light illuminates everything within the field of view of the lens).
+</p><p>Note that the English word "spotlight" is one word, as opposed to the
+other kinds of lights, which are two words.  Thus, the class name is
+correctly spelled "Spotlight", not "SpotLight".
+</p>
+<pre class="python">slight = Spotlight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'slight'</span><span style="color: black;">&#41;</span><br />slight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />lens = PerspectiveLens<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />slight.<span style="color: black;">setLens</span><span style="color: black;">&#40;</span>lens<span style="color: black;">&#41;</span><br />slnp = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>slight<span style="color: black;">&#41;</span><br />slnp.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">20</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />slnp.<span style="color: black;">lookAt</span><span style="color: black;">&#40;</span>myObject<span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>slnp<span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Putting_it_all_Together">Putting it all Together</span></h2>
+<p>Here is an example of lighting.  There are an ambient light and two directional lights lighting the scene, and a green ambient light that only affects one of the pandas.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Put two pandas in the scene, panda x and panda y.</span><br />x = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'panda'</span><span style="color: black;">&#41;</span><br />x.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />x.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">-6</span><span style="color: black;">&#41;</span><br />&#160;<br />y = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'panda'</span><span style="color: black;">&#41;</span><br />y.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />y.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-10</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">-6</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Position the camera to view the two pandas.</span><br />base.<span style="color: black;">trackball</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">60</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Now create some lights to apply to everything in the scene.</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Create Ambient Light</span><br />ambientLight = AmbientLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ambientLight'</span><span style="color: black;">&#41;</span><br />ambientLight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />ambientLightNP = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>ambientLight<span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>ambientLightNP<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Directional light 01</span><br />directionalLight = DirectionalLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'directionalLight'</span><span style="color: black;">&#41;</span><br />directionalLight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.8</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />directionalLightNP = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>directionalLight<span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># This light is facing backwards, towards the camera.</span><br />directionalLightNP.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">180</span>, <span style="color: #ff4500;">-20</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>directionalLightNP<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Directional light 02</span><br />directionalLight = DirectionalLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'directionalLight'</span><span style="color: black;">&#41;</span><br />directionalLight.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0.8</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />directionalLightNP = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>directionalLight<span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># This light is facing forwards, away from the camera.</span><br />directionalLightNP.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-20</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>directionalLightNP<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Now attach a green light only to object x.</span><br />ambient = AmbientLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ambient'</span><span style="color: black;">&#41;</span><br />ambient.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />ambientNP = x.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>ambient<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># If we did not call setLightOff() first, the green light would add to</span><br /><span style="color: #808080; font-style: italic;"># the total set of lights on this object. Since we do call</span><br /><span style="color: #808080; font-style: italic;"># setLightOff(), we are turning off all the other lights on this</span><br /><span style="color: #808080; font-style: italic;"># object first, and then turning on only the green light.</span><br />x.<span style="color: black;">setLightOff</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />x.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>ambientNP<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;">#run the example</span><br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Shadow_Mapping"> Shadow Mapping </span></h2>
+<p>As for version 1.7.0, Panda3D offers fully automatic shadow mapping support for spotlights and directional lights. You can enable shadows by calling <code>setShadowCaster()</code>. The nodes that receive shadows will need to have <a href="The_Shader_Generator.html" title="The Shader Generator">the Shader Generator</a> enabled, otherwise no shadows will appear.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># Use a 512x512 resolution shadow map</span><br />light.<span style="color: black;">setShadowCaster</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span>, <span style="color: #ff4500;">512</span>, <span style="color: #ff4500;">512</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># Enable the shader generator for the receiving nodes</span><br />render.<span style="color: black;">setShaderAuto</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Note that, even though in general shadowing is easy to set-up, you will want to tweak the light's lens settings to get the best depth buffer precision. Use the <code>setNearFar()</code> method on the Lens to get a perfect fit of what is being rendered. Also, for directional lights, you will need to call <code>setFilmSize()</code> on the Lens and position the light properly so that the light camera will get an optimal view of the scene.
+</p><p>Also note that every Light is in fact also a Camera, so you can easily exclude objects from being shadowed (e.g. for performance reasons) by use of camera masks.
+</p><p>If you have very thin objects, you may run into self-shadowing issues if the backside of the object casts shadows on its frontside. You can easily fix this by applying a depth offset to the object in question. A depth offset of 1 means to use an offset as small as possible, but big enough to make a difference. This should generally be enough. You can call <code>setDepthOffset()</code> on the NodePath or use the <code>depth-offset</code> scalar in the .egg file.
+</p>
+<pre class="python">leaves.<span style="color: black;">setDepthOffset</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 335/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:990-0!*!0!!en!*!* and timestamp 20171008000413 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="List_of_All_Attributes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Materials.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
