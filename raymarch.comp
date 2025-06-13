@@ -24,6 +24,8 @@ uniform float time;
 uniform vec3 u_light_spacing;
 uniform vec3 u_light_offset;
 uniform vec3 u_light_color;
+uniform vec3 u_dir_light_dir;
+uniform vec3 u_dir_light_color;
 
 // PBR Material Properties
 layout(binding = 1) uniform sampler2D albedo_tex;
@@ -71,12 +73,12 @@ float lattice(vec3 p) {
 float map(vec3 p) { return lattice(p); }
 
 vec3 getNormal(vec3 p) {
-    const vec2 e = vec2(SURF_DIST, 0.0);
-    return normalize(vec3(
-        map(p + e.xyy) - map(p - e.xyy),
-        map(p + e.yxy) - map(p - e.yxy),
-        map(p + e.yyx) - map(p - e.yyx)
-    ));
+    vec3 n = vec3(0.0);
+    for(int i=0; i<4; ++i){
+        vec3 e = 0.5773 * (2.0 * vec3(float((i+3)>>1 & 1), float((i>>1) & 1), float(i & 1)) - 1.0);
+        n += e * map(p + e * SURF_DIST);
+    }
+    return normalize(n);
 }
 
 //================================================================================================
@@ -86,6 +88,29 @@ float DistributionGGX(vec3 N, vec3 H, float r) { float a2=r*r*r*r; float nH=max(
 float GeometrySchlickGGX(float nV, float r) { float k=(r+1.)*(r+1.)/8.; return nV/(nV*(1.-k)+k); }
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float r) { return GeometrySchlickGGX(max(dot(N,V),0.),r)*GeometrySchlickGGX(max(dot(N,L),0.),r); }
 vec3 fresnelSchlick(float c, vec3 F0) { return F0+(vec3(1.)-F0)*pow(clamp(1.-c,0.,1.),5.);}
+float calcSoftshadow(vec3 ro, vec3 rd, float mint, float tmax) {
+    float res = 1.0;
+    float t = mint;
+    for(int i=0; i<24; ++i){
+        float h = map(ro + rd * t);
+        res = min(res, 8.0*h / t);
+        t += clamp(h, 0.02, 0.1);
+        if(res < 0.005 || t > tmax) break;
+    }
+    return clamp(res, 0.0, 1.0);
+}
+
+float calcAO(vec3 pos, vec3 nor) {
+    float occ = 0.0;
+    float sca = 1.0;
+    for(int i=0; i<5; ++i){
+        float h = 0.01 + 0.12*float(i)/4.0;
+        float d = map(pos + nor*h);
+        occ += (h - d) * sca;
+        sca *= 0.95;
+    }
+    return clamp(1.0 - 3.0*occ, 0.0, 1.0);
+}
 
 float calculateShadow(vec3 ro, vec3 rd, float max_t) {
     float t = 0.01;
@@ -108,6 +133,7 @@ vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
     // PBR properties for a non-metallic surface
     float metallic = 0.0;
     vec3 F0 = vec3(u_R0);
+    float ao = calcAO(p, n);
 
     // Accumulate lighting from a 3x3x3 grid of point lights
     vec3 Lo = vec3(0.0); // Final outgoing radiance
@@ -125,7 +151,7 @@ vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
                 float NdotL = max(dot(n, L), 0.0);
                 
                 if (NdotL > 0.0) {
-                    float shadow = calculateShadow(p + n * SURF_DIST * 2.0, L, light_dist);
+                    float shadow = calcSoftshadow(p + n * SURF_DIST * 2.0, L, 0.02, light_dist);
                     if (shadow > 0.0) {
                         float NDF = DistributionGGX(n, H, roughness);
                         float G = GeometrySmith(n, V, L, roughness);
@@ -147,8 +173,25 @@ vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
         }
     }
     
+    // Directional light
+    vec3 Ld = normalize(u_dir_light_dir);
+    float NdotLd = max(dot(n, Ld), 0.0);
+    if(NdotLd > 0.0){
+        float shadow = calcSoftshadow(p + n * SURF_DIST * 2.0, Ld, 0.02, MAX_DIST);
+        if(shadow > 0.0){
+            vec3 Hd = normalize(V + Ld);
+            float NDFd = DistributionGGX(n, Hd, roughness);
+            float Gd = GeometrySmith(n, V, Ld, roughness);
+            vec3 Fd = fresnelSchlick(max(dot(Hd, V), 0.0), F0);
+            vec3 specd = (NDFd * Gd * Fd) / (4.0 * max(dot(n,V),0.0) * NdotLd + 0.001);
+            vec3 kdd = vec3(1.0) - Fd;
+            kdd *= (1.0 - metallic);
+            vec3 diffd = kdd * albedo / PI;
+            Lo += (diffd + specd) * u_dir_light_color * NdotLd * shadow;
+        }
+    }
     // Ambient term for indirect lighting approximation
-    vec3 ambient = 0.05 * albedo;
+    vec3 ambient = (0.03 * albedo + 0.07 * vec3(0.7, 0.8, 1.0)) * ao;
     vec3 color = ambient + Lo;
 
     // HDR Tone Mapping and Gamma Correction

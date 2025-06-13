@@ -97,6 +97,8 @@ class MainMenuApp(ShowBase):
         self.light_color = Vec3(1.0, 0.85, 0.8)
         self._build_menu()
         self.accept("escape", self._build_menu)
+        self.dir_light_dir = Vec3(-0.5, -1.0, -0.6)
+        self.dir_light_color = Vec3(1.0, 0.95, 0.9)
 
     def _build_menu(self):
         if hasattr(self, "menu_frame"):
@@ -189,6 +191,8 @@ class MainMenuApp(ShowBase):
             self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
             self.compute_np.set_shader_input("u_light_offset", self.light_offset)
             self.compute_np.set_shader_input("u_light_color", self.light_color)
+        self.compute_np.set_shader_input("u_dir_light_dir", self.dir_light_dir)
+        self.compute_np.set_shader_input("u_dir_light_color", self.dir_light_color)
 
 # In main.py, replace the MainMenuApp class's compute methods with these:
 
@@ -216,6 +220,8 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
         self.compute_np.set_shader_input("u_light_offset", self.light_offset)
         self.compute_np.set_shader_input("u_light_color", self.light_color)
+        self.compute_np.set_shader_input("u_dir_light_dir", self.dir_light_dir)
+        self.compute_np.set_shader_input("u_dir_light_color", self.dir_light_color)
 
         # Set initial values for the new uniforms
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
