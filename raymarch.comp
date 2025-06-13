@@ -126,8 +126,8 @@ float sample_roughness(vec3 p) {
 }
 
 
-vec4 shade(vec3 p, vec3 n) {
-    vec3 V = normalize(camera_pos - p);
+vec4 shade(vec3 p, vec3 n, vec3 rd) {
+    vec3 V = -rd; // V is the opposite of the ray direction
     vec3 base_color = sample_albedo(p);
     float roughness = sample_roughness(p);
 
@@ -199,7 +199,7 @@ void main() {
         vec3 n_sdf = get_normal(pos_sdf);
         vec3 pos = pos_sdf;
         vec3 n = normalize(n_sdf);
-        color = shade(pos, n);
+        color = shade(pos, n, rd);
     }
 
     imageStore(outputImage, pixel, color);
