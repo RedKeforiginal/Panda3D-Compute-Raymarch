@@ -22,13 +22,13 @@ const float MAX_DIST = 100.0;
 const float EPSILON = 0.001;
 const float PI = 3.14159265359;
 
-// Convert Panda3D's Z-up coordinate system to the shader's original Y-up system
+// Panda3D and the compute shader both use Y-up, so these are identity transforms
 vec3 toShaderCoords(vec3 p) {
-    return vec3(p.x, p.z, p.y);
+    return p;
 }
 
 vec3 fromShaderCoords(vec3 p) {
-    return vec3(p.x, p.z, p.y);
+    return p;
 }
 
 // Signed distance function

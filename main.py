@@ -1,6 +1,11 @@
 from panda3d.core import loadPrcFileData
 
 # Configure window size before loading ShowBase
+# Use Panda3D's Y-up coordinate system so the shader and engine agree.
+# See Panda3D config variable documentation:
+# https://docs.panda3d.org/1.10/python/programming/configuration/prc-globals
+loadPrcFileData("", "coordinate-system yup-right")
+
 loadPrcFileData('', 'win-size 1024 1024')
 
 from direct.showbase.ShowBase import ShowBase
