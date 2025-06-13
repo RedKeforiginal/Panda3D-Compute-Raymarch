@@ -210,7 +210,12 @@ class MainMenuApp(ShowBase):
         self.taskMgr.add(self._update_compute, "update-compute")
 
     def _update_compute(self, task):
-        view = Mat4(self.cam.get_mat(self.render))  # world_to_camera
+        # NodePath.getMat returns the camera-to-world transform. Invert it to
+        # obtain the world-to-camera view matrix. See Panda3D docs:
+        # https://docs.panda3d.org/1.10/python/reference/panda3d.core.NodePath#panda3d.core.NodePath.getMat
+        view = Mat4(self.cam.get_mat(self.render))
+        view.invert_in_place()
+
         proj = self.camLens.get_projection_mat()
         view_proj = proj * view
         inv_view_proj = Mat4(view_proj)
@@ -219,9 +224,9 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
         self.compute_np.set_shader_input("time", task.time)
         return task.cont
-
     def _on_launch(self):
         if hasattr(self, "menu_frame"):
+
             self.menu_frame.destroy()
         if hasattr(self, "controller"):
             self.taskMgr.remove("fps-update")
