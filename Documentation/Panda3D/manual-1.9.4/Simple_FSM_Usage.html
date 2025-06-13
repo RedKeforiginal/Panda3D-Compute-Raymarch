@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Simple FSM Usage - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Simple FSM Usage</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="FSM_Introduction.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="FSM_with_input.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>
+</p>
+<p>A Panda3D FSM is implemented by defining a new Python class which inherits from the class direct.fsm.FSM.FSM (normally imported as simply FSM), and defining the appropriate enter and exit methods on the class.</p>
+<p>FSM states are represented by name strings, which should not
+contain spaces or punctuation marks; by Panda3D convention, state
+names should begin with a capital letter.  An FSM is always in exactly
+one state a time; the name of the current state in stored in
+<code>fsm.state</code>.  When it transitions from one state to
+another, it first calls <code>exitOldState()</code>, and then it calls
+<code>enterNewState()</code>, where OldState is the name of the
+previous state, and NewState is the name of the state it is entering.
+While it is making this transition, the FSM is not technically in
+either state, and <code>fsm.state</code> will be None--but you can
+find both old and new state names in <code>fsm.oldState</code> and
+<code>fsm.newState</code>, respectively.</p>
+<p>To define a possible state for an FSM, you only need to define an
+<code>enterStateName()</code> and/or <code>exitStateName()</code>
+method on your class, where StateName is the name of the state you
+would like to define.  The <code>enterStateName()</code> method should
+perform all the necessary action for entering your new state, and the
+corresponding <code>exitStateName()</code> method should generally
+undo everything that was done in <code>enterStateName()</code>, so
+that the world is returned to a neutral state.</p>
+<p>An FSM starts and finishes in the state named "Off".  When the FSM
+is created, it is already in "Off"; and when you destroy it (by
+calling <code>fsm.cleanup()</code>), it automatically transitions back
+to "Off".</p>
+<p>To request an FSM to transition explicitly to a new state, use the
+call <code>fsm.request('StateName')</code>, where StateName is the
+state you would like it to transition to.</p>
+<h2> <span class="mw-headline" id="Arguments_to_enterStateName_methods"> Arguments to enterStateName methods </span></h2>
+<p>Normally, both <code>enterStateName()</code> and
+<code>exitStateName()</code> take no arguments (other than self).
+However, if your FSM requires some information before it can
+transition to a particular state, you can define any arguments you
+like to the enterStateName method for that state; these arguments
+should be passed in to the <code>request()</code> call, following the
+state name.</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">fsm</span>.<span style="color: black;">FSM</span> <span style="color: #ff7700;font-weight:bold;">import</span> FSM<br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">class</span> AvatarFSM<span style="color: black;">&#40;</span>FSM<span style="color: black;">&#41;</span>:<br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> enterWalk<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, speed, doorMask<span style="color: black;">&#41;</span>:<br />        avatar.<span style="color: black;">setPlayRate</span><span style="color: black;">&#40;</span>speed, <span style="color: #483d8b;">'walk'</span><span style="color: black;">&#41;</span><br />        avatar.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'walk'</span><span style="color: black;">&#41;</span><br />        footstepsSound.<span style="color: black;">play</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        enableDoorCollisions<span style="color: black;">&#40;</span>doorMask<span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> exitWalk<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        avatar.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        footstepsSound.<span style="color: black;">stop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />        disableDoorCollisions<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />myfsm = AvatarFSM<span style="color: black;">&#40;</span><span style="color: #483d8b;">'myAvatar'</span><span style="color: black;">&#41;</span><br />myfsm.<span style="color: black;">request</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'Walk'</span>, <span style="color: #ff4500;">1.0</span>, BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>Note that the exitStateName method must always take no arguments.</p>
+<h2> <span class="mw-headline" id="Allowed_and_disallowed_state_transitions"> Allowed and disallowed state transitions </span></h2>
+<p>By default, every state transition request is allowed: the call
+<code>fsm.request('StateName')</code> will always succeed, and the the
+FSM will be left in the new state.  You may wish to make your FSM more
+robust by disallowing certain transitions that you don't want to
+happen.</p>
+<p>For instance, consider the example FSM described previously, which
+had the following state diagram:</p>
+<p><br />
+</p>
+<center><table style="border-collapse: separate; border-spacing: 1pt 0pt">
+<tr>
+<td style="text-align: center"><big>&#8599;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Walk2Swim
+</p>
+</td>
+<td style="text-align: center"><big>&#8600;</big></td><td></td><td></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Walk
+</p>
+</td>
+<td></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Swim
+</p>
+</td>
+<td><big>&#8594;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Drowning
+</p>
+</td>
+</tr>
+<tr>
+<td style="text-align: center"><big>&#8598;</big></td>
+<td style="border: 1px solid black; background: #c1beea; padding: 5pt">
+<p>Swim2Walk
+</p>
+</td>
+<td style="text-align: center"><big>&#8601;</big></td><td></td><td></td>
+</tr>
+</table></center>
+<p>In this diagram, the arrows represent legal transitions.  It is
+legal to transition from 'Walk' to 'Walk2Swim', but not from 'Walk' to
+'Swim2Walk'.  If you were to request the FSM to enter state
+'Swim2Walk' while it is currently in state 'Walk', that's a bug; you
+might prefer to have the FSM throw an exception, so you can find this
+bug.</p>
+<p>To enforce this, you can store <code>self.defaultTransitions</code>
+in the FSM's <code>__init__()</code> method.  This should be a map of
+allowed transitions from each state.  That is, each key of the map is
+a state name; for that key, the value is a list of allowed transitions
+from the indicated state.  Any transition not listed in
+defaultTransitions is considered invalid.  For example:</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">class</span> AvatarFSM<span style="color: black;">&#40;</span>FSM<span style="color: black;">&#41;</span>:<br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />        FSM.<span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, <span style="color: #483d8b;">'myAvatar'</span><span style="color: black;">&#41;</span><br />        <span style="color: #008000;">self</span>.<span style="color: black;">defaultTransitions</span> = <span style="color: black;">&#123;</span><br />            <span style="color: #483d8b;">'Walk'</span>&#160;: <span style="color: black;">&#91;</span> <span style="color: #483d8b;">'Walk2Swim'</span> <span style="color: black;">&#93;</span>,<br />            <span style="color: #483d8b;">'Walk2Swim'</span>&#160;: <span style="color: black;">&#91;</span> <span style="color: #483d8b;">'Swim'</span> <span style="color: black;">&#93;</span>,<br />            <span style="color: #483d8b;">'Swim'</span>&#160;: <span style="color: black;">&#91;</span> <span style="color: #483d8b;">'Swim2Walk'</span>, <span style="color: #483d8b;">'Drowning'</span> <span style="color: black;">&#93;</span>,<br />            <span style="color: #483d8b;">'Swim2Walk'</span>&#160;: <span style="color: black;">&#91;</span> <span style="color: #483d8b;">'Walk'</span> <span style="color: black;">&#93;</span>,<br />            <span style="color: #483d8b;">'Drowning'</span>&#160;: <span style="color: black;">&#91;</span> <span style="color: black;">&#93;</span>,<br />            <span style="color: black;">&#125;</span></pre>
+<p>If you do not assign anything to <code>self.defaultTransitions()</code>, then all
+transitions are legal.  However, if you <em>do</em> assign a map like
+the above, then requesting a transition that is not listed in the map
+will raise the exception <code>FSM.RequestDenied</code>.</p>
+<p>
+
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 189/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1714-0!*!*!!*!*!* and timestamp 20171008060426 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="FSM_Introduction.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="FSM_with_input.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

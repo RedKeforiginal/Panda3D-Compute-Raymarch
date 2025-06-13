@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Splash window tags - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Splash window tags</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Advanced_object_tags.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Plugin_notify_callbacks.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The following table lists the custom P3D tokens that you may specify within the &lt;object&gt; element, as described in <a href="Advanced_object_tags.html" title="Advanced object tags">Advanced object tags</a>.  You can use these settings to customize the look of the app's embedded frame whenever the Panda3D window is not being displayed, e.g. before or after launch.
+</p><p>When deploying an application for the desktop, you can specify these tags with the <code>-t tag=value</code> flag to pdeploy.
+</p>
+<table border="1">
+<tr>
+<th> Token </th>
+<th> Meaning
+</th></tr>
+<tr>
+<td> splash_img </td>
+<td> The URL of an image to display in the plugin space, anytime before Panda starts running (unless a more specific image, below, overrides)
+</td></tr>
+<tr>
+<td> download_img </td>
+<td> The image to display while the p3d file and its required packages are being downloaded
+</td></tr>
+<tr>
+<td> unauth_img </td>
+<td> The image to display when the app is unrecognized, and is waiting for the user to click the red "authorize" button
+</td></tr>
+<tr>
+<td> ready_img </td>
+<td> The image to display when the app is ready to run, and waiting for the user to click the green "play" button
+</td></tr>
+<tr>
+<td> failed_img </td>
+<td> The image to display when the app cannot launch for some reason (e.g. bad URL)
+</td></tr>
+<tr>
+<td> launch_img </td>
+<td> The image to display while the app is launching: the time after the user has clicked "play" and before it actually opens its Panda3D window
+</td></tr>
+<tr>
+<td> active_img </td>
+<td> The image to display while the app is running (but the app has taken its window out of the frame)
+</td></tr>
+<tr>
+<td> noplugin_img </td>
+<td> This is available only if you use the <a href="Embedding_with_RunPanda3D.html" title="Embedding with RunPanda3D">RunPanda3D.js</a> method of embedding your p3d file.  In this case, this specifies the image to display if the plugin is not installed or cannot be run for some reason.
+</td></tr>
+<tr>
+<td> noplugin_href </td>
+<td> As above, this is available only if you use the RunPanda3D.js method of embedding your p3d file, and it specifies the URL that the user should be taken to if he or she clicks on the embed region when the plugin is not installed.  A good choice, for instance, is <a rel="nofollow" class="external free" href="http://www.panda3d.org/get">https://www.panda3d.org/get</a> .
+</td></tr>
+<tr>
+<td> auth_ready<br />auth_rollover<br />auth_click </td>
+<td> The three images that define the normally red "authorize" button
+</td></tr>
+<tr>
+<td> play_ready<br />play_rollover<br />play_click </td>
+<td> The three images that define the normally green "play" button
+</td></tr>
+<tr>
+<td> fgcolor </td>
+<td> The text color of the text that may appear in the window, default is black.
+</td></tr>
+<tr>
+<td> bgcolor </td>
+<td> The background color of the window before the app has launched, default is white.
+</td></tr>
+<tr>
+<td> barcolor </td>
+<td> The fill color of the loading bar that is shown before the app launches
+</td></tr>
+<tr>
+<td> bar_bgcolor </td>
+<td> The background color of the loading bar.  If not set, the bgcolor is used.
+</td></tr>
+<tr>
+<td> bar_border </td>
+<td> The width of the border around the loading bar, in pixels.  Set to 0 to disable the border.
+</td></tr>
+<tr>
+<td> bar_bottom </td>
+<td> The number of pixels between the bottom of the window and the bottom edge of the loading bar.
+</td></tr>
+<tr>
+<td> bar_width </td>
+<td> Width of the loading bar, in pixels.  Alternatively, you may specify it as a percentage of the window width, eg. '60%'
+</td></tr>
+<tr>
+<td> bar_height </td>
+<td> Height of the loading bar, in pixels.  Alternatively, you may specify it as a percentage of the window height, eg. '5%'
+</td></tr>
+<tr>
+<td> font_family </td>
+<td> Specify which font to use for the text that may appear in the splash window.  Default is 'Helvetica'.
+</td></tr>
+<tr>
+<td> font_size </td>
+<td> The font size, in pixels.  Default is 12.
+</td></tr>
+<tr>
+<td> font_style </td>
+<td> Changes the slant of the font.  Acceptable values are 'normal', 'oblique' and 'italic'.
+</td></tr>
+<tr>
+<td> font_weight </td>
+<td> This may be set to 'bold' in order to make the font bold.  Some platforms may support a numeric value between 100 and 900 (in increments of 100), where 100 is lightest, 400 is normal, and 900 is black.
+</td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2419-0!*!0!*!*!*!* and timestamp 20171008113354 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Advanced_object_tags.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Plugin_notify_callbacks.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

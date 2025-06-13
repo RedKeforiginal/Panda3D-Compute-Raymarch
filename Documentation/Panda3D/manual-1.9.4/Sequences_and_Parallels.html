@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Sequences and Parallels - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Sequences and Parallels</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Motion_Path_and_Particle_Intervals.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Position,_Rotation_and_Scale_Intervals.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>You will need to have this include statement to use Sequences and Parallels.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">interval</span>.<span style="color: black;">IntervalGlobal</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span></pre>
+<p>Sequences and Parallels can control when intervals are played. Sequences play intervals one after the other, effectively a “do in order” command. Parallels are a “do together,” playing all intervals at the same time. Both have simple formats, and every kind of interval may be used.
+</p>
+<pre class="python">mySequence = Sequence<span style="color: black;">&#40;</span>myInterval1,…,myIntervaln, name=<span style="color: #483d8b;">&quot;Sequence Name&quot;</span><span style="color: black;">&#41;</span><br />myParallel = Parallel<span style="color: black;">&#40;</span>myInterval1,…,myIntervaln, name=<span style="color: #483d8b;">&quot;Parallel Name&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>To add to sequences or parallels after creating them, use the <code>append</code> method.
+</p>
+<pre class="python">mySequence.<span style="color: black;">append</span><span style="color: black;">&#40;</span>myInterval<span style="color: black;">&#41;</span><br />myParallel.<span style="color: black;">append</span><span style="color: black;">&#40;</span>myInterval<span style="color: black;">&#41;</span></pre>
+<p>Sequences and Parallels may also be combined for even greater control. Also, there is a wait interval that can add a delay to Sequences. While it can be defined beforehand, it does not have to be.
+</p>
+<pre class="python">delay = Wait<span style="color: black;">&#40;</span><span style="color: #ff4500;">2.5</span><span style="color: black;">&#41;</span><br />pandaWalkSeq = <br />    Sequence<span style="color: black;">&#40;</span><br />        Parallel<span style="color: black;">&#40;</span>pandaWalk, pandaWalkAnim<span style="color: black;">&#41;</span>, <br />        delay,<br />        Parallel<span style="color: black;">&#40;</span>pandaWalkBack, pandaWalkAnim<span style="color: black;">&#41;</span>, <br />        Wait<span style="color: black;">&#40;</span><span style="color: #ff4500;">1.0</span><span style="color: black;">&#41;</span>, <br />        Func<span style="color: black;">&#40;</span>myFunction, arg1<span style="color: black;">&#41;</span><br />    <span style="color: black;">&#41;</span></pre>
+<p>In the above example, a wait interval is generated. After that, a Sequence is made that uses a Parallel, the defined wait interval, another Parallel, and a wait interval, and a call to the function function myFunction is generated in the Sequence. Such Sequences can get very long very quick, so it may be prudent to define the internal Parallels and Sequences before creating the master Sequence.
+</p><p>One can do very powerful things with Sequences and Parallels.  Examine this Sequence: 
+</p>
+<pre class="python">s = OnscreenImage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'wav_is_playing.png'</span><span style="color: black;">&#41;</span><br />s.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>aspect2d<span style="color: black;">&#41;</span><br />s.<span style="color: black;">setTransparency</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />fadeIn = s.<span style="color: black;">colorScaleInterval</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">3</span>, Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>, Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />fadeOut = s.<span style="color: black;">colorScaleInterval</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">3</span>, Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />sound = loader.<span style="color: black;">loadSfx</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'sound.wav'</span><span style="color: black;">&#41;</span><br />&#160;<br />Sequence<span style="color: black;">&#40;</span><br />         fadeIn,<br />         SoundInterval<span style="color: black;">&#40;</span>sound<span style="color: black;">&#41;</span>,<br />         fadeOut<br />        <span style="color: black;">&#41;</span>.<span style="color: black;">start</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>It fades an image in, plays a sound, waits till sounds stops and then fades the image out. Doing this conventional way would require a class to store state, a task to check timings, and produce messy code.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1018-0!*!*!*!*!*!* and timestamp 20171008013356 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Motion_Path_and_Particle_Intervals.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Position,_Rotation_and_Scale_Intervals.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

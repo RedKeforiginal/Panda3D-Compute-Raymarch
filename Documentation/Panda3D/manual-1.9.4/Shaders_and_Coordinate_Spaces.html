@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Shaders and Coordinate Spaces - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Shaders and Coordinate Spaces</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="List_of_GLSL_Shader_Inputs.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Known_Shader_Bugs_and_Limitations.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Shaders_and_Coordinate_Spaces.html#The_Major_Coordinate_Spaces"><span class="tocnumber">1</span> <span class="toctext">The Major Coordinate Spaces</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Shaders_and_Coordinate_Spaces.html#Supplying_Translation_Matrices_to_a_Shader"><span class="tocnumber">2</span> <span class="toctext">Supplying Translation Matrices to a Shader</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Shaders_and_Coordinate_Spaces.html#A_note_about_GLSL_inputs"><span class="tocnumber">3</span> <span class="toctext">A note about GLSL inputs</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Shaders_and_Coordinate_Spaces.html#Recommendation:_Don.27t_use_API_View_Space_or_API_Clip_Space"><span class="tocnumber">4</span> <span class="toctext">Recommendation: Don't use API View Space or API Clip Space</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Shaders_and_Coordinate_Spaces.html#Model_of_x.2C_View_of_x.2C_Clip_of_x"><span class="tocnumber">5</span> <span class="toctext">Model_of_x, View_of_x, Clip_of_x</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="The_Major_Coordinate_Spaces"> The Major Coordinate Spaces </span></h2>
+<p>When writing complex shaders, it is often necessary to do a lot of
+coordinate system conversion.  In order to get this right, it is
+important to be aware of all the different coordinate spaces that
+panda uses.  You must know what "space" the coordinate is in.  Here
+is a list of the major coordinate spaces:
+</p>
+<dl><dt>Model Space
+</dt><dd>If a coordinate is in model space, then it is relative to the center of the model currently being rendered. The vertex arrays are in model space, therefore, if you access the vertex position using vtx_position, you have a coordinate in model space.  Model space is z-up right-handed.
+</dd><dt>World Space
+</dt><dd>If a coordinate is in world space, then it is relative to the scene's origin. World space is z-up right-handed.
+</dd><dt>View Space
+</dt><dd>If a coordinate is in view space, then it is relative to the camera.  View space is z-up right-handed.
+</dd><dt>API View Space
+</dt><dd>This coordinate space is identical to view space, except that the axes may be flipped to match the natural orientation of the rendering API. In the case of OpenGL, API view space is y-up right-handed.  In the case of DirectX, API view space is y-up left-handed.
+</dd><dt>Clip Space
+</dt><dd>Panda's clip space is a coordinate system in which (X/W, Y/W) maps to a screen pixel, and (Z/W) maps to a depth-buffer value.  All values in this space range over [-1,1].
+</dd><dt>API Clip Space
+</dt><dd>This coordinate space is identical to clip space, except that the axes may be flipped to match the natural orientation of the rendering API, and the numeric ranges may be rescaled to match the needs of the rendering API. In the case of OpenGL, the (Z/W) values range from [-1, 1].  In the case of DirectX, the (Z/W) values range from [0,1].
+</dd></dl>
+<p>In OpenGL, "clip space" and "API clip space" are equivalent.
+</p>
+<h2> <span class="mw-headline" id="Supplying_Translation_Matrices_to_a_Shader"> Supplying Translation Matrices to a Shader </span></h2>
+<p>You can use a shader parameter named "trans_x_to_y" to automatically
+obtain a matrix that converts any coordinate system to any other.
+The words x and y can be "model," "world," "view," "apiview,"
+"clip," or "apiclip." Using this notation, you can build
+up almost any transform matrix that you might need.
+Here is a short list of popular matrices that can be
+recreated using this syntax.  Of course, this isn't even close to
+exhaustive: there are seven keywords, so there are 7x7 possible matrices,
+of which 7 are the identity matrix.
+</p>
+<table>
+<tr>
+<th>Desired Matrix
+</th>
+<th>Source
+</th>
+<th>Syntax
+</th>
+<th>GLSL input
+</th></tr>
+<tr>
+<td>The Modelview Matrix
+</td>
+<td>gsg.getInternalTransform()
+</td>
+<td>trans_model_to_apiview
+</td>
+<td>p3d_ModelViewMatrix
+</td></tr>
+<tr>
+<td>The Projection Matrix
+</td>
+<td>gsg.getProjectionMat()
+</td>
+<td>trans_apiview_to_apiclip
+</td>
+<td>p3d_ProjectionMatrix
+</td></tr>
+<tr>
+<td>the DirectX world matrix
+</td>
+<td>model.getNetTransform()
+</td>
+<td>trans_model_to_world
+</td>
+<td>p3d_ModelMatrix
+</td></tr>
+<tr>
+<td>the DirectX view matrix
+</td>
+<td>scene.getCsWorldTransform()
+</td>
+<td>trans_world_to_apiview
+</td>
+<td>p3d_ViewMatrix
+</td></tr>
+<tr>
+<td>
+</td>
+<td>scene.getCameraTransform()
+</td>
+<td>trans_view_to_world
+</td></tr>
+<tr>
+<td>
+</td>
+<td>scene.getWorldTransform()
+</td>
+<td>trans_world_to_view
+</td></tr>
+<tr>
+<td>
+</td>
+<td>gsg.getExternalTransform()
+</td>
+<td>trans_model_to_view
+</td></tr>
+<tr>
+<td>
+</td>
+<td>gsg.getCsTransform()
+</td>
+<td>trans_view_to_apiview
+</td></tr>
+<tr>
+<td>
+</td>
+<td>gsg.getInvCsTransform()
+</td>
+<td>trans_apiview_to_view
+</td></tr></table>
+<h2> <span class="mw-headline" id="A_note_about_GLSL_inputs"> A note about GLSL inputs </span></h2>
+<p>The p3d_ModelViewMatrix and p3d_ProjectionMatrix by default transform to and from "apiview" space, in order to match the behavior of the equivalent gl_-prefixed inputs from earlier GLSL versions.  Panda3D traditionally uses a right-handed Y-up coordinate space for all OpenGL operations because some OpenGL fixed-function features rely on this space in order to produce the correct results.
+</p><p>However, if you develop a largely shader-based application and/or don't really use features like fixed-function sphere mapping, you may choose to disable this conversion to Y-up space.  This will define "apiview" space to be equivalent to "view" space, which simplifies many things, and will reduce overhead due to unnecessary coordinate space conversion, especially as "apiclip" and "clip" are already equivalent in OpenGL as well.
+</p><p>This is possible in Panda3D 1.9.1 and above, by putting <code>gl-coordinate-system default</code> in your Config.prc file.
+</p>
+<h2> <span class="mw-headline" id="Recommendation:_Don.27t_use_API_View_Space_or_API_Clip_Space"> Recommendation: Don't use API View Space or API Clip Space </span></h2>
+<p>The coordinate systems "API View Space" and "API Clip Space" are not
+very useful.  The fact that their behavior changes from one rendering
+API to the next makes them extremely hard to work with.  Of course,
+you have to use the composed modelview/projection matrix to transform
+your vertices, and in doing so, you are implicitly using these spaces.
+But aside from that, it is strongly recommended that you not use
+these spaces for anything else.
+</p>
+<h2> <span class="mw-headline" id="Model_of_x.2C_View_of_x.2C_Clip_of_x"> Model_of_x, View_of_x, Clip_of_x </span></h2>
+<p>When you use the word "model" in a trans directive, you implicitly
+mean "the model currently being rendered."  But you can make any 
+nodepath accessible to the shader subsystem using <code>setShaderInput</code>:
+</p>
+<pre class="python">myhouse = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;myhouse&quot;</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">setShaderInput</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;myhouse&quot;</span>, myhouse<span style="color: black;">&#41;</span></pre>
+
+<p>Then, in the shader, you can convert coordinates to or from the
+model-space of this particular nodepath:
+</p>
+<pre class="cg"><span style="color: #333399; font-weight: bold;">uniform</span> float4x4 trans_world_to_model_of_myhouse</pre>
+<p>or, use the syntactic shorthand:
+</p>
+<pre class="cg"><span style="color: #333399; font-weight: bold;">uniform</span> float4x4 trans_world_to_myhouse</pre>
+<p>Likewise, you can create a camera and pass it into the shader
+subsystem.  This is particularly useful when doing shadow mapping:
+</p>
+<pre class="python">render.<span style="color: black;">setShaderInput</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;shadowcam&quot;</span>, shadowcam<span style="color: black;">&#41;</span></pre>
+
+<p>Now you can transform vertices into the clip-space of the given
+camera using this notation:
+</p>
+<pre class="cg"><span style="color: #333399; font-weight: bold;">uniform</span> float4x4 trans_model_to_clip_of_shadowcam</pre>
+<p>If you transform your model's vertices from model space into the
+clip space of a shadow camera, the resulting
+(X/W,Y/W) values can be used as texture coordinates to projectively
+texture the shadow map onto the scene (after rescaling them), and
+the (Z/W) value can be compared to the value stored in the depth
+map (again, after rescaling it).
+</p><p>Panda does support the notation "trans_x_to_apiclip_of_y", but again,
+our recommendation is not to use it.
+</p><p>You can transform a vertex to the view space of an alternate camera,
+using "view of x."  In fact, this is exactly identical to "model of
+x," but it's probably good form to use "view of x" when x is a camera.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 51/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1720-0!*!*!!en!*!* and timestamp 20171008055907 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="List_of_GLSL_Shader_Inputs.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Known_Shader_Bugs_and_Limitations.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

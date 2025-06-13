@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>ShowBase - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: ShowBase</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_resources_from_nonstandard_sources.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="File_Reading.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>
+</p>
+<h2> <span class="mw-headline" id="Overview"> Overview </span></h2>
+<p>If you are already up to speed with Python, the following code may look like a black box:</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span>.<span style="color: black;">ShowBase</span> <span style="color: #ff7700;font-weight:bold;">import</span> ShowBase
+&#160;
+base = ShowBase<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+base.<span style="color: black;">run</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>The class <a rel="nofollow" class="external text" href="http://www.panda3d.org/reference/devel/python/direct.showbase.ShowBase.ShowBase">ShowBase</a> inherits from DirectObject. Under Linux, the relevant file can be found in:
+</p><p><code>/usr/share/panda3d/direct/showbase/</code>
+</p><p>On Windows, the code is (by default) located in:
+</p><p><code>C:\Panda3D-1.X.X\direct\showbase</code>
+</p><p>An important item created meanwhile is a base task manager as <code>taskMgr</code>. The function <code>run()</code> is in fact a single call to launch this task manager. 
+</p>
+<h2> <span class="mw-headline" id="Global_Variables_with_builtin"> Global Variables with __builtin__ </span></h2>
+<p>Some key variables used in all Panda3D scripts are actually attributes of the ShowBase instance. Here is the relevant code making these attribute global in scope:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">base</span> = <span style="color: #008000;">self</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">render2d</span> = <span style="color: #008000;">self</span>.<span style="color: black;">render2d</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">aspect2d</span> = <span style="color: #008000;">self</span>.<span style="color: black;">aspect2d</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">pixel2d</span> = <span style="color: #008000;">self</span>.<span style="color: black;">pixel2d</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">render</span> = <span style="color: #008000;">self</span>.<span style="color: black;">render</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">hidden</span> = <span style="color: #008000;">self</span>.<span style="color: black;">hidden</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">camera</span> = <span style="color: #008000;">self</span>.<span style="color: black;">camera</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">loader</span> = <span style="color: #008000;">self</span>.<span style="color: black;">loader</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">taskMgr</span> = <span style="color: #008000;">self</span>.<span style="color: black;">taskMgr</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">jobMgr</span> = <span style="color: #008000;">self</span>.<span style="color: black;">jobMgr</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">eventMgr</span> = <span style="color: #008000;">self</span>.<span style="color: black;">eventMgr</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">messenger</span> = <span style="color: #008000;">self</span>.<span style="color: black;">messenger</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">bboard</span> = <span style="color: #008000;">self</span>.<span style="color: black;">bboard</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">run</span> = <span style="color: #008000;">self</span>.<span style="color: black;">run</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">ostream</span> = Notify.<span style="color: black;">out</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">directNotify</span> = directNotify
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">giveNotify</span> = giveNotify
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">globalClock</span> = globalClock
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">vfs</span> = vfs
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">cpMgr</span> = ConfigPageManager.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">cvMgr</span> = ConfigVariableManager.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">pandaSystem</span> = PandaSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+<span style="color: #dc143c;">__builtin__</span>.<span style="color: black;">wantUberdog</span> = base.<span style="color: black;">config</span>.<span style="color: black;">GetBool</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'want-uberdog'</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>This is where the commonly used objects <code>base</code>, <code>render</code>, <code>render2d</code>, <code>camera</code>, <code>messenger</code>, and <code>taskMgr</code> are created. There are more such variables added to <code>__builtin__</code>. Consult the code if you want to find them all. 
+</p><p>Note that this way of exposing these attributes make them available globally even though these will not be returned by a call to the built-in function <code>dir()</code>.
+
+
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 79/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2259-0!*!*!!*!*!* and timestamp 20171008095723 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_resources_from_nonstandard_sources.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="File_Reading.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

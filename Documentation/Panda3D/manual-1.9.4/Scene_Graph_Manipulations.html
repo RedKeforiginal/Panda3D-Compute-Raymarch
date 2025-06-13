@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Scene Graph Manipulations - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Scene Graph Manipulations</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Scene_Graph.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Common_State_Changes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="The_default_scene_graphs">The default scene graphs</span></h2>
+<p>By default, there are two different scene graphs created automatically when you start up Panda3D.  These graphs are referred to by their top nodes: <b>render</b> and <b>render2d</b>.
+</p><p>You use render most often; this is the top of the ordinary 3-D scene.  In order to put an object in the world, you will need to parent it to render (or to some node that is in turn parented to render).  
+</p><p>You will use render2d to render 2-D GUI elements, such as text or buttons, that you want to display onscreen; for instance, a heads-up display.  Anything parented to render2d will be rendered on top of the 3-D scene, as if it were painted on the screen glass.
+</p><p>The coordinate system of render2d is set up to match that of the mouse inputs: the lower-left corner of the screen is (-1, 0, -1), and the upper-right corner is (1, 0, 1).  Since this is a square coordinate system, but the screen is usually non-square, objects parented directly to render2d may appear squashed.  For this reason, Panda3D also defines a child of render2d, called <b>aspect2d</b>, which has a scale applied to it to correct the non-square aspect ratio of render2d.  Most often, you will parent GUI elements to aspect2d rather than render2d.
+</p><p>Specifically, the coordinate system of aspect2d is by default scaled such that x ranges over [-ratio,ratio], and y ranges over [-1,1] where ratio is screen_size_x/screen_size_y (in the normal case of a window wider than it is tall).
+</p><p>As of Panda3D version 1.7.0, there is another child of render2d, called <b>pixel2d</b>.  This is scaled in such a way that one Panda unit represents one pixel in the window.  The origin, (0, 0, 0) is in the upperleft corner of the window. The lower right corner has x and z values equal to the width and -height of the window respectively. As Panda3D uses a Z-Up Right coordinate system, the Y coordinate in the window will actually be the inverted Z coordinate in Panda.
+This node is especially helpful when you want to do pixel-perfect positioning and scaling.
+</p><p>Finally, you may see references to one other top-level node called <b>hidden</b>.  This is simply an ordinary node that has no rendering properties set up for it, so that things parented to hidden will not be rendered.  Older Panda3D code needed to use hidden to remove a node from the render scene graph.  However, this is no longer necessary, and its use is not recommended for new programs; the best way to remove a node from render is to call nodePath.detachNode().
+</p>
+<h2> <span class="mw-headline" id="Loading_models">Loading models</span></h2>
+<p>You can load up a model with a filename path, in the <a href="Panda_Filename_Syntax.html" title="Panda Filename Syntax" class="mw-redirect">Panda Filename Syntax</a>, to the model's egg or bam file.  In many examples, the filename extension is omitted; in this case, Panda will look for a file with either the .egg or .bam extension.
+</p>
+<pre class="python">myNodePath = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;path/to/models/myModel.egg&quot;</span><span style="color: black;">&#41;</span></pre>
+
+<p>The first time you call <code>loadModel()</code> for a particular model, that model is read and saved in a table in memory; on each subsequent call, the model is simply copied from the table, instead of reading the file.
+</p><p>The above call is appropriate for loading static models; for animated models, see <a href="Loading_Actors_and_Animations.html" title="Loading Actors and Animations">Loading Actors and Animations</a>.
+</p>
+<h2> <span class="mw-headline" id="Reparenting_nodes_and_models">Reparenting nodes and models</span></h2>
+<p>One of the most fundamental scene graph manipulations is changing a node's parent.  You need to do this at least once after you load a model, to put it under render for viewing:
+</p>
+<pre class="python">myModel.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span></pre>
+
+<p>And to remove it again:
+</p>
+<pre class="python">myModel.<span style="color: black;">detachNode</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<p>To completely remove a NodePath from the scene graph and memory call removeNode, this has the effect of emptying the node and releasing the memory taken up by the node. Use it only when you have no further use for the node:
+</p>
+<pre class="python">myModel.<span style="color: black;">removeNode</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<p>As you become more comfortable with scene graph operations, you may find yourself taking more and more advantage of a deeply nested scene graph, and you may start to parent your models to other nodes than just render.  Sometimes it is convenient to create an empty node for this purpose, for instance, to group several models together:
+</p>
+<pre class="python">dummyNode = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Dummy Node Name&quot;</span><span style="color: black;">&#41;</span><br />myModel.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>dummyNode<span style="color: black;">&#41;</span><br />myOtherModel.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>dummyNode<span style="color: black;">&#41;</span></pre>
+
+<p>Since a node inherits its position information from its parent node, when you reparent a node in the scene graph you might inadvertently change its position in the world.  If you need to avoid this, you can use a special variant on reparentTo():
+</p>
+<pre class="python">myModel.<span style="color: black;">wrtReparentTo</span><span style="color: black;">&#40;</span>newParent<span style="color: black;">&#41;</span></pre>
+
+<p>The "wrt" prefix stands for "with respect to".  This special method works like reparent<span style="text-transform: uppercase">t</span>o(), except that it automatically recomputes the local transform on myModel to compensate for the change in transform under the new parent, so that the node ends up in the same position relative to the world.
+</p><p>Note that the computation required to perform wrtReparentTo() is a floating-point matrix computation and is therefore inherently imprecise.  This means that if you use wrtReparentTo() repeatedly, thousands of times on the same node, it may eventually accumulate enough numerical inaccuracies to introduce a slight scale on the object (for instance, a scale of 1, 1, 0.99999); if left unchecked, this scale could eventually become noticeable.
+</p><p>Beginners tend to overuse this method; you should not use wrtReparentTo() unless there is a real reason to use it.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 119/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:943-0!*!0!!*!*!* and timestamp 20171007155256 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Scene_Graph.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Common_State_Changes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

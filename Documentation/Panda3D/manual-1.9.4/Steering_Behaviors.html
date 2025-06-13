@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Steering Behaviors - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Steering Behaviors</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Getting_Started.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Seek.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>These AI behaviors control the basic motion of NPC objects in a game and make it look realistic. 
+</p><p>PandAI is inbuilt with handling the functionality of the seven following basic steering behaviors&#160;:
+</p><p><b>
+Seek
+</p><p>Flee
+</p><p>Pursue
+</p><p>Evade
+</p><p>Arrival
+</p><p>Wander
+</p><p>Flock
+</p><p>Obstacle Avoidance
+</p><p>Path Follow
+</b>
+</p><p>Before you start exploring these various behaviors, let me give you a brief introduction on how it is setup and what you need to begin&#160;:
+</p><p>All the Steering Behaviors are part of the Behavior class of any AI Character. Hence, to use them you need to get a reference to it via <b>'getAiBehaviors()'</b> function of the AICharacter class.
+</p><p>Once you get this reference, you can use it to call any steering behavior. 
+</p>
+<pre class="python">//For example:<br />&#160;<br />     aiBehaviors = aiCharacter.<span style="color: black;">getAiBehaviors</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span>  <br />     aiBehaviors.<span style="color: black;">seek</span><span style="color: black;">&#40;</span>targetNodePath<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<ul><li> Once you have read this page, you can proceed to explore the individual pages for each AI Behavior for details and even an example demo for each one working.
+</li></ul>
+<hr />
+<p><br />
+<b>PRIORITIES&#160;:</b>
+</p><p>Every steering behavior can also take a second parameter which is priority. This ranges from 0 to 1 and it defines the behaviors intensity when combined with other behaviors. 
+</p>
+<pre class="python">//For example: <br />&#160;<br />    aiBehaviors.<span style="color: black;">seek</span><span style="color: black;">&#40;</span>targetNodePath_1, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />    aiBehaviors.<span style="color: black;">flee</span><span style="color: black;">&#40;</span>targetNodePath_2, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<p><b>This will cause the AICharacter's resultant force to be an equal balance of seeking 'targetNodePath_1' and fleeing 'targetNodePath_2' .</b>
+</p><p><br />
+</p>
+<hr />
+<p><b>HELPER FUNCTIONS&#160;: </b>
+</p><p>(For beginners -&gt; Come back to these when you need this functionality)
+</p><p><br />
+<b>For the AIWorld class:</b>
+</p>
+<pre class="python">void addAiChar<span style="color: black;">&#40;</span>AICharacter aiChar<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void removeAiChar<span style="color: black;">&#40;</span><span style="color: #dc143c;">string</span> name<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void addFlock<span style="color: black;">&#40;</span>Flock <span style="color: #66cc66;">*</span>flock<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void flockOff<span style="color: black;">&#40;</span><span style="color: #008000;">int</span> ID<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void flockOn<span style="color: black;">&#40;</span><span style="color: #008000;">int</span> ID<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />Flock getFlock<span style="color: black;">&#40;</span><span style="color: #008000;">int</span> ID<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<p><b>For the AICharacter class:</b>
+</p>
+<pre class="python">double getMass<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void setMass<span style="color: black;">&#40;</span>double m<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />LVecBase3f getVelocity<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />double getMaxForce<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void setMaxForce<span style="color: black;">&#40;</span>double max_force<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />NodePath getNodePath<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void setNodePath<span style="color: black;">&#40;</span>NodePath np<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<p><b>For the AIBehaviors class:</b>
+</p>
+<pre class="python">aiBehaviors.<span style="color: black;">behaviorStatus</span><span style="color: black;">&#40;</span><span style="color: #dc143c;">string</span> AIName<span style="color: black;">&#41;</span></pre>
+<p>This function returns the status of an AI Behavior whether it is active, paused, done or disabled. Returns  -1 if an invalid string is passed.
+</p>
+<ul><li>Note for pathfinding status, use pathfollow as the string name, since pathfinding is a subset of pathfollow.
+</li></ul>
+<p><br /> 
+<b>To remove any AI after their call has been instantiated.</b>
+</p>
+<pre class="python">void removeAi<span style="color: black;">&#40;</span><span style="color: #dc143c;">string</span> <span style="color: #483d8b;">&quot;AIName&quot;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<ul><li>Note for pathfinding removal, use pathfollow as the string name, since pathfinding is a subset of pathfollow.
+</li></ul>
+<p><br /> 
+<b>To pause or resume any AI after their call has been instantiated.</b>
+</p>
+<pre class="python">void pauseAi<span style="color: black;">&#40;</span><span style="color: #dc143c;">string</span> <span style="color: #483d8b;">&quot;AIName&quot;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span><br />&#160;<br />void resumeAi<span style="color: black;">&#40;</span><span style="color: #dc143c;">string</span> <span style="color: #483d8b;">&quot;AIName&quot;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<p>where AIName refers to:
+</p><p>"all" - removes all the Ai's
+</p><p>"seek" - removes seek
+</p><p>"flee" - removes flee
+</p><p>"pursue" - removes arrival
+</p><p>"evade" - removes pursuit
+</p><p>"arrival" - removes evade
+</p><p>"wander" - removes wander
+</p><p>"flock" - removes flock
+</p><p>"obstacle_avoidance" - removes obstacle_avoidance
+</p><p>"pathfollow" - removes pathfollow
+</p><p><br />
+</p>
+<hr />
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 22/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2581-0!*!*!*!*!*!* and timestamp 20171008014711 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Getting_Started.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Seek.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Shader Basics - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Shader Basics</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Shaders.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_Possible_Cg_Shader_Inputs.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Shader_Basics.html#Overview_of_Shaders"><span class="tocnumber">1</span> <span class="toctext">Overview of Shaders</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Shader_Basics.html#Cg_Shaders"><span class="tocnumber">2</span> <span class="toctext">Cg Shaders</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="Shader_Basics.html#Overview_of_Cg_Shaders"><span class="tocnumber">2.1</span> <span class="toctext">Overview of Cg Shaders</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="Shader_Basics.html#Single-File_Cg_Shaders"><span class="tocnumber">2.2</span> <span class="toctext">Single-File Cg Shaders</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="Shader_Basics.html#Multi-File_Cg_Shaders"><span class="tocnumber">2.3</span> <span class="toctext">Multi-File Cg Shaders</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-6"><a href="Shader_Basics.html#GLSL_Shaders"><span class="tocnumber">3</span> <span class="toctext">GLSL Shaders</span></a>
+<ul>
+<li class="toclevel-2 tocsection-7"><a href="Shader_Basics.html#Overview_of_GLSL_Shaders"><span class="tocnumber">3.1</span> <span class="toctext">Overview of GLSL Shaders</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="Shader_Basics.html#GLSL_Example"><span class="tocnumber">3.2</span> <span class="toctext">GLSL Example</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-9"><a href="Shader_Basics.html#Using_Shaders_in_Panda3D"><span class="tocnumber">4</span> <span class="toctext">Using Shaders in Panda3D</span></a>
+<ul>
+<li class="toclevel-2 tocsection-10"><a href="Shader_Basics.html#Loading_a_Cg_Shader"><span class="tocnumber">4.1</span> <span class="toctext">Loading a Cg Shader</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="Shader_Basics.html#Loading_a_GLSL_Shader"><span class="tocnumber">4.2</span> <span class="toctext">Loading a GLSL Shader</span></a></li>
+<li class="toclevel-2 tocsection-12"><a href="Shader_Basics.html#Applying_a_Shader"><span class="tocnumber">4.3</span> <span class="toctext">Applying a Shader</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-13"><a href="Shader_Basics.html#Fetching_Data_from_the_Panda3D_Runtime"><span class="tocnumber">5</span> <span class="toctext">Fetching Data from the Panda3D Runtime</span></a></li>
+<li class="toclevel-1 tocsection-14"><a href="Shader_Basics.html#Supplying_data_to_the_Shader_Manually"><span class="tocnumber">6</span> <span class="toctext">Supplying data to the Shader Manually</span></a></li>
+<li class="toclevel-1 tocsection-15"><a href="Shader_Basics.html#Shader_Render_Attributes"><span class="tocnumber">7</span> <span class="toctext">Shader Render Attributes</span></a></li>
+<li class="toclevel-1 tocsection-16"><a href="Shader_Basics.html#Deferred_Shader_Compilation"><span class="tocnumber">8</span> <span class="toctext">Deferred Shader Compilation</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Overview_of_Shaders"> Overview of Shaders </span></h2>
+<p>As of version 1.7.0, Panda3D supports two shading languages: <b>Cg</b> and <b>GLSL</b>. Section assumes that you have a working knowledge of a shader language.  If not, it would be wise to read about Cg or GLSL before trying to understand how they fit into Panda3D.
+</p><p>Though Panda3D has used only Cg in the past, it is recommended that you create new shaders in GLSL unless you want to target DirectX as well, since the NVIDIA Cg toolkit is no longer being maintained.
+</p><p>There are various types of shaders, each capable of describing a different stage in the rendering process.  In the most simple case, a model simply has a <i>vertex shader</i>, which describes how each vertex is processed, and a <i>fragment shader</i> (also called a <i>pixel shader</i> in DirectX parlance), describing how the color of each visible pixel on the model is determined.  A shader pipeline can be composed of one or more of the following types of shaders:
+</p>
+<dl><dt> Vertex shader
+</dt><dd> The first stage of the pipeline.  It is run for each vertex on the model geometry, and is responsible for preparing the vertex data, usually by transforming the original vertex position to on-screen X, Y coordinates.
+</dd><dt> Tessellation control (hull) shader
+</dt><dd> Optional.  When tessellation is used, this specifies how to subdivide the tessellation patch.  GLSL only.
+</dd><dt> Tessellation evaluation (domain) shader
+</dt><dd> Optional.  When tessellation is used, this determines the position of the tessellated vertices.  GLSL only.
+</dd><dt> Geometry shader
+</dt><dd> Optional.  This is run for each <i>input primitive</i> (usually a triangle), and determines how the geometry is formed from the input vertices.  It may also create additional geometry.
+</dd><dt> Fragment (pixel) shaders
+</dt><dd> This is the last stage of the pipeline before the pixel is blended into the framebuffer, and usually the most useful one.  It determines the color of each pixel of the rendered geometry, and therefore performs tasks such as lighting and texturing.
+</dd></dl>
+<p>You will often only find a vertex and fragment shader, since geometry and tessellation shaders are relatively new features that are useful only in more specific cases.
+</p>
+<h2> <span class="mw-headline" id="Cg_Shaders"> Cg Shaders </span></h2>
+<h3> <span class="mw-headline" id="Overview_of_Cg_Shaders"> Overview of Cg Shaders </span></h3>
+<p>A Cg shader must contain procedures named <code>vshader()</code> and <code>fshader()</code>; the vertex shader and fragment shader respectively. If a geometry shader is used, then it must also contain a procedure named <code>gshader()</code>.
+</p>
+<h3> <span class="mw-headline" id="Single-File_Cg_Shaders"> Single-File Cg Shaders </span></h3>
+<p>To write a Cg shader in a single file, you must create a shader program that looks much like the one shown below. This example preserves position but switches the red and green channels of everything it is applied to:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-glsl" style="font-family: monospace;"><pre><span style="color: #666666; font-style: italic;">//Cg</span>
+&#160;
+<span style="color: #000066; font-weight: bold;">void</span> vshader<span style="color: #000066;">&#40;</span>float4 vtx_position <span style="color: #000066;">:</span> POSITION<span style="color: #000066;">,</span>
+             float4 vtx_color<span style="color: #000066;">:</span> COLOR<span style="color: #000066;">,</span>
+             <span style="color: #333399; font-weight: bold;">out</span> float4 l_position <span style="color: #000066;">:</span> POSITION<span style="color: #000066;">,</span>
+             <span style="color: #333399; font-weight: bold;">out</span> float4 l_color0 <span style="color: #000066;">:</span> COLOR0<span style="color: #000066;">,</span>
+             <span style="color: #333399; font-weight: bold;">uniform</span> float4x4 mat_modelproj<span style="color: #000066;">&#41;</span>
+<span style="color: #000066;">&#123;</span>
+  l_position <span style="color: #000066;">=</span> mul<span style="color: #000066;">&#40;</span>mat_modelproj<span style="color: #000066;">,</span> vtx_position<span style="color: #000066;">&#41;</span><span style="color: #000066;">;</span>
+  l_color0 <span style="color: #000066;">=</span> vtx_color<span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span>
+&#160;
+<span style="color: #000066; font-weight: bold;">void</span> fshader<span style="color: #000066;">&#40;</span>float4 l_color0 <span style="color: #000066;">:</span> COLOR0<span style="color: #000066;">,</span>
+             <span style="color: #333399; font-weight: bold;">out</span> float4 o_color <span style="color: #000066;">:</span> COLOR<span style="color: #000066;">&#41;</span>
+<span style="color: #000066;">&#123;</span>
+  o_color <span style="color: #000066;">=</span> l_color0<span style="color: #000066;">.</span><span style="color: #006600;">grba</span><span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span></pre></div></div>
+<h3> <span class="mw-headline" id="Multi-File_Cg_Shaders"> Multi-File Cg Shaders </span></h3>
+<p>Cg shaders can be divided into several files as well; one for the vertex shader, another for the fragment shader, and a third for the geometry shader. The procedure names are still required to be <code>vshader()</code>, <code>fshader()</code> and <code>gshader()</code> in their respective shader files.
+</p>
+<h2> <span class="mw-headline" id="GLSL_Shaders"> GLSL Shaders </span></h2>
+<h3> <span class="mw-headline" id="Overview_of_GLSL_Shaders"> Overview of GLSL Shaders </span></h3>
+<p>To write a GLSL shader, you must write your vertex, pixel and geometry shaders separately, since GLSL requires the names of the entry point to all be <code>main()</code>.
+</p>
+<h3> <span class="mw-headline" id="GLSL_Example"> GLSL Example </span></h3>
+<p>This example applies the first texture of the model using the first texture coordinate set, but switches the red and blue channels around.
+</p><p>This is the vertex shader, named myshader.vert:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-glsl" style="font-family: monospace;"><pre><span style="color: #009900;">#version 130</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// Uniform inputs</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> p3d_ModelViewProjectionMatrix<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// Vertex inputs</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec4</span> p3d_Vertex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> p3d_MultiTexCoord0<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// Output to fragment shader</span>
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">vec2</span> texcoord<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">&#40;</span><span style="color: #000066;">&#41;</span> <span style="color: #000066;">&#123;</span>
+  <span style="color: #551111;">gl_Position</span> <span style="color: #000066;">=</span> p3d_ModelViewProjectionMatrix <span style="color: #000066;">*</span> p3d_Vertex<span style="color: #000066;">;</span>
+  texcoord <span style="color: #000066;">=</span> p3d_MultiTexCoord0<span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span></pre></div></div>
+<p>This is the fragment shader, named myshader.frag:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-glsl" style="font-family: monospace;"><pre><span style="color: #009900;">#version 130</span>
+&#160;
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> p3d_Texture0<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #666666; font-style: italic;">// Input from vertex shader</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> texcoord<span style="color: #000066;">;</span>
+&#160;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">&#40;</span><span style="color: #000066;">&#41;</span> <span style="color: #000066;">&#123;</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> color <span style="color: #000066;">=</span> texture<span style="color: #000066;">&#40;</span>p3d_Texture0<span style="color: #000066;">,</span> texcoord<span style="color: #000066;">&#41;</span><span style="color: #000066;">;</span>
+  <span style="color: #551111;">gl_FragColor</span> <span style="color: #000066;">=</span> color<span style="color: #000066;">.</span><span style="color: #006600;">bgra</span><span style="color: #000066;">;</span>
+<span style="color: #000066;">&#125;</span></pre></div></div>
+<h2> <span class="mw-headline" id="Using_Shaders_in_Panda3D"> Using Shaders in Panda3D </span></h2>
+<p>Shaders in Panda3D use the <code>Shader</code> class. When a shader is loaded, an object of this class is returned. This is then applied to a node using the <code>set_shader</code> method of the <code>NodePath</code> class.
+</p>
+<h3> <span class="mw-headline" id="Loading_a_Cg_Shader"> Loading a Cg Shader </span></h3>
+<p>Loading a single-file Cg shader is done with the <code>Shader.load()</code> procedure. The first parameter is the path to the shader file, and the second is the shader language, which in this case is <code>Shader.SL_Cg</code>. The following is an example of using this procedure:</p>
+<p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Shader
+&#160;
+myShader = Shader.<span style="color: black;">load</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;myshader.sha&quot;</span>, Shader.<span style="color: black;">SL_Cg</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+
+</p>
+<p>Loading a multi-file Cg shader requires a different set of parameters for the <code>load()</code> function; the first being the shader language, and the second, third and fourth being paths to the vertex, fragment and geometry shaders respectively.  Here is an example:</p>
+<p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myShader = Shader.<span style="color: black;">load</span><span style="color: black;">&#40;</span>Shader.<span style="color: black;">SL_Cg</span>, vertex=<span style="color: #483d8b;">&quot;myvertexshader.sha&quot;</span>, fragment=<span style="color: #483d8b;">&quot;myfragmentshader.sha&quot;</span>, geometry=<span style="color: #483d8b;">&quot;mygeometryshader.sha&quot;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+
+</p>
+<h3> <span class="mw-headline" id="Loading_a_GLSL_Shader"> Loading a GLSL Shader </span></h3>
+<p>In the following code sample, a GLSL shader is loaded:
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myShader = Shader.<span style="color: black;">load</span><span style="color: black;">&#40;</span>Shader.<span style="color: black;">SL_GLSL</span>, vertex=<span style="color: #483d8b;">&quot;myshader.vert&quot;</span>, fragment=<span style="color: #483d8b;">&quot;myshader.frag&quot;</span>, geometry=<span style="color: #483d8b;">&quot;myshader.geom&quot;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+
+</p>
+<h3> <span class="mw-headline" id="Applying_a_Shader"> Applying a Shader </span></h3>
+<p>Shaders can be applied to any <code>NodePath</code> with the <code>set_shader()</code> method.  Here is an example that applies a loaded shader to a model:
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myModel.<span style="color: black;">set_shader</span><span style="color: black;">&#40;</span>myShader<span style="color: black;">&#41;</span></pre></div></div>
+<p>
+
+</p><p>The call to <code>set_shader()</code> causes the <code>NodePath</code> to be rendered with the shader passed to it as a parameter. Shaders propagate down the scene graph, like any other render attribute; the node and everything beneath it will use the shader.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Fetching_Data_from_the_Panda3D_Runtime"> Fetching Data from the Panda3D Runtime </span></h2>
+<p>Each shader program contains a parameter list.  Panda3D scans the parameter list and interprets each parameter name as a request to extract data from the panda runtime.  For example, if the shader contains a parameter declaration <code>float3 vtx_position&#160;: POSITION</code>, Panda3D will interpret that as a request for the vertex position, and it will satisfy the request. Panda3D will only allow parameter declarations that it recognizes and understands.
+</p><p>Panda3D will generate an error if the parameter qualifiers do not match what Panda3D is expecting.  For example, if you declare the parameter <code>float3 vtx_position</code>, then Panda3D will be happy. If, on the other hand, you were to declare <code>uniform sampler2D vtx_position</code>, then Panda3D would generate two separate errors: Panda3D knows that vtx_position is supposed to be a float-vector, not a texture, that it is supposed to be varying, not uniform.
+</p><p>Again, all parameter names must be recognized.  There is a <a href="List_of_Possible_Shader_Inputs.html" title="List of Possible Shader Inputs" class="mw-redirect">list of possible Cg shader inputs</a> that shows all the valid parameter names and the data that Panda3D will supply.
+</p>
+<h2> <span class="mw-headline" id="Supplying_data_to_the_Shader_Manually"> Supplying data to the Shader Manually </span></h2>
+<p>Most of the data that the shader could want can be fetched from Panda3D at runtime by using the appropriate parameter names. However, it is sometimes necessary to supply some user-provided data to the shader. For this, you need <code>set_shader_input()</code>. Here is an example:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myModel.<span style="color: black;">set_shader_input</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;tint&quot;</span>, <span style="color: black;">&#40;</span><span style="color: #ff4500;">1.0</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1.0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre></div></div>
+<p>
+<p>The method <code>set_shader_input()</code> stores data that can be accessed by the shader.  It is possible to store data of type <code>Texture</code>, <code>NodePath</code>, and any vector object.
+</p><p>The data that you store using <code>set_shader_input()</code> isn't necessarily used by the shader. Instead, the values are stored in the node, but unless the shader explicitly asks for them, they will sit unused.  So the example above simply stores the vector, but it is up to the shader whether or not it is interested in a data item labeled "tint".
+</p><p>To fetch data that was supplied using <code>set_shader_input()</code>, the shader must use the appropriate parameter name. See the <a href="List_of_Possible_Shader_Inputs.html" title="List of Possible Shader Inputs" class="mw-redirect">list of possible Cg shader inputs</a>, many of which refer to the data that was stored using <code>set_shader_input()</code>.
+</p><p>Shader Inputs propagate down the scene graph, and accumulate as they go. For example, if you store <code>set_shader_input("x", 1)</code> on a node, and <code>set_shader_input("y", 2)</code> on its child, then the child will contain both values. If you store <code>set_shader_input("z", 1)</code> on a node, and <code>set_shader_input("z", 2)</code> on its child, then the latter will override the former. The method <code>set_shader_input()</code> accepts a third parameter, priority, which defaults to zero. If you store <code>set_shader_input("w", 1, priority=1000)</code> on a node, and <code>set_shader_input("w", 2, priority=500)</code> on the child, then the child will contain ("w"==1), because the priority 1000 overrides the priority 500.
+</p>
+<h2> <span class="mw-headline" id="Shader_Render_Attributes"> Shader Render Attributes </span></h2>
+<p>The functions <code>nodePath.set_shader()</code> and <code>nodePath.set_shader_input()</code> are used to apply a shader to a node in the scene graph. Internally, these functions manipulate a render attribute of class <code>ShaderAttrib</code> on the node.
+</p><p>In rare occasions, it is necessary to manipulate <code>ShaderAttrib</code> objects explicitly. As an example, the code below shows how to create a <code>ShaderAttrib</code> and apply it to a camera:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myShaderAttrib = ShaderAttrib.<span style="color: black;">make</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+myShaderAttrib = myShaderAttrib.<span style="color: black;">setShader</span><span style="color: black;">&#40;</span>Shader.<span style="color: black;">load</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;myshader.sha&quot;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>
+myShaderAttrib = myShaderAttrib.<span style="color: black;">setShaderInput</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;tint&quot;</span>, Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1.0</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1.0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>
+base.<span style="color: black;">cam</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setInitialState</span><span style="color: black;">&#40;</span>render.<span style="color: black;">getState</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addAttrib</span><span style="color: black;">&#40;</span>myShaderAttrib<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+Be careful: attribs are immutable objects. So when you apply a function like <code>set_shader()</code> or <code>set_shader_input()</code> to a <code>ShaderAttrib</code>, you aren't modifying the attrib. Instead, these functions work by returning a new attrib (which contains the modified data).
+</p>
+<h2> <span class="mw-headline" id="Deferred_Shader_Compilation"> Deferred Shader Compilation </span></h2>
+<p>When you create a Cg shader object, it compiles the shader, checking for syntax errors.  But it does not check whether or not your video card is powerful enough to handle the shader.  This only happens later on, when you try to render something with the shader.  In the case of GLSL shaders, all of this will only happen when the shader is first used to render something.
+</p><p>In the unusual event that your computer contains multiple video cards, the shader may be compiled more than once. It is possible that the compilation could succeed for one video card, and fail for the other.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 568/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1056-0!*!0!!en!*!* and timestamp 20171008112144 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Shaders.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_Possible_Cg_Shader_Inputs.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

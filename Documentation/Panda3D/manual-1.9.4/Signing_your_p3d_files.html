@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Signing your p3d files - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Signing your p3d files</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Email_certificates.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="P3D_file_config_settings.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Once you have a certificate, you can use it to sign any of your p3d
+files.  Be sure the certificate is in pem format; use the openssl
+command to convert it to pem format first if you need to.
+</p><p>The easiest way to sign a p3d file is to specify the -S parameter to
+packp3d at the time you generate it:
+</p>
+<pre class="bash">packp3d <span style="color: #660033;">-S</span> mycert.pem <span style="color: #660033;">-o</span> myapp.p3d <span style="color: #660033;">-d</span> c:<span style="color: #000000; font-weight: bold;">/</span>myapp</pre>
+<p>The above is the appropriate command to use if your public key and
+private key are combined in the same file.  If they are separate, you
+can specify both files with "-S mypublic.pem,,myprivate.pem".  (Note
+the double comma; it is necessary.)  If you also have a certificate
+chain file, then you should specify all three files: "-S
+mypublic.pem,mychain.pem,myprivate.pem".
+</p><p>It is also possible to sign a p3d file after it has been generated,
+with the multify command:
+</p>
+<pre class="bash">multify <span style="color: #660033;">-S</span> mycert.pem <span style="color: #660033;">-uvf</span> myapp.p3d<br />multify <span style="color: #660033;">-S</span> mycert.pem,mychain.pem,myprivate.pem <span style="color: #660033;">-uvf</span> myapp.p3d</pre>
+<p>You can add multiple signatures to a p3d file.  If the user has
+already approved any of the certificates used to sign a p3d file, then
+that p3d file will be considered automatically approved.  If the user
+has approved none of the certificates, then the first one (and only
+the first one) used to sign the file will be presented to the user for
+approval.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2403-0!*!*!*!*!*!* and timestamp 20171008061846 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Email_certificates.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="P3D_file_config_settings.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

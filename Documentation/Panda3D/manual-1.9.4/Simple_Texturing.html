@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Simple Texturing - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Simple Texturing</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texturing.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Choosing_a_Texture_Size.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>A <b>texture map</b> or <b>texture image</b> is a two-dimensional image file, like a JPEG or a Windows BMP file, that is used to apply color to a 3-D model.  It is called a "texture" because one of the earliest uses of this technique was to apply an interesting texture to walls and floors that would otherwise be one flat, plastic-looking color.  Nowadays texturing is so common in 3-D applications that it is often the only thing used to apply color to models--without texture maps, many models would simply be white.
+</p><p>There are a vast array of rendering effects that can be achieved with different variants on texturing.  Before you can learn about them, it is important to understand the basics of texturing first.
+</p><p>In simple texturing--by far the most common form--you can think of the texture map as a layer of paint that is applied to the model.  In order for the graphics hardware to know in what direction the paint should be applied, the model must have been created with <b>texture coordinates</b>--a special (u, v) coordinate pair that is associated with each vertex of your model.  Each vertex's (u, v) texture coordinates place the vertex at a particular point within the texture map, in the same way that the vertex's (x, y, z) coordinates place the vertex at a particular point in 3-D space.
+</p><p>These texture coordinates are sometimes called <b>uv's</b> because of the (u, v) name of the coordinate pair.  Almost any modeling package that you might use to create a model can create texture coordinates at the same time, and many do it without even asking.
+</p><p>By convention, every texture map is assigned a (u, v) coordinate range such that the u coordinate ranges from 0 to 1 from left to right, and the v coordinate ranges from 0 to 1 from bottom to top.  This means that the bottom-left corner of the texture is at coordinate (0, 0), and the top-right corner is at (1, 1).  For instance, take a look at some typical texture maps:
+</p><p><a href="File%253ATexture_uvs.png.html" class="image" title="The assignment of (u, v) values to texture images"><img alt="The assignment of (u, v) values to texture images" src="Texture_uvs.png" width="400" height="300" /></a>
+</p><p>It is the (u, v) texture coordinates that you assign to the vertices that determine how the texture map will be applied to your model.  When each triangle of your model is drawn, it is drawn with the colors from your texture map that fall within the same triangle of vertices in (u, v) texture map space.  For instance, the sample smiley.egg model that ships with Panda has its vertices defined such that the <i>u</i> coordinate increases from 0 to 1 around its diameter, and the <i>v</i> coordinate increases from 0 at the bottom to 1 at the top.  This causes the texture image to be wrapped horizontally around the sphere:
+</p><p><a href="File%253ATexture_smiley.png.html" class="image" title="The assignment of (u, v) values to vertices"><img alt="The assignment of (u, v) values to vertices" src="Texture_smiley.png" width="400" height="300" /></a>
+</p><p>Note that the (u, v) range for a texture image is always the same, 0 to 1, regardless of the size of the texture.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 1/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1171-0!*!*!*!*!2!* and timestamp 20171007213947 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texturing.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Choosing_a_Texture_Size.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

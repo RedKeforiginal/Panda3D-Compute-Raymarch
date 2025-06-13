@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Simple Texture Replacement - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Simple Texture Replacement</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Filter_Types.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Multitexture_Introduction.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Although usually you will load and display models that are already textured, you can also apply or replace a texture image on a model at runtime.  To do this, you must first get a handle to the texture, for instance by loading it directly:
+</p>
+<pre class="python">myTexture = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;myTexture.png&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>The above loadTexture() call will search along the current model-path for the named image file (in this example, a file named "myTexture.png").  If the texture is not found or cannot be read for some reason, None is returned.
+</p><p>Once you have a texture, you can apply it to a model with the <code>setTexture() </code> call.  For instance, suppose you used the CardMaker class to generate a plain white card:
+</p>
+<pre class="python">cm = CardMaker<span style="color: black;">&#40;</span><span style="color: #483d8b;">'card'</span><span style="color: black;">&#41;</span><br />card = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>cm.<span style="color: black;">generate</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>Then you can load up a texture and apply it to the card like this:
+</p>
+<pre class="python">tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'maps/noise.rgb'</span><span style="color: black;">&#41;</span><br />card.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>tex<span style="color: black;">&#41;</span></pre>
+<p>(Note that it is not necessary to use the override parameter to the setTexture() call--that is, you do not need to do card.setTexture(tex, 1)--because in this case, the card does not already have any other texture applied to it, so your texture will be visible even without the override.)
+</p><p>In order for this to work, the model you apply it to must already have <b>texture coordinates</b> defined (see <a href="Simple_Texturing.html" title="Simple Texturing">Simple Texturing</a>).  As it happens, the CardMaker generates texture coordinates by default when it generates a card, so no problem there.
+</p><p>You can also use <code>setTexture()</code> to replace the texture on an already-textured model.  In this case, you must specify a second parameter to setTexture, which is the same optional Panda override parameter you can specify on any kind of Panda state change.  Normally, you simply pass 1 as the second parameter to setTexture().  Without this override, the texture that is assigned directly at the Geom level will have precedence over the state change you make at the model node, and the texture change won't be made.
+</p><p>For instance, to change the appearance of smiley:
+</p>
+<pre class="python">smiley = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'smiley.egg'</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'maps/noise.rgb'</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>tex, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ATexture_smiley_noise.png.html" class="image" title="Smiley with noise.egg applied"><img alt="Smiley with noise.egg applied" src="Texture_smiley_noise.png" width="267" height="200" /></a>
+</p><p>Often, you want to replace the texture on just one piece of a model, rather than setting the texture on every element.  To do this, you simply get a NodePath handle to the piece or pieces of the model that you want to change, as described in the section <a href="Manipulating_a_Piece_of_a_Model.html" title="Manipulating a Piece of a Model">Manipulating a Piece of a Model</a>, and make the <code>setTexture()</code> call on those NodePaths.
+</p><p>For instance, this car model has multiple textures available in different colors:
+</p><p><a href="File%253ACar_red.png.html" class="image" title="Description"><img alt="Description" src="Car_red.png" width="267" height="200" /></a>
+</p><p>For the most part, this car was painted with one big texture image, which looks like this:
+</p><p><a href="File%253ACarnsx.png.html" class="image" title="Description"><img alt="Description" src="Carnsx.png" width="256" height="256" /></a>
+</p><p>But we also have a blue version of the same texture image:
+</p><p><a href="File%253ACarnsx_blue.png.html" class="image" title="Description"><img alt="Description" src="Carnsx_blue.png" width="256" height="256" /></a>
+</p><p>Although it is tempting to use setTexture() to assign the blue texture to the whole car, that would also assign the blue texture to the car's tires, which need to use a different texture map.  So instead, we apply the blue texture just to the pieces that we want to change:
+</p>
+<pre class="python">car = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'bvw-f2004--carnsx/carnsx.egg'</span><span style="color: black;">&#41;</span><br />blue = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'bvw-f2004--carnsx/carnsx-blue.png'</span><span style="color: black;">&#41;</span><br />car.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/body/body'</span><span style="color: black;">&#41;</span>.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>blue, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />car.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/body/polySurface1'</span><span style="color: black;">&#41;</span>.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>blue, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />car.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/body/polySurface2'</span><span style="color: black;">&#41;</span>.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>blue, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span></pre>
+<p>And the result is this:
+</p><p><a href="File%253ACar_with_blue.png.html" class="image" title="Description"><img alt="Description" src="Car_with_blue.png" width="267" height="200" /></a>
+</p><p>If you are interested in changing the image of a texture during program execution, say to adjust some of its pixels, see <a href="Creating_New_Textures_from_Scratch.html" title="Creating New Textures from Scratch">Creating New Textures from Scratch</a>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 25/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1020-0!*!0!*!*!2!* and timestamp 20171008113326 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Filter_Types.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Multitexture_Introduction.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

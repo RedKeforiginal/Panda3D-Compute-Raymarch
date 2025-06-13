@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Sound - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Sound</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Orthographic_Lenses.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_and_Playing_Sounds_and_Music.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p>
+<h2> <span class="mw-headline" id="Sound_System_Options"> Sound System Options </span></h2>
+<p>To play audio in your game, Panda3D can offer you the following three choices of audio libraries:
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://connect.creativelabs.com/openal/default.aspx">OpenAL</a> is a well-known and popular open-source audio library.  Panda3D uses the <a rel="nofollow" class="external text" href="http://openal-soft.org/">OpenAL Soft</a> implementation.
+</li><li> <a rel="nofollow" class="external text" href="http://www.fmod.org/">FMOD</a> is a powerful proprietary cross-platform sound engine that supports various types of sound files - MP3, WAV, AIFF, MIDI, MOD, WMA, and OGG Vorbis. However, its license restricts you from using it for commercial purposes unless you actually purchase a special license. Non-commercial use of FMOD is free of charge. (For more information on this, visit the <a rel="nofollow" class="external text" href="http://www.fmod.org/index.php/sales">FMOD Licenses</a> page.)
+</li><li> <a rel="nofollow" class="external text" href="http://www.radgametools.com/miles.htm">Miles</a> is a sound system that is not included in the downloadable binaries of Panda3D. In order to use this you will need to purchase Miles and compile Panda3D from scratch using the ppremake system
+</li></ul>
+<p>If these choices are not enough for you, then you can try other sound libraries.
+</p>
+<h2> <span class="mw-headline" id="Setting_the_Sound_System"> Setting the Sound System </span></h2>
+<p>To configure Panda3D to use a specific sound system, you will need to change your <a href="Configuring_Panda.html" title="Configuring Panda" class="mw-redirect">Config.prc</a> configuration. You should look up the variable <code>audio-library-name</code> and change the value to one of <code>p3openal_audio</code>, <code>p3fmod_audio</code>, or <code>miles_audio</code>. (The names of the libraries may differ with the way Panda3D was built.)
+</p>
+<h2> <span class="mw-headline" id="Extra_Notes"> Extra Notes </span></h2>
+<p>If you don't want to use one or both of the libraries shipped by default with the SDK, then you can remove the associated library files after installation or compile Panda3D from source with the appropriate settings to keep them out of the build.
+</p><p><b>Note for users of Panda3D 1.5.4 and under:</b> If you are using FMOD and a 64-bit operating system, you might run into a strange assertion error or even a crash if the memory address of the sound exceeds 4 billion. This is because of an issue in FMOD. To avoid being affected by this issue, you must make sure your memory usage doesn't exceed 4 GiB (which is not likely, and even impossible on 32-bit systems).
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 48/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1021-0!*!0!!*!*!* and timestamp 20171008001537 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Orthographic_Lenses.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_and_Playing_Sounds_and_Music.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
