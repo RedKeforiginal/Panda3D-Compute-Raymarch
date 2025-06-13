@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Modes - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Modes</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multitexture_Introduction.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Order.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>There are several kinds of textures: color textures, normal maps, gloss maps, glow maps, and so forth.  To distinguish these, use the <code>TextureStage.setMode</code> function. 
+</p><p>Futhermore, within the general category of color textures, there are several ways to combine the colors: Modulate, Decal, Blend, and so forth.  These, too, are controlled using the <code>TextureStage.setMode</code> function.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#The_Basics"><span class="tocnumber">1</span> <span class="toctext">The Basics</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Modulate_mode"><span class="tocnumber">2</span> <span class="toctext">Modulate mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Add_mode"><span class="tocnumber">3</span> <span class="toctext">Add mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Replace_mode"><span class="tocnumber">4</span> <span class="toctext">Replace mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Decal_mode"><span class="tocnumber">5</span> <span class="toctext">Decal mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Blend_mode"><span class="tocnumber">6</span> <span class="toctext">Blend mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Normal_Map_Mode"><span class="tocnumber">7</span> <span class="toctext">Normal Map Mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Height_.2F_Parallax_Map_Mode"><span class="tocnumber">8</span> <span class="toctext">Height / Parallax Map Mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Gloss_Map_Mode"><span class="tocnumber">9</span> <span class="toctext">Gloss Map Mode</span></a></li>
+<li class="toclevel-1"><a href="Texture_Blend_Modes.html#Glow_Map_Mode"><span class="tocnumber">10</span> <span class="toctext">Glow Map Mode</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="The_Basics">The Basics</span></h2>
+<p>Let's go back to the example of applying a texture to the smiley model.  In this case, we'll create a new TextureStage to apply the following texture image:
+</p><p><a href="File%253AColor_pattern.png.html" class="image" title="Sample multitexture image"><img alt="Sample multitexture image" src="Color_pattern.png" width="128" height="128" /></a>
+</p><p>To this scene:
+</p><p><a href="File%253ASmiley_multitex_none.png.html" class="image" title="Smiley with no multitexture"><img alt="Smiley with no multitexture" src="Smiley_multitex_none.png" width="267" height="200" /></a>
+</p><p>Note that the circular white part of the sample image is actually not white at all, but an alpha cutout (you are seeing through the image to the white page background).  We have rendered smiley.egg against a colored background so you can see the effects of alpha in the various modes below; in some of them, the alpha is propagated through to the final color, so smiley is transparent in those parts of the image, but in other modes, the alpha is used for a different purpose, and smiley is not transparent there.
+</p><p>Note also that, for the purposes of illustration, we have only applied the sample texture image to a portion of the smiley model, rather than to the whole model.  (This was done by transforming the texture coordinates of this texture stage, which is covered in <a href="Texture_Transforms.html" title="Texture Transforms">a later topic</a>.)
+</p>
+<h2> <span class="mw-headline" id="Modulate_mode">Modulate mode</span></h2>
+<p>This is the default blend mode.  In this mode, the top texture color is multiplied by the bottom texture color to produce the result.  This means the resulting texture color will be darker (or at least, no brighter) than both of the original texture colors.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MModulate</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ASmiley_multitex_modulate.png.html" class="image" title="Modulate blend mode"><img alt="Modulate blend mode" src="Smiley_multitex_modulate.png" width="267" height="200" /></a>
+</p><p>Note that in this mode, an alpha cutout in the top texture produces an alpha cutout in the resulting image.
+</p>
+<h2> <span class="mw-headline" id="Add_mode">Add mode</span></h2>
+<p>In this mode, the top texture color is added to the bottom texture color, and clamped to 1 (white).  This means the resulting texture color will be brighter (or at least, no darker) than both of the original texture colors.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MAdd</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ASmiley_multitex_add.png.html" class="image" title="Add blend mode"><img alt="Add blend mode" src="Smiley_multitex_add.png" width="267" height="200" /></a>
+</p><p>Note that in this mode, as in modulate mode, an alpha cutout in the top texture produces an alpha cutout in the resulting image.  Also note that, unless one or both of your source textures was rather dark, there is a tendency for the colors to get washed out at white where everything clamps to 1.
+</p>
+<h2> <span class="mw-headline" id="Replace_mode">Replace mode</span></h2>
+<p>In this mode the top texture completely replaces the bottom texture.  This mode is not often used.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MReplace</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ASmiley_multitex_replace.png.html" class="image" title="Replace blend mode"><img alt="Replace blend mode" src="Smiley_multitex_replace.png" width="267" height="200" /></a>
+</p><p>Note that the alpha cutout is preserved, but the effects of lighting (which are considered part of the underlying texture) have been lost.
+</p>
+<h2> <span class="mw-headline" id="Decal_mode">Decal mode</span></h2>
+<p>In this mode the top texture completely replaces the bottom texture, but only where alpha = 1 in the top texture.  When alpha = 0, the bottom texture shows through, and there is a smooth blending for alpha values between 0 and 1.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MDecal</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ASmiley_multitex_decal_1.png.html" class="image" title="Decal blend mode"><img alt="Decal blend mode" src="Smiley_multitex_decal_1.png" width="267" height="200" /></a>
+</p><p>Note that the alpha cutout is no longer preserved in this mode, because alpha is used to determine which texture should be visible.  Also note that the effects of lighting are lost for the decalled part of the texture.
+</p><p>Panda3D also provides a built-in decal capability, for rendering a small polygon coplanar with and embedded within a larger polygon, which is not related to the decal texture blend mode.
+</p>
+<h2> <span class="mw-headline" id="Blend_mode">Blend mode</span></h2>
+<p>Blend mode is similar to decal mode, except you can specify the color of the decal as a parameter at runtime.  You can vary the color and you don't have to have a different texture image prepared for each possible color.  However, the decal will always be monochromatic (it will be drawn in different shades of whatever color you specify).
+</p><p>Blend mode can only be used with a grayscale texture, and it does not use alpha.  Since the sample texture above is not a grayscale texture, we will use a different texture for this example:
+</p><p><a href="File%253AWhite_a.png.html" class="image"><img alt="White a.png" src="White_a.png" width="128" height="128" /></a>
+</p><p>This texture does not have an alpha channel; it is simply a grayscale image with a large white "A" on a field of black.  Blend mode will produce the original color where the image is black, and the color we specify with <code>TextureStage.setColor()</code> where the image is white.  Where the image is shades of gray, there will be a smooth blending between the colors.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MBlend</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ASmiley_multitex_blend_red.png.html" class="image" title="Blend mode, with a red image"><img alt="Blend mode, with a red image" src="Smiley_multitex_blend_red.png" width="267" height="200" /></a>
+</p><p>And we can change the color of the decal at will, simply with:
+</p>
+<pre class="python">ts.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>Vec4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p><a href="File%253ASmiley_multitex_blend_blue.png.html" class="image" title="Blend mode, with a blue image"><img alt="Blend mode, with a blue image" src="Smiley_multitex_blend_blue.png" width="267" height="200" /></a>
+</p><p>Note that, as with the decal example above, the lighting information is lost where the decal is applied.
+</p>
+<h2> <span class="mw-headline" id="Normal_Map_Mode">Normal Map Mode</span></h2>
+<p>Normal maps are maps that cause surfaces to appear to have raised and lowered areas.  They are also called "bump maps."  Unlike most maps, normal maps do not affect the color of the model - they affect the lighting.  When light hits a normal-mapped model, the light creates highlights and shadows throughout those ridges and bumps.  If no lights are applied to the model, then there will be no shadows or highlights, and the normal map will be invisible.  Currently, Panda3D only allows one normal map per polygon, additional normal maps will be ignored.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MNormal</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>The creation of normal maps is a sufficiently complex process that it is beyond the scope of this manual.  However, there are many good tools out there like Z-Brush, Crazy Bump, and the like which create normal maps.
+</p><p>See also: <a href="Sample_Programs%253A_Normal_Mapping.html" title="Sample Programs: Normal Mapping">Sample Programs: Normal Mapping</a>
+</p><p>Normal maps are new to Panda3D as of version 1.5.0.  They only function when <a href="The_Shader_Generator.html" title="The Shader Generator">shader generation</a> is enabled.
+</p>
+<h2> <span class="mw-headline" id="Height_.2F_Parallax_Map_Mode">Height / Parallax Map Mode</span></h2>
+<p><b>This feature is new as of Panda3D 1.7.0.</b><br />
+As an addition to normal mapping, you can specify a grayscale height map to enable parallax mapping.  This technique offsets the UV coordinates based on the height value and eye normal vector, so the resulting surface will have more apparent depth.  Currently, Panda only supports one height map per polygon, additional height maps will be ignored.
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MHeight</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>Since parallax mapping doesn't look very good without normal mapping, they are often used both together.  As an optimization, most people prefer to store the height map into the alpha channel of the normal map.  If you are using such a packed normal/height map, you need to use the MNormalHeight mode in Panda:
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># The second parameter to loadTexture will be stored in the texture's alpha channel.</span><br />tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;normalmap.png&quot;</span>, <span style="color: #483d8b;">&quot;heightmap.png&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br />ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MNormalHeight</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>By default, the parallax mapping algorithm will use 3 samples, and the effect will be scaled by 0.1. To change these parameters, use the following Config.prc lines:
+</p>
+<pre class="text">parallax-mapping-samples 3<br />parallax-mapping-scale 0.1</pre>
+<p>The amount of samples is how accurate the parallax mapping will be.  Lower values are cheaper, but the result will be less accurate.  The scale is the magnitude of the effect - with a lower value the effect decreases, with a higher value the surface will have more apparent depth (although the artifacts due to lack of occlusion will be more visible). Use a negative value to invert the effect (this has the same effect as inverting the heightmap).
+</p>
+<h2> <span class="mw-headline" id="Gloss_Map_Mode">Gloss Map Mode</span></h2>
+<p>A gloss map is a black-and-white image indicating where the model is supposed to be shiny and where it is supposed to be dull.  Gloss maps do not affect the color of the model - they affect the degree to which the model reflects specular highlights.  So if no lights are applied to the model, and thus there are no specular highlights at all, then the gloss map will be invisible.
+</p><p>More precisely, the gloss map affects the material specular color of the model. If the model already has a material specular color, then it is multiplied by the value (0-1) in the gloss map.  In this way, the gloss map can effectively turn on or off the specularity on a per-pixel basis.  If the model does not already have a material specular color specified, then applying a gloss map causes the material specular color to range from off to bright white.
+</p><p>A gloss map must be an alpha-texture:
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MGloss</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>If you wish, you can pack a modulate-texture and a gloss-map into a single RGBA texture.  In that case, the RGB components are just regular color values that are modulated onto the model, and the A controls gloss:
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MModulateGloss</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>Currently, Panda3D only allows one gloss map per polygon, additional gloss maps will be ignored.
+</p><p>Gloss maps are new to Panda3D as of version 1.5.0.  They only function when <a href="The_Shader_Generator.html" title="The Shader Generator">shader generation</a> is enabled.
+</p>
+<h2> <span class="mw-headline" id="Glow_Map_Mode">Glow Map Mode</span></h2>
+<p>A glow map is a black-and-white texture which indicates that a model should be glowing in certain areas.  More specifically, the contents of the glow map are added to the material emission.  This causes those parts of the model to be lit even when the lights are otherwise off.
+</p><p>In practice, though, things don't really look like they're glowing unless you apply a bloom filter to your scene.  Panda can be made to copy the contents of your glow map into the framebuffer alpha, from which it can be read by the bloom filter.  The bloom filter then really creates a dramatic glow effect.  All of this is documented in the chapter on the bloom filter.
+</p><p>A glow map must be an alpha-texture:
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MGlow</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>If you wish, you can pack a modulate-texture and a glow-map into a single RGBA texture.  In that case, the RGB components are just regular color values that are modulated onto the model, and the A controls glow:
+</p>
+<pre class="python">ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MModulateGlow</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre>
+<p>Currently, Panda3D only allows one glow map per polygon, additional glow maps will be ignored.
+</p><p>See also: <a href="Sample_Programs%253A_Glow_Filter.html" title="Sample Programs: Glow Filter">Sample Programs: Glow Filter</a>
+</p><p>Glow maps are new to Panda3D as of version 1.5.0.  They only function when <a href="The_Shader_Generator.html" title="The Shader Generator">shader generation</a> is enabled.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 273/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1188-0!*!0!!en!2!* and timestamp 20171007225320 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multitexture_Introduction.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Order.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

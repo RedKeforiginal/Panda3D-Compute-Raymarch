@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Tasks - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Tasks</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Tasks_and_Event_Handling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Task_Chains.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Tasks are special functions that are called once each frame while your application executes.  They are similar in concept to threads. However, in Panda3D, tasks are not generally separate threads; instead, all tasks are run cooperatively, one at a time, within the main thread.  This design simplifies game programming considerably by removing the requirement to protect critical sections of code from mutual access.  (See Task Chains in the next section if you really want to use threading.)
+</p><p>When you start Panda3D by initializing ShowBase, a handful of tasks are created by default, but you are free to add as many additional tasks as you like.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Tasks.html#The_Task_Function"><span class="tocnumber">1</span> <span class="toctext">The Task Function</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#Task_Return_Values"><span class="tocnumber">2</span> <span class="toctext">Task Return Values</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#The_Do-Later_Task.3F"><span class="tocnumber">3</span> <span class="toctext">The Do-Later Task?</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#The_Do-Later_Task"><span class="tocnumber">4</span> <span class="toctext">The Do-Later Task</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#The_Task_Object"><span class="tocnumber">5</span> <span class="toctext">The Task Object</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#The_Task_Manager"><span class="tocnumber">6</span> <span class="toctext">The Task Manager</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#Task_timing"><span class="tocnumber">7</span> <span class="toctext">Task timing</span></a></li>
+<li class="toclevel-1"><a href="Tasks.html#Examples"><span class="tocnumber">8</span> <span class="toctext">Examples</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="The_Task_Function">The Task Function</span></h2>
+<p>A task is defined with a function or class method; this function is the main entry point for the task and will be called once per frame while the task is running.  By default, the function receives one parameter, which is the task object; the task object carries information about the task itself, such as the amount of time that the task has been running.
+</p><p>Your task function should return when it has finished processing for the frame.  Because all tasks are run in the same thread, you must not spend too much time processing any one task function; the entire application will be locked up until the function returns.
+</p><p>The task function may return either <code>Task.cont</code> to indicate that the task should be called again next frame, or <code>Task.done</code> to indicate that it should not be called again. If it returns None (which is to say, it does not return anything), then the default behavior is to stop.
+</p><p>You can check how long your task has been running by checking <code>task.time</code> in your task function. You can also check how many times the task function has been run by using <code>task.frame</code>.
+</p><p>The below example imports the Task module and shows a function used as a task.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">task</span> <span style="color: #ff7700;font-weight:bold;">import</span> Task<br />&#160;<br /><span style="color: #808080; font-style: italic;"># This task runs for two seconds, then prints done</span><br /><span style="color: #ff7700;font-weight:bold;">def</span> exampleTask<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">if</span> task.<span style="color: #dc143c;">time</span> <span style="color: #66cc66;">&lt;</span> <span style="color: #ff4500;">2.0</span>:<br />    <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">cont</span><br />  <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">'Done'</span><br />  <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">done</span></pre>
+
+<h2> <span class="mw-headline" id="Task_Return_Values">Task Return Values</span></h2>
+<p>The value returned from a task affects how the task manager handles that task going forward.
+</p>
+<center>
+<table border="1" cellpadding="1" cellspacing="0">
+<tr>
+<th>Variable</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+<tr>
+<td><code>Task.done</code>
+</td><td>Specifies that a task is finished and removes it from the task manager.</td>
+</tr>
+<tr>
+<td><code>Task.cont</code></td>
+<td>Perform the task again next frame.</td>
+</tr>
+<tr>
+<td><code>Task.again</code></td>
+<td>Perform the task again, using the same delay as initially specified.</td>
+</tr>
+
+<tr>
+<td><code>None</code></td>
+<td>Same as done.</td>
+</tr>
+
+</table></center>
+<p>
+
+</p>
+<h2> <span class="mw-headline" id="The_Do-Later_Task">The Do-Later Task</span></h2>
+<p>A useful special kind of task is the do-later: this is similar to a task, but rather than being called every frame it will be called only once, after a certain amount of time (in seconds) has elapsed.  You can, of course, implement a do-later task with a regular task that simply does nothing until a certain amount of time has elapsed (as in the above example), but using a do-later is a much more efficient way to achieve the same thing, especially if you will have many such tasks waiting around.
+</p>
+<pre class="python">taskMgr.<span style="color: black;">doMethodLater</span><span style="color: black;">&#40;</span>delayTime, myFunction, <span style="color: #483d8b;">'Task Name'</span><span style="color: black;">&#41;</span></pre>
+<p>In this example myFunction must accept a task variable.  If you wish to use a function that does not accept a task variable:
+</p>
+<pre class="python">taskMgr.<span style="color: black;">doMethodLater</span><span style="color: black;">&#40;</span>delayTime, myFunction, <span style="color: #483d8b;">'Task Name'</span>, extraArgs = <span style="color: black;">&#91;</span>variables<span style="color: black;">&#93;</span><span style="color: black;">&#41;</span></pre>
+<p>Note: if you wish to call a function which takes no variables simply pass <code>extraArgs = []</code>
+</p><p>Do-Later task's can be repeated from the task function by returning <code>task.again</code>. You can also change the delay of the Do-Later task by changing <code>task.delayTime</code>, but changing this will not have any effect on the task's actual delay time until the <i>next</i> time it gets added to the do-later list, for instance by returning Task.again.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># This task increments itself so that the delay between task executions </span><br /><span style="color: #808080; font-style: italic;"># gradually increases over time. If you do not change task.delayTime</span><br /><span style="color: #808080; font-style: italic;"># the task will simply repeat itself every 2 seconds</span><br /><span style="color: #ff7700;font-weight:bold;">def</span> myFunction<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>:<br />    <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;Delay:&quot;</span>,task.<span style="color: black;">delayTime</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;Frame:&quot;</span>,task.<span style="color: black;">frame</span><br />    task.<span style="color: black;">delayTime</span> += <span style="color: #ff4500;">1</span><br />    <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">again</span><br />&#160;<br />myTask = taskMgr.<span style="color: black;">doMethodLater</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, myFunction, <span style="color: #483d8b;">'tickTask'</span><span style="color: black;">&#41;</span></pre>
+<p>If you wish to change the delayTime outside of the task function itself, and have it make an immediate effect, you can remove and re-add the task by hand, for instance:
+</p>
+<pre class="python">taskMgr.<span style="color: black;">remove</span><span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span><br />task.<span style="color: black;">delayTime</span> += <span style="color: #ff4500;">1</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span></pre>
+<p>Although there is a public member <code>task.wakeTime</code> which stores the time at which the task should wake up, you should not attempt to modify this.  Doing so may appear to work in some simple cases, but will actually invalidate the Task Manager's internal priority queue, potentially causing other tasks to wake up later or sooner than they are supposed to.  (In Panda3D version 1.6 and later, changing this value is specifically disallowed.)
+
+</p>
+<h2> <span class="mw-headline" id="The_Task_Object">The Task Object</span></h2>
+<p>The <code>task</code> object is passed into all Task Functions. There are several members accessible in the func object,  these are:
+</p>
+<center>
+<table border="1" cellpadding="1" cellspacing="0">
+<tr>
+<th style="width: 40%;">Member</th>
+<th style="text-align: left;">Returns</th>
+</tr>
+<tr>
+<td><code>task.time</code></td>
+<td>A float that indicates how long this task function has been running since the first execution of the function. The timer is running even when the task function is not being executed.</td>
+</tr>
+<tr>
+<td><code>task.frame</code></td>
+<td>An integer that counts the number of elapsed frames since this function was added. Count may start from 0 or 1.</td>
+</tr>
+<tr>
+<td><code>task.id</code></td>
+<td>An integer that gives the unique id assigned to this task by the Task Manager.</td>
+</tr>
+<tr>
+<td><code>task.name</code></td>
+<td>The task name assigned to the task function.</td>
+</tr>
+</table></center>
+<p>To remove the task and stop it from executing, call <code>task.remove()</code>.
+</p>
+<h2> <span class="mw-headline" id="The_Task_Manager">The Task Manager</span></h2>
+<p>All tasks are handled through the global Task Manager object, called <code>taskMgr</code> in Panda3D. The Task Manager keeps a list of all currently-running tasks.To add your task function to the task list, call <code>taskMgr.add()</code> with your function and an arbitrary name for the task. <code>taskMgr.add()</code> returns a Task which can be used to remove the task later on. 
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>exampleTask, <span style="color: #483d8b;">'MyTaskName'</span><span style="color: black;">&#41;</span></pre>
+
+<p>You can add extra arguments to the call through the extraArgs parameter. When you add extraArgs, the task parameter is no longer sent to your function by default. If you still want it, make sure to set appendTask to true. <code>appendTask=True</code> makes the task the last argument sent to the function.
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>exampleTask, <span style="color: #483d8b;">'MyTaskName'</span>, extraArgs=<span style="color: black;">&#91;</span>a,b,c<span style="color: black;">&#93;</span>, appendTask=<span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>Although normally each task is given a unique name, you may also create multiple different tasks with the same name.  This can be convenient for removing many task functions at the same time.  Each task remains independent of the others, even if they have the same name; this means that a task function returning <code>Task.done</code> will not affect any other task functions.
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>taskFunc, <span style="color: #483d8b;">'Existing TaskName'</span><span style="color: black;">&#41;</span></pre>
+
+<p>
+To remove the task and stop it from executing, call <code>taskMgr.remove()</code>.  You can pass in either the name of the task, or the task object (which was returned by <code>taskMgr.add()</code>, above).
+</p>
+<pre class="python">taskMgr.<span style="color: black;">remove</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'MyTaskName'</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p><p>
+You may add a cleanup function to the task function with the uponDeath parameter. Similar to task functions, the uponDeath function has a task object as a parameter.  The cleanup function is called whenever the task finishes, for instance by <code>return Task.done</code>, or when it is explicitly removed via <code>taskMgr.remove()</code>.
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>exampleTask, <span style="color: #483d8b;">'TaskName'</span>, uponDeath=cleanupFunc<span style="color: black;">&#41;</span></pre>
+<p>
+
+</p><p>To control order in which tasks are executed, you can use sort or priority argument. If you use only sort or only priority, tasks given lesser value will execute sooner.
+</p><p>
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task2, <span style="color: #483d8b;">&quot;second&quot;</span>,sort=<span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task1, <span style="color: #483d8b;">&quot;first&quot;</span> ,sort=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span></pre>
+<p>or
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task2, <span style="color: #483d8b;">&quot;second&quot;</span>,priority=<span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task1, <span style="color: #483d8b;">&quot;first&quot;</span> ,priority=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span></pre>
+<p>In both cases, task1 given name "first" will be executed before task2 ("second").
+
+</p><p>If you use both sort and priority arguments, tasks with lower sort value will be executed first. However, if there are several tasks which have same sort value, but different priority value then that tasks are going to be executed in a way that ones with HIGHER priority value will be executed first.
+
+To clarify it a bit, here is code sample, tasks are named in order in which they are executed.
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task1, <span style="color: #483d8b;">&quot;first&quot;</span>,  sort=<span style="color: #ff4500;">1</span>, priority=<span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task2, <span style="color: #483d8b;">&quot;second&quot;</span>,sort=<span style="color: #ff4500;">1</span>,priority=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task3, <span style="color: #483d8b;">&quot;third&quot;</span>,sort=<span style="color: #ff4500;">2</span>, priority=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task4, <span style="color: #483d8b;">&quot;fourth&quot;</span>,sort=<span style="color: #ff4500;">3</span>, priority=<span style="color: #ff4500;">13</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>task5, <span style="color: #483d8b;">&quot;fifth&quot;</span>,sort=<span style="color: #ff4500;">3</span>, priority=<span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>To print the list of tasks currently running, simply print out <code>taskMgr</code>. Among your own tasks, you may see the following system tasks listed:
+</p>
+<center><table border="1" cellpadding="1" cellspacing="0">
+<tr><td>dataloop</td><td>      Processes the keyboard and mouse inputs</td></tr>
+<tr><td>tkloop</td><td>      Processes Tk GUI events</td></tr>
+<tr><td>eventManager</td><td>      Processes events generated by C++ code, such as collision events</td></tr>
+<tr><td>igloop</td><td>Draws the scene</td></tr>
+</table></center>
+<p>
+There also is graphical interface for managing tasks. This is very useful for having a look at the tasks while your application is running. 
+</p>
+<pre class="python">taskMgr.<span style="color: black;">popupControls</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p>
+<h2> <span class="mw-headline" id="Task_timing"> Task timing </span></h2>
+<p>To see the specific timing information for each task when you print taskMgr, add the following line to your Config.prc file
+</p><p><code>
+task-timer-verbose #t
+</code>
+</p><p>(see <a href="The_Configuration_File.html" title="The Configuration File">The Configuration File</a> for config syntax)
+</p>
+<h2> <span class="mw-headline" id="Examples">Examples</span></h2>
+<p>
+<b>uponDeath</b>
+</p>
+<pre class="python">taskAccumulator = <span style="color: #ff4500;">0</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> cleanUp<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">global</span> taskAccumulator<br />  <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;Task func has accumulated&quot;</span>,taskAccumulator<br />  <span style="color: #808080; font-style: italic;"># Reset the accumulator</span><br />  taskAccumulator = <span style="color: #ff4500;">0</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># A task that runs forever</span><br /><span style="color: #ff7700;font-weight:bold;">def</span> taskFunc<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">global</span> taskAccumulator<br />  taskAccumulator += <span style="color: #ff4500;">1</span><br />  <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">cont</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> taskStop<span style="color: black;">&#40;</span>task<span style="color: black;">&#41;</span>:<br />  taskMgr.<span style="color: black;">remove</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'Accumulator'</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Add the taskFunc function with an uponDeath argument</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>taskFunc, <span style="color: #483d8b;">'Accumulator'</span>, uponDeath=cleanUp<span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># Stops the task 2 seconds later</span><br />taskMgr.<span style="color: black;">doMethodLater</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, taskStop, <span style="color: #483d8b;">'Task Stop'</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 647/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1023-0!*!0!!en!*!* and timestamp 20171007211926 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Tasks_and_Event_Handling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Task_Chains.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Tinting and Recoloring - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Tinting and Recoloring</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Clip_Planes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Backface_Culling_and_Frontface_Culling.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Tinting_and_Recoloring.html#Color_and_the_Model_Loader"><span class="tocnumber">1</span> <span class="toctext">Color and the Model Loader</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Tinting_and_Recoloring.html#Recoloring_the_Model"><span class="tocnumber">2</span> <span class="toctext">Recoloring the Model</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Tinting_and_Recoloring.html#Tinting_the_Model"><span class="tocnumber">3</span> <span class="toctext">Tinting the Model</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Tinting_and_Recoloring.html#Demonstration"><span class="tocnumber">4</span> <span class="toctext">Demonstration</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Tinting_and_Recoloring.html#Related_Classes"><span class="tocnumber">5</span> <span class="toctext">Related Classes</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Color_and_the_Model_Loader">Color and the Model Loader</span></h2>
+<p>When you create a 3D model in Max, Maya, or the like, you can color the model right in the modeling program.  I'm not talking about using a texture.  I'm talking about just setting a single color to the model as whole.  This is called a "flat color."  These art programs also allow you to "paint vertex colors": you can color each vertex of the model a different color.  Of course, sometimes you do neither, in which case the model is just white.
+</p><p>Every model you load <i>already has</i> a color attribute.  Color Attributes are usually not created by the programmer explicitly, they're usually created by the model loader only.  There are three possible color attributes created by the model loader:
+</p>
+<table border="1" cellpadding="5">
+<tr>
+<th> Method
+</th>
+<th> Explanation
+</th></tr>
+<tr>
+<td class="code"> ColorAttrib.makeVertex() </td>
+<td> Used by the model loader to indicate that the model has vertex colors stored in its vertex arrays.
+</td></tr>
+<tr>
+<td class="code"> ColorAttrib.makeFlat(Vec4(R,G,B,A)) </td>
+<td> Used by the model loader to indicate that the model has a single flat color.
+</td></tr>
+<tr>
+<td class="code"> ColorAttrib.makeOff() </td>
+<td> Used by the model loader to indicate that no particular color was specified.  Essentially the same as flat white, but possibly a little faster to render.
+</td></tr></table>
+<p>Panda combines these color attributes with the textures.  If you are accustomed to Photoshop, you should think of the model's color as the bottom (background) layer, and the textures go above that.  By default, each texture is modulated (multiplied) with the previous layer, but as in Photoshop, that can be changed.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Recoloring_the_Model">Recoloring the Model</span></h2>
+<p>If you wish, you can manually override the color attribute which has been specified by the model loader.
+</p>
+<pre class="codeblock">
+nodePath.setColor(r,g,b,a)
+</pre>
+<p>Again, this is an <i>override</i>.  If the model already had vertex colors, these will disappear: the <code>setColor</code> method is replacing those colors with a new one.  If the model already had a flat color, that will be replaced with the new flat color.
+</p><p>It should be mentioned that the color attribute created by the model loader has low priority.  That means that even a default-priority <code>setColor</code> is enough to override it.
+</p><p>You can remove a previous <code>setColor</code> using <code>clearColor</code>.
+</p>
+<h2> <span class="mw-headline" id="Tinting_the_Model">Tinting the Model</span></h2>
+<p>Sometimes, you don't want to <i>replace</i> the existing color, sometimes, you want to <i>tint</i> the existing colors.  For this, you need <i>setColorScale</i>:
+</p>
+<pre class="codeblock">
+nodePath.setColorScale(r,g,b,a)
+</pre>
+<p>This color will be modulated (multiplied) with the existing color.
+</p><p>You can remove a previous <code>setColorScale</code> using <code>clearColorScale</code>.
+</p>
+<h2> <span class="mw-headline" id="Demonstration">Demonstration</span></h2>
+<p>To see the difference between <code>setColor</code> and <code>setColorScale</code>, try the code sample below.  You will need the nik-dragon model from the Cartoon Shading sample program, which has
+vertex colors and no texture:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> ColorAttrib<br />&#160;<br /><span style="color: #808080; font-style: italic;"># Load three copies of Nik's dragon, which has vertex colors.</span><br />model1 = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;nik-dragon&quot;</span><span style="color: black;">&#41;</span><br />model2 = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;nik-dragon&quot;</span><span style="color: black;">&#41;</span><br />model3 = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;nik-dragon&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Put them in the scene.</span><br />model1.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />model2.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />model3.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Arrange them left-to-right</span><br />model1.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-10</span>,<span style="color: #ff4500;">50</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />model2.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>  <span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">50</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />model3.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span> <span style="color: #ff4500;">10</span>,<span style="color: #ff4500;">50</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Model 1 will be left alone, so you can see the original.</span><br /><span style="color: #808080; font-style: italic;"># Model 2 will be recolored light blue.</span><br /><span style="color: #808080; font-style: italic;"># Model 3 will be tinted light blue.</span><br />model2.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.6</span>, <span style="color: #ff4500;">0.6</span>, <span style="color: #ff4500;">1.0</span>, <span style="color: #ff4500;">1.0</span><span style="color: black;">&#41;</span><br />model3.<span style="color: black;">setColorScale</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.6</span>, <span style="color: #ff4500;">0.6</span>, <span style="color: #ff4500;">1.0</span>, <span style="color: #ff4500;">1.0</span><span style="color: black;">&#41;</span><br />&#160;<br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>This produces the following output:
+</p><p><a href="File%253ATinting-and-recoloring1.jpg.html" class="image"><img alt="Tinting-and-recoloring1.jpg" src="Tinting-and-recoloring1.jpg" width="500" height="392" /></a>
+</p><p>The model on the left is the original, unaltered model.  Nik has used vertex colors throughout.  The yellow of the belly, the black eyes, the red mouth, these are all vertex colors.  The one in the
+middle has been <code>setColor</code>ed to a medium-blue color.  As you can see, the <code>setColor</code> completely replaces the vertex colors.  The one on the right bas been <code>setColorScale</code>ed to the same medium-blue color, but this only tints the model.
+</p>
+<h2> <span class="mw-headline" id="Related_Classes"> Related Classes </span></h2>
+<ul><li><a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=ColorScaleAttrib">ColorScaleAttrib</a>
+</li><li><a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=ColorAttrib">ColorAttrib</a>
+</li><li><a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=NodePath">NodePath</a>
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 144/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2217-0!*!*!!en!2!* and timestamp 20171007194614 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Clip_Planes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Backface_Culling_and_Frontface_Culling.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

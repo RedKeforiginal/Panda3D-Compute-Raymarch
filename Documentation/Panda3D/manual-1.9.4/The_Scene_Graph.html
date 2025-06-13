@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>The Scene Graph - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: The Scene Graph</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Programming_with_Panda3D.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Scene_Graph_Manipulations.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="The_Scene_Graph.html#The_Scene_Graph:_a_Tree_of_Nodes"><span class="tocnumber">1</span> <span class="toctext">The Scene Graph: a Tree of Nodes</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="The_Scene_Graph.html#What_you_Need_to_Know_about_the_Hierarchical_Scene_Graph"><span class="tocnumber">2</span> <span class="toctext">What you Need to Know about the Hierarchical Scene Graph</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="The_Scene_Graph.html#NodePaths"><span class="tocnumber">3</span> <span class="toctext">NodePaths</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="The_Scene_Graph.html#NodePath_methods_and_Node_methods"><span class="tocnumber">4</span> <span class="toctext">NodePath methods and Node methods</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="The_Scene_Graph:_a_Tree_of_Nodes"> The Scene Graph: a Tree of Nodes </span></h2>
+<p>Many simple 3D engines maintain a list of 3D models to render every frame.  In these simple engines, one must allocate a 3D model (or load it from disk), and then insert it into the list of models to render.  The model is not "visible" to the renderer until it is inserted into the list.
+</p><p>Panda3D is slightly more sophisticated.  Instead of maintaining a list of objects to render, it maintains a tree of objects to render.  An object is not visible to the renderer until it is inserted into the tree.
+</p><p>The tree consists of objects of class <code>PandaNode</code>.  This is actually
+a superclass for a number of other classes: <code>ModelNode</code>, <code>GeomNode</code>, <code>LightNode</code>, and so forth.  Throughout this manual, it is common for us to refer to objects of these classes as simply <i>nodes</i>.  The root of the tree is a node called <code>render</code>.  (Note: there may be additional roots for specialized purposes, like <code>render2d</code> for 2D objects)
+</p><p>Panda3D's "tree of things to render" is named the <i>scene graph.</i>
+</p>
+<h2> <span class="mw-headline" id="What_you_Need_to_Know_about_the_Hierarchical_Scene_Graph"> What you Need to Know about the Hierarchical Scene Graph </span></h2>
+<p>Here are the most important things you need to know about the
+hierarchical arrangement of the scene graph:
+</p>
+<ol>
+<li>You control where objects go in the tree.  When you insert an object into
+the tree, you specify where to insert it.  You can move branches
+of the tree around.  You can make the tree as deep or as shallow as you like.
+<br /><br /></li>
+<li>Positions of objects are specified relative to their parent in the tree.  For example, if you have a 3D model of a hat, you might want to specify that it always stays five units above a 3D model of a certain person's head.  Insert the hat as a child of the head, and set the position of the hat to (0,0,5).
+<br /><br /></li>
+<li>When models are arranged in a tree, any <i>rendering attributes</i> you assign to a node will propagate to its children.  For example, if you specify that a given node should be rendered with depth fog, then its children will also be rendered with depth fog, unless you explicitly override at the child level.
+<br /><br /></li>
+<li>Panda3D generates bounding boxes for each node in the tree.  A good
+organizational hierarchy can speed frustum and occlusion culling.  If the
+bounding box of an entire branch is outside the frustum, there is no need to examine the children.</li>
+</ol>
+<p>Beginners usually choose to make their tree completely flat--everything
+is inserted immediately beneath the root.  This is actually a very good
+initial design.  Eventually, you will find a reason to want to add a little
+more depth to the hierarchy.  But it is wise not to get complicated until
+you have a clear, specific reason to do so.
+</p>
+<h2> <span class="mw-headline" id="NodePaths"> NodePaths </span></h2>
+<p>There is a helper class called <code>NodePath</code> which is a very
+small object containing a pointer to a node, plus some 
+administrative information.  For now, you can ignore the administrative information; it will be explained in a <a href="Instancing.html" title="Instancing">later section</a>
+of the manual. It is the intent of the panda designers that you
+should think of a NodePath as a handle to a node.  Any function that
+creates a node returns a <code>NodePath</code> that refers
+to the newly-created node.
+</p><p>A NodePath isn't exactly a pointer to a node; it's a "handle" to a node.
+Conceptually, this is almost a distinction without a difference.  However,
+there are certain API functions that expect you to pass in a NodePath,
+and there are other API functions that expect you to pass in a node
+pointer.  Because of this, although there is little conceptual difference between them, you still need to know that both exist.
+</p><p>You can convert a NodePath into a "regular" pointer at any time by calling <code>nodePath.node()</code>.  However, there is no unambiguous way to convert back.
+That's important: sometimes you <i>need</i> a NodePath, sometimes you
+<i>need</i> a node pointer.  Because of this, it is recommended that you
+store NodePaths, not node pointers.  When you pass parameters, you should
+probably pass NodePaths, not node pointers.  The callee can always convert
+the NodePath to a node pointer if it needs to.
+</p>
+<h2> <span class="mw-headline" id="NodePath_methods_and_Node_methods"> NodePath methods and Node methods </span></h2>
+<p>There are many methods that you can invoke on NodePaths, which are appropriate for nodes of any type.  Specialized node types, like LODNodes and Cameras (for instance), provide additional methods that are available only for nodes of that type, which you must invoke on the node itself.  Here are some assorted examples:
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># NODEPATH METHODS:</span><br />myNodePath.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>x, y, z<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>banana<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># LODNODE METHODS:</span><br />myNodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addSwitch</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1000</span>, <span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setCenter</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">5</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># CAMERA NODE METHODS:</span><br />myNodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setLens</span><span style="color: black;">&#40;</span>PerspectiveLens<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">getCameraMask</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<p>Always remember: when you invoke a method of <code>NodePath</code>, you
+are actually performing an operation on the node to which it points.
+</p><p>In the example above, we call node-methods by first converting the
+NodePath into a node, and then immediately calling the node-method.
+This is the recommended style.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 104/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:941-0!*!0!!en!*!* and timestamp 20171007191649 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Programming_with_Panda3D.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Scene_Graph_Manipulations.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

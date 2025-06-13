@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Combine Modes - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Combine Modes</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Order.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Transforms.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In addition to the several <a href="Texture_Blend_Modes.html" title="Texture Blend Modes" class="mw-redirect">Texture Blend Modes</a> described previously, there is a more advanced interface on TextureStage that allows for a larger vocabulary of texture blending options.
+</p><p>Although several of the following options (CMReplace, CMModulate, CMAdd) have obvious parallels with the simpler blend modes described previously, they are in fact more powerful, because with each of the following you may specify the particular source or sources to be used for the operation; you are not limited to simply applying the operation to the top texture and the texture below.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Texture_Combine_Modes.html#RGB_modes"><span class="tocnumber">1</span> <span class="toctext">RGB modes</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Texture_Combine_Modes.html#Alpha_modes"><span class="tocnumber">2</span> <span class="toctext">Alpha modes</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Texture_Combine_Modes.html#Source_values"><span class="tocnumber">3</span> <span class="toctext">Source values</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Texture_Combine_Modes.html#Operands"><span class="tocnumber">4</span> <span class="toctext">Operands</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="RGB_modes"> RGB modes </span></h2>
+<p>The following specify the effect of the RGB (color) channels.  A separate set of methods, below, specifies the effect of the alpha channel.
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineRgb</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMReplace</span>, source, operand<span style="color: black;">&#41;</span></pre>
+<p>This mode is similar to "replace mode".  Whatever color is specified by source and operand becomes the new color.
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineRgb</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMModulate</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span></pre> 
+<p>This mode is similar to "modulate mode".  The color from source0/operand0 is multiplied by the color from source1/operand1.
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineRgb</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMAdd</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span></pre> 
+<p>This mode is similar to "add mode".  The color from source0/operand0 is added to the color from source1/operand1, and the result is clamped to 1 (white).
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineRgb</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMAddSigned</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span></pre> 
+<p>In this mode, the colors are added as signed numbers, and the result wraps.
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineRgb</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMSubtract</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span></pre> 
+<p>In this mode, source1/operand1 is subtracted from source0/operand0.
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineRgb</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMInterpolate</span>,<br />                 source0, operand0, source1, operand1, source2, operand2<span style="color: black;">&#41;</span></pre> 
+<p>This is the only mode that uses three sources.  The value of source2/operand2 is used to select between source0/operand0 and source1/operand1.  When source2 is 0, source0 is selected, and when source2 is 1, source1 is selected.  When source2 is between 0 and 1, the color is smoothly blended between source0 and source1.
+</p>
+<h2> <span class="mw-headline" id="Alpha_modes"> Alpha modes </span></h2>
+<p>The following methods more-or-less duplicate the functionality of the above, but they control what happens to the alpha channel.  Thus, you have explicit control over whether an alpha cutout in the top texture should produce an alpha cutout in the resulting object.
+</p>
+<pre class="python">ts.<span style="color: black;">setCombineAlpha</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMReplace</span>, source, operand<span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setCombineAlpha</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMModulate</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setCombineAlpha</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMAdd</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setCombineAlpha</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMAddSigned</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setCombineAlpha</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMSubtract</span>, source0, operand0, source1, operand1<span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setCombineAlpha</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">CMInterpolate</span>, source0, operand0, source1, operand1,<br />                   source2, operand2<span style="color: black;">&#41;</span></pre> 
+<h2> <span class="mw-headline" id="Source_values"> Source values </span></h2>
+<p>This table lists the legal values for any of source, source0, source1, or source2, in the above calls.  This broadly gives you control over which two (or three) textures are used as inputs to the above combine modes.
+</p>
+<table>
+<tr>
+<td>TextureStage.CSTexture
+</td>
+<td>The current, or “top” texture image.
+</td></tr>
+<tr>
+<td>TextureStage.CSConstant
+</td>
+<td>A constant color, specified via TextureStage.setColor().
+</td></tr>
+<tr>
+<td>TextureStage.CSConstantColorScale
+</td>
+<td>The same as CSConstant, but the color will be modified by NodePath.setColorScale().
+</td></tr>
+<tr>
+<td>TextureStage.CSPrimaryColor
+</td>
+<td>The “primary” color of the object, before the first texture stage was applied, and including any lighting effects.
+</td></tr>
+<tr>
+<td>TextureStage.CSPrevious
+</td>
+<td>The result of the previous texture stage; i.e. the texture below.
+</td></tr>
+<tr>
+<td>TextureStage.CSLastSavedResult
+</td>
+<td>The result of any of the previous texture stages; specifically, the last stage for which TextureStage.setSavedResult(True) was called.
+</td></tr></table>
+<h2> <span class="mw-headline" id="Operands"> Operands </span></h2>
+<p>This table lists the legal values for any of operand, operand0, operand1, or operand2, in the above calls.  This fine-tunes the channel data that is used from each texture input.
+</p>
+<table>
+<tr>
+<td>TextureStage.COSrcColor
+</td>
+<td>Use the RGB color. When used in a setCombineAlpha() call, RGB is automatically aggregated into grayscale.
+</td></tr>
+<tr>
+<td>TextureStage.COOneMinusSrcColor
+</td>
+<td>The complement of the RGB color.
+</td></tr>
+<tr>
+<td>TextureStage.COSrcAlpha
+</td>
+<td>Use the alpha value. When used in a setCombineRgb() call, alpha is automatically expanded into uniform RGB.
+</td></tr>
+<tr>
+<td>TextureStage.COOneMinusSrcAlpha
+</td>
+<td>The complement of the alpha value.
+</td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 78/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1189-0!*!0!!en!*!* and timestamp 20171007234811 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Order.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Transforms.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

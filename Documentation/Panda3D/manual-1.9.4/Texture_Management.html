@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Management - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Management</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Transparency_and_Blending.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Compression.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Different graphics cards provide different amounts of texture memory.  If you're loading a lot of different textures, especially if they're large, you can easily consume all of your available texture memory.  In principle, this shouldn't cause problems, as long as you don't have all of your textures onscreen at once: both OpenGL and DirectX are supposed to automatically evict textures from graphics memory as needed.
+</p><p>In practice, it doesn't always work this cleanly.  In some integrated graphics cards, the "graphics memory" is actually your system memory, so the graphics driver never needs to evict textures--but if you load too many textures, there may not be enough memory left for your application.  Furthermore, some graphics drivers have major bugs that manifest as you start to approach the limit of your graphics memory, causing strange rendering artifacts or even crashes.
+</p><p>For these reasons, it may be useful to limit the amount of graphics memory your application uses.  Panda provides several tools to help with this.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Texture_Management.html#Automatically_reducing_textures"><span class="tocnumber">1</span> <span class="toctext">Automatically reducing textures</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Texture_Management.html#Enabling_texture_compression"><span class="tocnumber">2</span> <span class="toctext">Enabling texture compression</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Texture_Management.html#Limiting_graphics_memory_usage_overall"><span class="tocnumber">3</span> <span class="toctext">Limiting graphics memory usage overall</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Texture_Management.html#Monitoring_memory_usage"><span class="tocnumber">4</span> <span class="toctext">Monitoring memory usage</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Automatically_reducing_textures"> Automatically reducing textures </span></h2>
+<p>You can reduce textures automatically as they are loaded.  The easiest way to do this is to put a line like:
+</p>
+<pre class="codeblock">
+texture-scale 0.5
+</pre>
+<p>in your Config.prc file.  The above example will scale all textures by a factor of 0.5 in each dimension (for an overall reduction to 1/4 of the total memory requirement).  If there are certain textures that should not be scaled, for instance GUI textures, you can exclude them with lines like:
+</p>
+<pre class="codeblock">
+exclude-texture-scale digits_*.png
+exclude-texture-scale gui*.jpg
+</pre>
+<h2> <span class="mw-headline" id="Enabling_texture_compression"> Enabling texture compression </span></h2>
+<p>Another possibility is to enable and use <a href="Texture_Compression.html" title="Texture Compression">Texture Compression</a>, as described on the next page.  If supported by your graphics card, this will reduce texture memory requirements dramatically, to 1/4 or 1/8 of the original.  There is some reduction of quality, but not as much as the quality reduction you'd get from downscaling the textures by the equivalent amount.  It is also possible to enable texture compression in conjunction with texture scaling.
+</p>
+<h2> <span class="mw-headline" id="Limiting_graphics_memory_usage_overall"> Limiting graphics memory usage overall </span></h2>
+<p>Finally, it may be prudent to limit the amount of graphics memory that Panda attempts to use, with a line like:
+</p>
+<pre class="codeblock">
+graphics-memory-limit 67108864
+</pre>
+<p>The above example imposes a limit of 64MB (64 * 1024 * 1024) on the graphics memory that Panda will attempt to use.  This can be a good idea to avoid allocating runaway textures on integrated graphics cards with no fixed texture limit, or to work around buggy graphics drivers that crash when you use too much.  Panda will automatically start to unload textures when the specified limit is exceeded, even if the graphics driver would allow allocating more.
+</p><p>Ideally, it would be great to query the amount of useful graphics memory provided by the card, and set this as the graphics-memory-limit; unfortunately, this is impractical for several reasons, including the reasons given above.  Typically, if you wish your application to work on a variety of hardware, you will need to come up with a handful of default settings and allow the user to select between them, according to his own knowledge of his hardware capabilities.
+</p><p>Note that graphics-memory-limit is a new feature of Panda, and is not available in versions before Panda3D 1.6.
+</p>
+<h2> <span class="mw-headline" id="Monitoring_memory_usage"> Monitoring memory usage </span></h2>
+<p>You can see how much graphics memory you are actually consuming with the <a href="Measuring_Performance_with_PStats.html" title="Measuring Performance with PStats">PStats</a> tool.  Select the "Graphics memory" option.  This graph will show the amount of memory required for active (onscreen), and inactive (offscreen) textures.  It also includes memory required for vertex and index buffers, though these are typically much smaller than your texture memory requirements.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 42/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2263-0!*!0!!en!*!* and timestamp 20171008095355 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Transparency_and_Blending.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Compression.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

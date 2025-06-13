@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>The Default Camera Driver - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: The Default Camera Driver</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Camera_Control.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Lenses_and_Field_of_View.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>By default, panda runs a task that enables you to move the camera using the mouse.  This task will conflict with any code you write to move the camera.  The task controls the camera by updating the camera's position every frame to where the mouse thinks it should be.  This means that any other code that directly controls the camera will not seem to work, because it will be fighting the mouse for control.
+</p><p>If you want to move the camera directly under show control, you must first disable the camera control task and then the camera will move as expected.
+</p>
+<pre class="python">base.<span style="color: black;">disableMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>The ShowBase class contains some handy methods to allow the user control over the camera. The <code>useDrive()</code> command enables keyboard and mouse control. Both control systems move only on the x and y axes, so moving up and down along the z axis is impossible with these systems.
+</p><p>The keyboard system uses the arrow keys. Up moves the camera forward, and down move it back. The left and right arrows turn the camera.
+</p><p>The mouse system responds whenever any button is held. If the pointer is towards the top of the screen, the camera moves forward. If it is towards the bottom, the camera moves backwards. If it is on either side, the camera rotates to that direction. The speed the camera moves is determined by how far from the center the mouse pointer is. Additionally, there is another command that allows control based on trackball mice.
+</p>
+<pre class="python">base.<span style="color: black;">useDrive</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">useTrackball</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>ShowBase also provides the method <code>oobe()</code> to give you to control of the basic camera node (base.cam) with the mouse/trackball while the code continues to move the camera node (base.camera).  This can be useful for debugging purposes.  The word stands for "out-of-body experience" and is handy for giving you a God's-eye view of your application at any point in development.  The method is a toggle; call it once to enable OOBE mode, and then again to disable it.
+</p>
+<pre class="python">base.<span style="color: black;">oobe</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p><code>oobeCull()</code> is a variant on <code>oobe()</code>, and it works similarly, except that it still culls the scene as if the camera were still in its original position, while drawing the scene from the point of view of your camera's new position. So now you can view the scene from your "out of body" placement, and walk around, and you can see things popping in and out of view as your view frustum moves around the world.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 22/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1025-0!*!*!*!*!*!* and timestamp 20171008055950 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Camera_Control.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Lenses_and_Field_of_View.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

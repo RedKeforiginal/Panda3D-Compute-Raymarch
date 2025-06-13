@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Main Page - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Main Page</h2>
+<div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Editing_Guidelines">Editing Guidelines</span></h2>
+<ul><li>The purpose of the manual is to explain concepts, not list classes and functions: that's what the reference is for. It is okay to name classes and functions, as long as the concepts are explained first.
+</li></ul>
+<ul><li>Please write in normal English and use correct spelling and grammar.
+</li></ul>
+<ul><li>Please do not add any additional tutorials to the manual unless given explicit permission by the Panda3D developers.
+</li></ul>
+<ul><li>Make sure you add every page to the table of contents. You don't need to worry about the next/previous links at the top of every page - those will take care of themselves, as long as the table of contents is good.
+</li></ul>
+<ul><li>To put C++ specific information in the manual, use &#91;cxx]&#91;/cxx] tags. For Python-specific information, use &#91;python]&#91;/python] tags. Depending on the toggle setting (at the top of the page) only the chosen language will be displayed.
+</li></ul>
+<p><span style="margin: 5px !important;border: 1px solid #acf; background: #efefff; text-align: right;">
+Your current setting is <b>Python</b>.
+</span>
+</p>
+<ul><li>Some people will want to read the manual front to back.  Think about the information you are adding and where it belongs in the sequence.
+</li></ul>
+<ul><li>I don't want casual users browsing the manual to be aware that this is a wiki that is why I hid the login button.  Try to avoid major giveaways.
+</li></ul>
+<ul><li>Avoid the use of HTML tags.  I know MediaWiki accepts them, but it's best not to use them over the MediaWiki equivalents, as it will only make the wiki text less portable.
+</li></ul>
+<ul><li>Avoid the use of really wide preformatted text.  If you must, insert this:
+</li></ul>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-html4strict" style="font-family: monospace;"><pre><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;span</span> <span style="color: #000066;">class</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;suppress-screenshots&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/span&gt;</span></span></pre></div></div>
+<p>This is a hack that will suppress the screenshots on the right hand side of the screen, giving you more space. If that's not enough, you need to reformat your text.
+</p>
+<ul><li>To do a block of code, write it like this:
+</li></ul>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-xml" style="font-family: monospace;"><pre><span style="color: #000000; font-weight: bold;">&lt;syntaxhighlight</span> <span style="color: #000066;">lang</span>=<span style="color: #ff0000;">&quot;python&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000;">
+from panda3d.core import *
+fn = Filename()
+print(fn)
+</span><span style="color: #000000; font-weight: bold;">&lt;/syntaxhighlight<span style="color: #000000; font-weight: bold;">&gt;</span></span></pre></div></div>
+<p>You can use &lt;syntaxhighlight lang="cpp"&gt; for C++ code. To get a list of available languages, <a rel="nofollow" class="external text" href="http://www.mediawiki.org/wiki/Extension:SyntaxHighlight_GeSHi">click here</a>.
+</p><p>If you see old pages that still use the old &lt;pre class="codeblock"&gt; or &lt;code python&gt; notation, please modify it to use the new syntax highlighting notation.
+</p>
+<ul><li>To write a function, variable, or class name, or other forms of in-line code, use &lt;code&gt;xyz&lt;/code&gt;
+</li></ul>
+<ul><li>Code comments should be like this:
+</li></ul>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #808080; font-style: italic;"># This is a comment</span>
+<span style="color: #808080; font-style: italic;"># This is another very very long comment line that has</span>
+<span style="color: #808080; font-style: italic;"># to be wordwrapped just like this.</span>
+<span style="color: #808080; font-style: italic;">#this.is.a.commented(out, code_line)</span>
+&#160;
+<span style="color: #483d8b;">&quot;&quot;&quot; Docstrings are written like this. If they are longer than one line
+break like this and end it on a new line.
+&quot;&quot;&quot;</span></pre></div></div>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-cpp" style="font-family: monospace;"><pre><span style="color: #666666;">// Comment Blah</span>
+<span style="color: #ff0000; font-style: italic;">/* Comment
+block */</span></pre></div></div>
+<p>The first letter of a comment line has to be uppercase (unless its multiple comment lines wordwrapped), and there should be a space between the comment itself and the comment indicators.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 15/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1077-0!*!*!*!*!*!* and timestamp 20171008083055 -->
+</div><table width="100%" cellpadding="0" cellspacing="0" border="0" class="manualnav"><tr><td align="left"><a href="Main_Page.html" title="Main Page">Back to the Manual</a>&nbsp;&nbsp;&nbsp;</td></tr></table><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

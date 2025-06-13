@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Types of forces - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Types of forces</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Applying_physics_to_a_node.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Notes_and_caveats.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Panda3D provides two types of forces that you can apply to an object. 
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="LinearVectorForce"> LinearVectorForce </span></h2>
+<p>A <code>LinearVectorForce</code> treats the object as a point mass. It applies an acceleration in Newtons to the center of mass of the object it was added to. The direction of this force is relative to the orientation of the <code>ForceNode</code> that the <code>LinearVectorForce</code> was applied to.
+</p><p><i>Note: Since <code>LinearVectorForce</code> treats the object as a point mass, it is not possible to apply a rotation of any kind to your object. For rotational forces, see <code>AngularVectorForce</code> below.</i>
+</p><p><b>Example:</b>
+</p>
+<pre class="python">lvf=LinearVectorForce<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># Push 1 newton in the positive-x direction </span><br />forceNode.<span style="color: black;">addForce</span><span style="color: black;">&#40;</span>lvf<span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># Determine coordinate space of this force node</span><br />actorNode.<span style="color: black;">getPhysical</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>.<span style="color: black;">addLinearForce</span><span style="color: black;">&#40;</span>lvf<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Add the force to the object</span></pre>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="AngularVectorForce"> AngularVectorForce </span></h2>
+<p>The <code>AngularVectorForce</code> applies a torque to the object it is attached to. The acceleration is in Newtons, and <code>AngularVectorForce</code> may be treated in much the same way as <code>LinearVectorForce</code>. There are, however, some minor differences that that should be taken into account.
+</p><p><code>AngularVectorForce</code> does not have a <code>.setDependantMass()</code> . The reason for this is simple: mass <b>must</b> be used in the torque calculations. As such, you will want to make sure your forces are sufficiently small or your masses are sufficiently large to keep your rotational velocity sane.
+</p><p><b>Example:</b>
+</p>
+<pre class="python">avf=AngularVectorForce<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Spin around the positive-x axis </span><br />forceNode.<span style="color: black;">addForce</span><span style="color: black;">&#40;</span>avf<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Determine which positive-x axis we use for calculation</span><br />actorNode.<span style="color: black;">getPhysical</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>.<span style="color: black;">addAngularForce</span><span style="color: black;">&#40;</span>avf<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Add the force to the object</span></pre>
+<p>One additional caveat with <code>AngularVectorForce</code>: Angular forces will not be processed on your object until an <code>AngularIntegrator</code> is added to the <code>PhysicsManager</code>. 
+</p><p><b>Example:</b>
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">physics</span> <span style="color: #ff7700;font-weight:bold;">import</span> AngularEulerIntegrator<br />&#160;<br />angleInt = AngularEulerIntegrator<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Instantiate an AngleIntegrator()</span><br />base.<span style="color: black;">physicsMgr</span>.<span style="color: black;">attachAngularIntegrator</span><span style="color: black;">&#40;</span>angleInt<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Attatch the AngleIntegrator to the PhysicsManager</span></pre>
+<p><br />
+<i>Editor's Note: Each type of force should be given it's own page with much more in depth examples, and perhaps a small sample program.</i>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 91/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1781-0!*!*!!*!*!* and timestamp 20171008113344 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Applying_physics_to_a_node.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Notes_and_caveats.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

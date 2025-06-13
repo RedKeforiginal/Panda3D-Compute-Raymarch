@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>The Python Debugger - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: The Python Debugger</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Log_Messages.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Running_Panda3D_under_the_C++_Debugger.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Python is a very powerful interactive and interpreted language. Python's development cycle is very fast. Often the most effective way to to debug is to output relevant information. Having said that, there are many ways to enhance productivity with knowledge of good debugging techniques.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Using_python_-i_mode">Using python -i mode</span></h2>
+<p>Python programs may be developed and tested with the help of the interactive mode of the Python interpreter, which, allows program components to be debugged, traced, profiled, and tested interactively. When invoking python with -i, this ensures that an interactive session of python is invoked. With regards to Panda3D this requires a little explanation. Panda3D programs typically have a command called run() to start rendering, so here's one way to start an interactive session. On the command prompt type:
+</p>
+<pre class="codeblock">
+python -i myPandaFile.py
+</pre>
+<p>After Panda3D has loaded, make sure the command window has focus and type Ctrl-C. This will show a python prompt like so:
+</p>
+<pre class="codeblock">
+&gt;&gt;&gt;
+</pre>
+<p>Now on the command prompt you can execute any python commands, related or unrelated to your Panda3D program. This is useful for looking at information at that specific point in time. You could even change that information for that running instance of the program.
+</p>
+<h2> <span class="mw-headline" id="pdb">pdb</span></h2>
+<p>Python offers hooks enabling interactive debugging. Module pdb supplies a simple text-mode interactive debugger. It supports setting (conditional) breakpoints and single stepping at the source line level, inspection of stack frames, source code listing, and evaluation of arbitrary Python code in the context of any stack frame. It also supports post-mortem debugging and can be called under program control.
+</p><p>The debugger's prompt is "(Pdb) ". There are many ways to enter the debugger. Typical usage to run a program under control of the debugger is:
+</p>
+<pre class="codeblock">
+&gt;&gt;&gt; import pdb
+&gt;&gt;&gt; import &lt;mymodule&gt;
+&gt;&gt;&gt;  pdb.run('mymodule.test()')
+&gt; &lt;string&gt;(0)?()
+(Pdb) continue
+&gt; &lt;string&gt;(1)?()
+(Pdb) continue
+ NameError: 'spam'
+ &lt;string&gt;(1)?()
+ (Pdb)
+</pre>
+<p><br />
+Detailed information about pdb can be found <a rel="nofollow" class="external text" href="http://www.python.org/doc/current/lib/module-pdb.html">here</a>. In addition to pdb, python also has two modules called <code>inspect</code> and <code>traceback</code>. <code>inspect</code> supplies functions to extract information from all kinds of objects, including the Python call stack and source files. The <code>traceback</code> module lets you extract, format and output information about tracebacks as normally produced by uncaught exceptions.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 65/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1026-0!*!*!!*!*!* and timestamp 20171008032736 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Log_Messages.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Running_Panda3D_under_the_C++_Debugger.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

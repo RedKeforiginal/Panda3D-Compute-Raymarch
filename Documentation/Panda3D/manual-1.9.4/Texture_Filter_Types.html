@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Filter Types - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Filter Types</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Wrap_Modes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simple_Texture_Replacement.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>It's rare that the pixels of a texture image match one-to-one with
+actual screen pixels when a texture is visible onscreen.  Usually, it
+is the case that either a single pixel of the texture is stretched
+over multiple screen pixels (<b>texture magnification</b>--the texture image is stretched bigger), or the
+opposite, that multiple pixels of a texture contribute to the color of
+a single screen pixel (<b>texture minification</b>--the texture image is squished smaller).  Often, a single
+polygon will have some texture pixels that need to be magnified, and
+some pixels that need to be minified (the graphics card can handle
+both cases on a single polygon).
+</p><p>You can control how the texture looks when it is magnified or minified
+by setting its <b>filter type</b>.
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setMagfilter</span><span style="color: black;">&#40;</span>filterType<span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setMinfilter</span><span style="color: black;">&#40;</span>filterType<span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p>filterType is a value from the FilterType enum of SamplerState (Texture in Panda3D versions prior to 1.9).  There is a separate filterType setting for magnification and for minification.  For both magnification and minification, the filterType
+may be one of:
+</p>
+<dl><dt>FT_nearest
+</dt><dd>Sample the nearest pixel
+</dd><dt>FT_linear
+</dt><dd>Sample the four nearest pixels, and linearly interpolate them
+</dd></dl>
+<p>For minification only, in addition to the above two choices, you can
+also choose from:
+</p>
+<dl><dt>FT_nearest_mipmap_nearest
+</dt><dd>Point sample the pixel from the nearest mipmap level
+</dd><dt>FT_linear_mipmap_nearest
+</dt><dd>Bilinear filter the pixel from the nearest mipmap level
+</dd><dt>FT_nearest_mipmap_linear
+</dt><dd>Point sample the pixel from two mipmap levels, and linearly blend
+</dd><dt>FT_linear_mipmap_linear
+</dt><dd>Bilinearly filter the pixel from two mipmap levels, and linearly blend the results.  This is also called <b>trilinear filtering</b>
+</dd></dl>
+<p>The default filter type for both magnification and minification is
+<code>FT_linear</code>.
+</p><p>Consider the visual effects of the various filter types on magnification and
+minification of the following texture:
+</p><p><a href="File%253AFractal.jpg.html" class="image" title="A fractal image"><img alt="A fractal image" src="Fractal.jpg" width="256" height="256" /></a>
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Texture_Filter_Types.html#FT_nearest"><span class="tocnumber">1</span> <span class="toctext">FT_nearest</span></a></li>
+<li class="toclevel-1"><a href="Texture_Filter_Types.html#FT_linear"><span class="tocnumber">2</span> <span class="toctext">FT_linear</span></a></li>
+<li class="toclevel-1"><a href="Texture_Filter_Types.html#Mipmaps"><span class="tocnumber">3</span> <span class="toctext">Mipmaps</span></a></li>
+<li class="toclevel-1"><a href="Texture_Filter_Types.html#Anisotropic_Filtering"><span class="tocnumber">4</span> <span class="toctext">Anisotropic Filtering</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="FT_nearest">FT_nearest</span></h2>
+<p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setMagfilter</span><span style="color: black;">&#40;</span>SamplerState.<span style="color: black;">FT_nearest</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setMinfilter</span><span style="color: black;">&#40;</span>SamplerState.<span style="color: black;">FT_nearest</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p><a href="File%253ATexture_mag_nearest.jpg.html" class="image" title="Magnification w/FTNearest"><img alt="Magnification w/FTNearest" src="Texture_mag_nearest.jpg" width="256" height="256" /></a>
+<a href="File%253ATexture_min_nearest.jpg.html" class="image" title="Minification w/FTNearest"><img alt="Minification w/FTNearest" src="Texture_min_nearest.jpg" width="256" height="256" /></a>
+</p><p>Usually, <code>FT_nearest</code> is used only to achieve a special
+pixelly effect.
+</p>
+<h2> <span class="mw-headline" id="FT_linear">FT_linear</span></h2>
+<p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setMagfilter</span><span style="color: black;">&#40;</span>SamplerState.<span style="color: black;">FT_linear</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setMinfilter</span><span style="color: black;">&#40;</span>SamplerState.<span style="color: black;">FT_linear</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p><a href="File%253ATexture_mag_linear.jpg.html" class="image" title="Magnification w/FTLinear"><img alt="Magnification w/FTLinear" src="Texture_mag_linear.jpg" width="256" height="256" /></a>
+<a href="File%253ATexture_min_linear_0.jpg.html" class="image" title="Minification w/FTLinear"><img alt="Minification w/FTLinear" src="Texture_min_linear_0.jpg" width="256" height="256" /></a>
+</p><p><code>FT_linear</code> is a good, general-purpose choice, though it
+isn't perfect.
+</p>
+<h2> <span class="mw-headline" id="Mipmaps">Mipmaps</span></h2>
+<p>Many graphics tutorials will go on for pages and pages about exactly
+what mipmapping means and how it all works inside.  We'll spare you
+those details here; but you should understand the following things
+about mipmapping:
+</p><p>(1) It requires 33% more texture memory (per mipmapped texture), but
+it renders quickly.
+</p><p>(2) It helps the texture look much smoother than filtering alone when
+it is minified.
+</p><p>(3) Mipmapping doesn't have anything at all to do with magnification.
+</p><p>(4) It has a tendency to blur minified textures out a little too much,
+especially when the texture is applied to a polygon that is very
+nearly edge-on to the camera.
+</p><p>There are four different filter types that involve mipmapping, but you
+almost always want to use just the last one,
+<code>FT_linear_mipmap_linear</code>.  The other modes are for advanced
+uses, and sometimes can be used to tweak the mipmap artifacts a bit
+(especially to reduce point 4, above).  If you don't understand the description in the table above, it's not worth worrying about.
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setMinfilter</span><span style="color: black;">&#40;</span>SamplerState.<span style="color: black;">FT_linear_mipmap_linear</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p><a href="File%253ATexture_min_mipmap_0.jpg.html" class="image" title="Minification w/FTLinearMipmapLinear"><img alt="Minification w/FTLinearMipmapLinear" src="Texture_min_mipmap_0.jpg" width="256" height="256" /></a>
+</p>
+<h2> <span class="mw-headline" id="Anisotropic_Filtering">Anisotropic Filtering</span></h2>
+<p>There is one final addition to the texture filtering equation: you can
+enable anisotropic filtering on top of any of the above filter modes,
+which enables a more expensive, slightly slower rendering mode that
+generally produces superior effects.  In particular, anisotropic
+filtering is usually better at handling texture minification than
+mipmapping, and doesn't tend to blur out the texture so much.
+</p><p>To enable anisotropic filtering, you specify the degree:
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setAnisotropicDegree</span><span style="color: black;">&#40;</span>degree<span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p>The degree should be a power-of-two integer number. The default value is 1, which indicates no anisotropic filtering; set it to a higher number to indicate the amount of filtering you require. Larger numbers are more expensive but produce a better result, up to the capability of your graphics card. Many graphics cards support up to 16x anisotropic filtering.
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setAnisotropicDegree</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p><a href="File%253ATexture_mag_aniso.jpg.html" class="image" title="Magnification w/anisotropic filtering"><img alt="Magnification w/anisotropic filtering" src="Texture_mag_aniso.jpg" width="256" height="256" /></a>
+<a href="File%253ATexture_min_aniso.jpg.html" class="image" title="Minification w/anisotropic filtering"><img alt="Minification w/anisotropic filtering" src="Texture_min_aniso.jpg" width="256" height="256" /></a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 146/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1255-0!*!*!!en!2!* and timestamp 20171008022158 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Wrap_Modes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simple_Texture_Replacement.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

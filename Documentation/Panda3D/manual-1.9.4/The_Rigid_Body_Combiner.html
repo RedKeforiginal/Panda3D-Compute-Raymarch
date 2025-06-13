@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>The Rigid Body Combiner - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: The Rigid Body Combiner</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Measuring_Performance_with_PStats.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Issue%253A_Too_Many_Meshes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="The_Rigid_Body_Combiner">The Rigid Body Combiner</span></h2>
+<p>When you are developing a complex game, you will most likely run into the problem that you will have <a href="Performance_Issue%253A_Too_Many_Meshes.html" title="Performance Issue: Too Many Meshes">too many meshes</a> in your scene. Panda3D's flattening methods can help you reducing the number of nodes, but often when you have hundreds of moving bodies this is not always an option. Therefore, Panda3D has a feature to help you reduce the number of nodes, even if they are moving: the <i>RigidBodyCombiner</i>.</p>
+<p>The RigidBodyCombiner is designed to reduce the number of nodes actually sent to the graphics card, just like the flattening functions. But instead of flattening everything into one node immediately, the RigidBodyCombiner keeps your original node structure intact, still allowing you to apply transforms (e.g. moving around, rotating or scaling) sub-nodes. But what's actually sent to the graphics cards is just one node, a combined version of all these sub-nodes. If you want to see the combined version of these nodes (not likely), you can call <code>getInternalScene()</code>, this function will return the NodePath that is actually sent to the graphics card.</p>
+<p>The RigidBodyCombiner class is just another kind of PandaNode. All of the standard node interfaces apply. Thus, the easiest way to add nodes to a RigidBodyCombiner is to wrap a NodePath around it, and then use the standard <code>reparentTo()</code> interfaces to parent the nodes you want to combine to this NodePath.</p>
+<p>When you are done with reparenting the nodes, you need to call <code>collect()</code> on the original <code>RigidBodyCombiner</code> instance. This is a fairly expensive call and you should normally only call this once -- but after you called <code>collect()</code> you may freely transform all nodes below without having to call this again. If you later add more children to the RBC, though, you will need to call <code>collect()</code> again.</p>
+<p>The vertices of the objects you attach to the RigidBodyCombiner must be transformed each frame on the CPU.  For this reason, you may find a performance advantage in limiting the number of vertices in the models you use.  Also, be sure you do not have normals on your models unless you are actually using lighting.</p>
+<p>Here is a small example showing a random cloud of boxes:
+
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> RigidBodyCombiner, NodePath, Vec3<br /><span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #dc143c;">random</span><br />&#160;<br />rbc = RigidBodyCombiner<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;rbc&quot;</span><span style="color: black;">&#41;</span><br />rbcnp = NodePath<span style="color: black;">&#40;</span>rbc<span style="color: black;">&#41;</span><br />rbcnp.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">200</span><span style="color: black;">&#41;</span>:<br />    pos = Vec3<span style="color: black;">&#40;</span><span style="color: #dc143c;">random</span>.<span style="color: black;">uniform</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-100</span>, <span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span>,<br />               <span style="color: #dc143c;">random</span>.<span style="color: black;">uniform</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-100</span>, <span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span>,<br />               <span style="color: #dc143c;">random</span>.<span style="color: black;">uniform</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-100</span>, <span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />    f = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;box.egg&quot;</span><span style="color: black;">&#41;</span><br />    f.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>pos<span style="color: black;">&#41;</span><br />    f.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>rbcnp<span style="color: black;">&#41;</span><br />&#160;<br />rbc.<span style="color: black;">collect</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></p>
+<p><b>Note:</b> <a href="RenderEffects.html" title="RenderEffects" class="mw-redirect">RenderEffects</a> such as <a href="Billboards.html" title="Billboards" class="mw-redirect">Billboards</a> are not supported below this node.</p>
+<p>For more information and a complete list of RigidBodyCombiner 
+functions please see the <a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=RigidBodyCombiner">API reference</a>.</p>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 23/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2264-0!*!0!*!*!*!* and timestamp 20171008055647 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Measuring_Performance_with_PStats.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Issue%253A_Too_Many_Meshes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

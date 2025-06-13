@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Transmitting Data - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Transmitting Data</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Client-Server_Connection.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Downloading_a_File.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Once a connection has been established, data can be transmitted from one Panda program to another using the classes described in this section. Communication can happen in both directions (i.e. client-to-server or server-to-client); once the connection has been established, either side may send messages along the connection to the other side.
+</p><p>This section describes message passing in detail, first transmission, then receipt of a message.
+</p>
+<h2> <span class="mw-headline" id="Sending_a_message">Sending a message</span></h2>
+<p>To send a message along an established connection, the sender must first construct a PyDatagram containing the message. This involves instantiating a PyDatagram object and then populating its contents with the desired data. The type of the data is determined by the functions used to pack it; see the full documentation of the PyDatagram class for more details.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># Developer-defined constants, telling the server what to do.</span><br /><span style="color: #808080; font-style: italic;"># Your style of how to store this information may differ; this is</span><br /><span style="color: #808080; font-style: italic;"># only one way to tackle the problem</span><br />PRINT_MESSAGE = <span style="color: #ff4500;">1</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> myNewPyDatagram<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />  <span style="color: #808080; font-style: italic;"># Send a test message</span><br />  myPyDatagram = PyDatagram<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  myPyDatagram.<span style="color: black;">addUint8</span><span style="color: black;">&#40;</span>PRINT_MESSAGE<span style="color: black;">&#41;</span><br />  myPyDatagram.<span style="color: black;">addString</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Hello, world!&quot;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">return</span> myPyDatagram</pre>
+<p>As shown in the previous section, once the datagram is constructed you may then send it using a ConnectionWriter.
+</p>
+<pre class="python">cWriter.<span style="color: black;">send</span><span style="color: black;">&#40;</span>myPyDatagram, aConnection<span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Receiving_a_message">Receiving a message</span></h2>
+<p>As shown in the previous section, when a message is received via a QueuedConnectionReader, it can be retrieved into a NetDatagram:
+</p>
+<pre class="python">datagram = NetDatagram<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">if</span> cReader.<span style="color: black;">getData</span><span style="color: black;">&#40;</span>datagram<span style="color: black;">&#41;</span>:<br />  myProcessDataFunction<span style="color: black;">&#40;</span>datagram<span style="color: black;">&#41;</span></pre>
+<p>A NetDatagram contains the original information that was stored in the transmitted PyDatagram. It also contains knowledge of the connection over which it was received and the address of the connection. To retrieve the connection, use the getConnection method:
+</p>
+<pre class="python">sourceOfMessage = datagram.<span style="color: black;">getConnection</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>To retrieve the contents of the message, use the PyDatagramIterator. The iterator class acts as the complement of the PyDatagram class; its methods can be used to retrieve the content that was encoded using PyDatagram. 
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> myProcessDataFunction<span style="color: black;">&#40;</span>netDatagram<span style="color: black;">&#41;</span>:<br />  myIterator = PyDatagramIterator<span style="color: black;">&#40;</span>netDatagram<span style="color: black;">&#41;</span><br />  msgID = myIterator.<span style="color: black;">getUint8</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">if</span> msgID == PRINT_MESSAGE:<br />    messageToPrint = myIterator.<span style="color: black;">getString</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> messageToPrint</pre>
+<p><b>Note</b>: It is assumed that the message recipient will retrieve the same type of content in the same order that the message sender packed the content. No mechanism exists in the PyDatagramIterator to ensure that the data being unpacked matches the requested type. Unpacking the data using a different type function will probably result in unexpected behavior.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 47/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2045-0!*!*!!*!*!* and timestamp 20171008022559 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Client-Server_Connection.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Downloading_a_File.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

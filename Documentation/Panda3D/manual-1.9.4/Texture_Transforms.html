@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Transforms - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Transforms</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Combine_Modes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Multiple_Texture_Coordinate_Sets.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>It is possible to apply a matrix to transform the (u, v) texture
+coordinates of a model before rendering.  In this way, you can adjust
+the position, rotation, or scale of a texture, sliding the texture
+around to suit your particular needs.
+</p><p>Use the following NodePath methods to do this:
+</p>
+<pre class="python">nodePath.<span style="color: black;">setTexOffset</span><span style="color: black;">&#40;</span>TextureStage, uOffset, vOffset<span style="color: black;">&#41;</span><br />nodePath.<span style="color: black;">setTexScale</span><span style="color: black;">&#40;</span>TextureStage, uScale, vScale<span style="color: black;">&#41;</span><br />nodePath.<span style="color: black;">setTexRotate</span><span style="color: black;">&#40;</span>TextureStage, degrees<span style="color: black;">&#41;</span></pre>
+<p>If you don't have a particular TextureStage, use
+<code>TextureStage.getDefault()</code> as the first parameter.
+</p><p>Note that the operation in each case is applied to the (u, v) texture
+coordinates, not to the texture; so it will have the opposite effect
+on the texture.  For instance, the call <code>nodePath.setTexScale(ts,
+2, 2)</code> will effectively double the values of the texture
+coordinates on the model, which doubles the space over which the texture is applied, and thus makes the texture appear half as large.
+</p><p>The above methods apply a 2-d transform to your texture
+coordinates, which is appropriate, since texture coordinates are
+usually two-dimensional.  However, sometimes you are working with <a href="3-D_Textures.html" title="3-D Textures">3-d texture coordinates</a>, and you really do want to apply a 3-d transform.  For those cases, there are the following methods:
+</p>
+<pre class="python">nodePath.<span style="color: black;">setTexPos</span><span style="color: black;">&#40;</span>TextureStage, uOffset, vOffset, wOffset<span style="color: black;">&#41;</span><br />nodePath.<span style="color: black;">setTexScale</span><span style="color: black;">&#40;</span>TextureStage, uScale, vScale, wScale<span style="color: black;">&#41;</span><br />nodePath.<span style="color: black;">setTexHpr</span><span style="color: black;">&#40;</span>TextureStage, h, p, r<span style="color: black;">&#41;</span></pre>
+<p>And there is also one generic form:
+</p>
+<pre class="python">nodePath.<span style="color: black;">setTexTransform</span><span style="color: black;">&#40;</span>TextureStage, transform<span style="color: black;">&#41;</span><span style="color: #66cc66;">;</span></pre>
+<p>This last method sets a generic
+TransformState object.  This is the same kind of 4x4 transform matrix
+object that you can get from a NodePath via e.g.,
+<code>NodePath.getTransform()</code>.  You can also construct a new TransformState
+via a number of methods like <code>TransformState.makePos(VBase3(0, 1, 0))</code>.  If you intend to apply a 2-d transform only, you should restrict yourself to methods like <code>TransformState.makePos2d(VBase2(0, 1))</code>; using only 2-d operations may allow the graphics backend to use a slightly simpler calculation.
+</p><p>Note that the texture transform is associated with a particular
+TextureStage; it is not a fixed property of the model or its texture
+coordinates.  You can therefore apply a different texture transform to
+each different TextureStage, so that if you have multiple textures in
+effect on a particular node, they need not all be in the same place,
+even if they all use the same texture coordinates.  For instance, this
+technique was used to generate the sample images in the <a href="Texture_Blend_Modes.html" title="Texture Blend Modes" class="mw-redirect">Texture Blend Modes</a> section.  In fact, the following code was used to place this
+sample texture (excerpted):
+</p>
+<pre class="python">smiley = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'smiley.egg'</span><span style="color: black;">&#41;</span><br />ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />pattern = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'color_pattern.png'</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, pattern<span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexScale</span><span style="color: black;">&#40;</span>ts, <span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexOffset</span><span style="color: black;">&#40;</span>ts, <span style="color: #ff4500;">-4</span>, <span style="color: #ff4500;">-2</span><span style="color: black;">&#41;</span></pre>
+<p>and the resulting texture:
+</p><p><a href="File%253ASmiley_multitex_decal_1.png.html" class="image" title="Multitexture sample"><img alt="Multitexture sample" src="Smiley_multitex_decal_1.png" width="267" height="200" /></a>
+</p><p>In the above example, we have applied a scale of (8, 4) to reduce the
+size of the decal image substantially, and then we specified an offset
+of (-4, -2) to slide it around in the positive (u, v) direction to
+smiley's face (since the (0, 0) coordinate happens to be on smiley's
+backside).  However, these operations affect only the decal image; the
+original smiley texture is unchanged from its normal position, even
+though both textures are using the same texture coordinates.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 28/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1191-0!*!0!*!*!2!* and timestamp 20171007161147 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Combine_Modes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Multiple_Texture_Coordinate_Sets.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Wrap Modes - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Wrap Modes</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Choosing_a_Texture_Size.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Filter_Types.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>As described earlier, the <i>(u, v)</i> texture coordinates that you assign to your vertices
+are what determines how the texture fits on your geometry.  Often, you will use
+texture coordinates that always fall within the range [0, 1], which is
+the complete range of the pixels of your texture image.  However, it is
+also legal to use texture coordinates that go outside this range; you can
+have negative values, for instance, or numbers higher than 1.
+</p><p>So if the texture image is only defined over the range [0, 1], what does
+the texture look like outside this range?  You can specify this with
+the <b>texture wrap mode</b>.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>wrap_mode<span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>wrap_mode<span style="color: black;">&#41;</span></pre></div></div>
+
+<p>The wrap_mode parameter is specified separately for the <i>u</i> and
+<i>v</i> directions (there is also a <code>setWrapW()</code> for
+<a href="3-D_Textures.html" title="3-D Textures">3-D textures</a>, but that's an advanced topic).  The
+wrapMode may be any of the following values:
+</p>
+<table>
+<tr>
+<td><code>Texture.WM_repeat</code>
+</td>
+<td>The texture image repeats to infinity.
+</td></tr>
+<tr>
+<td><code>Texture.WM_clamp</code>
+</td>
+<td>The last pixel of the texture image stretches out to infinity.
+</td></tr>
+<tr>
+<td><code>Texture.WM_border_color</code>
+</td>
+<td>The color specified by <code>texture.setBorderColor()</code> is used to fill the space.
+</td></tr>
+<tr>
+<td><code>Texture.WM_mirror</code>
+</td>
+<td>The texture image flips back-and-forth to infinity.
+</td></tr>
+<tr>
+<td><code>Texture.WM_mirror_once</code>
+</td>
+<td>The texture image flips backwards, once, and then the "border color" is used.
+</td></tr></table>
+<p>The default wrap mode is <code>WM_repeat</code>.
+</p><p>Consider the following simple texture image:
+</p><p><a href="File%253ASmall_r.png.html" class="image" title="black_r.png"><img alt="black_r.png" src="Small_r.png" width="32" height="64" /></a>
+</p><p>We will apply this texture in the center of a large polygon whose
+texture coordinates range considerably farther than [0, 1] in both
+directions.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Texture_Wrap_Modes.html#WM_repeat"><span class="tocnumber">1</span> <span class="toctext">WM_repeat</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Texture_Wrap_Modes.html#WM_clamp"><span class="tocnumber">2</span> <span class="toctext">WM_clamp</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Texture_Wrap_Modes.html#WM_border_color"><span class="tocnumber">3</span> <span class="toctext">WM_border_color</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Texture_Wrap_Modes.html#WM_mirror"><span class="tocnumber">4</span> <span class="toctext">WM_mirror</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Texture_Wrap_Modes.html#WM_mirror_once"><span class="tocnumber">5</span> <span class="toctext">WM_mirror_once</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="Texture_Wrap_Modes.html#Setting_different_wrap_modes"><span class="tocnumber">6</span> <span class="toctext">Setting different wrap modes</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="Texture_Wrap_Modes.html#One_caution_about_a_common_wrap_mode_error"><span class="tocnumber">7</span> <span class="toctext">One caution about a common wrap mode error</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="WM_repeat"> WM_repeat </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_repeat</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_repeat</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_repeat.png.html" class="image" title="WM_repeat"><img alt="WM_repeat" src="Texture_repeat.png" width="267" height="200" /></a>
+</p><p><code>WM_repeat</code> mode is often used to tile a relatively small
+texture over a large surface.
+</p>
+<h2> <span class="mw-headline" id="WM_clamp"> WM_clamp </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_clamp</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_clamp</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_clamp.png.html" class="image" title="WM_clamp"><img alt="WM_clamp" src="Texture_clamp.png" width="267" height="200" /></a>
+</p><p><code>WM_clamp</code> mode is rarely used on large polygons because, frankly, it looks terrible when the pixels stretch out to infinity like this; but this mode is usually the right choice when the texture exactly fills its polygon (see <i>One caution about a common wrap error,</i> below).
+</p>
+<h2> <span class="mw-headline" id="WM_border_color"> WM_border_color </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_border_color</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_border_color</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setBorderColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.4</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_border_color_blue.png.html" class="image" title="WM_border_color"><img alt="WM_border_color" src="Texture_border_color_blue.png" width="267" height="200" /></a>
+</p><p>The above blue color was chosen for illustration purposes; you can use
+any color you like for the border color.  (However, some hardware may not efficiently support a border color other than opaque white, transparent white, opaque black and transparent black)  Normally, you would use the background
+color of the texture as the border color, like this:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WMBorderColor</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WMBorderColor</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_border_color_white.png.html" class="image" title="WMBorderColor"><img alt="WMBorderColor" src="Texture_border_color_white.png" width="267" height="200" /></a>
+</p><p>Some very old graphics drivers don't support
+<code>WM_border_color</code>.  In this case, Panda3D will fall back to
+<code>WM_clamp</code>, which will look similar as long as there is a
+sufficient margin of background color around the edge of your texture (unlike our sample texture, which goes all the way out the edge).
+</p>
+<h2> <span class="mw-headline" id="WM_mirror"> WM_mirror </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_mirror</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_mirror</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_mirror.png.html" class="image" title="WM_mirror"><img alt="WM_mirror" src="Texture_mirror.png" width="267" height="200" /></a>
+</p><p>Many older graphics drivers do not support <code>WM_mirror</code>.  In
+this case, Panda3D will fall back to <code>WM_repeat</code>.
+</p>
+<h2> <span class="mw-headline" id="WM_mirror_once"> WM_mirror_once </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_mirror_once</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_mirror_once</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setBorderColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.4</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_mirror_once.png.html" class="image" title="WM_mirror_once"><img alt="WM_mirror_once" src="Texture_mirror_once.png" width="267" height="200" /></a>
+</p><p>Few graphics drivers support <code>WM_mirror_once</code>.  In this case,
+Panda3D will fall back to <code>WM_border_color</code>.
+</p>
+<h2> <span class="mw-headline" id="Setting_different_wrap_modes"> Setting different wrap modes </span></h2>
+<p>It is possible to set different wrap modes in the <i>u</i> and
+<i>v</i> directions:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>texture.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_repeat</span><span style="color: black;">&#41;</span>
+texture.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WM_clamp</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p><a href="File%253ATexture_clamp_repeat.png.html" class="image" title="WM_clamp and WM_repeat"><img alt="WM_clamp and WM_repeat" src="Texture_clamp_repeat.png" width="267" height="200" /></a>
+</p>
+<h2> <span class="mw-headline" id="One_caution_about_a_common_wrap_mode_error"> One caution about a common wrap mode error </span></h2>
+<p>When you apply a texture that is intended to exactly fill a
+polygon--that is, the texture coordinates range from 0 to 1, but no
+further--you should usually set its wrap mode to <i>clamp</i>.  This
+is because if you let it keep the default value of <i>repeat</i>, the
+color may bleed in from the opposite edge, producing a thin line along
+the edge of your polygon, like this:
+</p><p><a href="File%253ATexture_wrap_error.png.html" class="image" title="A common wrap mode error"><img alt="A common wrap mode error" src="Texture_wrap_error.png" width="200" height="150" /></a>
+</p><p>This is a particularly common error with a texture that is painted as
+an alpha cutout, where there is an image with a fully transparent
+background: you will often see an thin, barely-visible edge floating
+along the top (for instance) of the polygon.  This edge is actually
+the bottom edge of the texture bleeding onto the top, because the
+designer specified <code>WM_repeat</code> instead of
+the correct mode, <code>WM_clamp</code>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 321/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1245-0!*!0!!en!2!* and timestamp 20171008030046 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Choosing_a_Texture_Size.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Filter_Types.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

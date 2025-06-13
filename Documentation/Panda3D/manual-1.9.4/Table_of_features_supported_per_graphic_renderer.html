@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Table of features supported per graphic renderer - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Table of features supported per graphic renderer</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Subclassing.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Artificial_Intelligence_(PANDAI).html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>This is a table of features that are not supported by all of the available Panda3D graphics back-end plug-ins. For brevity, features supported by all of the renderers are omitted.
+</p><p>This is by no means a complete list.  The OpenGL renderer is by far the most complete back-end, and many features that it supports are not yet listed below.
+</p>
+<table border="1">
+<tr>
+<th>
+</th>
+<th> OpenGL
+</th>
+<th> Direct3D 9
+</th>
+<th> GLES, WebGL
+</th>
+<th> Tinydisplay
+</th></tr>
+<tr>
+<th> Rendering
+</th>
+<td> Hardware
+</td>
+<td> Hardware
+</td>
+<td> Hardware
+</td>
+<td> Software
+</td></tr>
+<tr>
+<th> Cg shaders
+</th>
+<td> Yes
+</td>
+<td> Yes
+</td>
+<td> No
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> GLSL shaders
+</th>
+<td> Yes
+</td>
+<td> No
+</td>
+<td> Yes
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> Geometry shaders
+</th>
+<td> Yes
+</td>
+<td> No
+</td>
+<td> No
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> Shader generation
+</th>
+<td> Yes
+</td>
+<td> Partial
+</td>
+<td> No
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> sRGB support
+</th>
+<td> Yes
+</td>
+<td> Yes
+</td>
+<td> No
+</td>
+<td> Yes
+</td></tr>
+<tr>
+<th> Depth textures
+</th>
+<td> Yes
+</td>
+<td> No<sup>1</sup>
+</td>
+<td> Yes
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> 3-D textures
+</th>
+<td> Yes
+</td>
+<td> Yes
+</td>
+<td> Yes
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> Buffer textures
+</th>
+<td> Since 1.10
+</td>
+<td> No
+</td>
+<td> No
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> Multisampling
+</th>
+<td> Yes
+</td>
+<td> Yes<sup>2</sup>
+</td>
+<td> Yes
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> Thick wireframe
+</th>
+<td> Yes
+</td>
+<td> No
+</td>
+<td> Yes
+</td>
+<td> No
+</td></tr>
+<tr>
+<th> Geometry instancing
+</th>
+<td> Yes
+</td>
+<td> No
+</td>
+<td> Since 1.9.1
+</td>
+<td> No
+</td></tr></table>
+<p><sup>1</sup> You can achieve shadow mapping by using shaders instead of the depth buffer at a minimal performance cost.
+</p><p><sup>2</sup> Supported through the configuration setting <code>dx-multisample-antialiasing-level</code>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2429-0!*!*!*!*!*!* and timestamp 20171007194751 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Subclassing.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Artificial_Intelligence_(PANDAI).html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

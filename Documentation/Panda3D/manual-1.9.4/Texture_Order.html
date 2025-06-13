@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture Order - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture Order</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Modes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Combine_Modes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>When there are multiple textures in effect, depending on the <a href="Texture_Blend_Modes.html" title="Texture Blend Modes" class="mw-redirect">Texture Blend Mode</a> in use, it may be important to control the order in which the textures apply.  For instance, although Modulate mode and Add mode are order-independent, texture order makes a big difference to Decal mode, Replace mode, and Blend mode.
+</p><p>To specify the texture order, use <code>TextureStage.setSort()</code> on one or more of your TextureStages.  If you do not specify a sort value, the default sort value is 0.  When the geometry is rendered, all of the textures are rendered in increasing order of sort value, such that the largest sort value is rendered on top.  Thus, if you want to use Decal mode, for instance, to apply a texture on top of a lower texture, it would be a good idea to use setSort() to give a higher sort value to your decal texture.
+</p><p>Also, since some hardware might not be able to render all of the TextureStages that you have defined on a particular node, Panda provides a way for you to specify which texture(s) are the most important.  Use <code>TextureStage.setPriority()</code> for this.
+</p><p>The priority value is only consulted when you have applied more TextureStages to a particular node than your current hardware can render.  In this case, Panda will select the n textures with the highest priority value (and then sort them in order by the setSort() value).  Between two textures with the same priority, Panda will prefer the one with the lower sort value.  The default priority is 0.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1190-0!*!0!*!*!*!* and timestamp 20171008055714 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Texture_Modes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Combine_Modes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>The appRunner.dom object - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: The appRunner.dom object</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_appRunner.main_object.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Reading_the_HTML_tokens.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Another important member of base.appRunner is the "dom" object.  This is the top of the JavaScript DOM ("Document Object Model") hierarchy, and corresponds to the global scope (that is, the "window" object) in JavaScript.
+</p><p>In general, global objects and functions in JavaScript will be visible to the Python code as members of appRunner.dom.  In particular, base.appRunner.dom.document corresponds to the toplevel "document" object, which you can use to access the contents of the embedding web page itself.
+</p><p>For example, to update the value in a field called "username" on form called "login" on the web page, you could write Python code like this:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>login = base.<span style="color: black;">appRunner</span>.<span style="color: black;">dom</span>.<span style="color: black;">document</span>.<span style="color: black;">getElementById</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'login'</span><span style="color: black;">&#41;</span>
+login.<span style="color: black;">username</span>.<span style="color: black;">value</span> = <span style="color: #483d8b;">'username'</span></pre></div></div>
+<p>In general, anything you can do in JavaScript, you can do in Python, via the base.appRunner.dom object.
+</p><p>The dom object is always available; it is not limited by the <a href="P3D_origin_security.html" title="P3D origin security">P3D origin security</a> features.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2423-0!*!0!*!*!*!* and timestamp 20171008062112 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_appRunner.main_object.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Reading_the_HTML_tokens.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
