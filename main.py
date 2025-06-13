@@ -210,7 +210,8 @@ class MainMenuApp(ShowBase):
         self.taskMgr.add(self._update_compute, "update-compute")
 
     def _update_compute(self, task):
-        view = self.cam.get_mat(self.render)
+        view = Mat4(self.cam.get_mat(self.render))
+        view.invert_in_place()            # world_to_camera
         proj = self.camLens.get_projection_mat()
         view_proj = proj * view
         inv_view_proj = Mat4(view_proj)
