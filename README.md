@@ -5,7 +5,7 @@ A proof-of-concept ray marching program using Panda3D.
 Version 0.1 will:
 
 1. allow users to select an SDF that provides world geometry.
-2. allow users to explore the SDF with WSAD for x and z directions, spacebar and ctrl for y+ and y-, and mouse look. This will require translating the default Pand3D world space, which is z = u/downp, into the Shader's space, which is y= up/down.
+2. allow users to explore the SDF with WSAD for horizontal movement, spacebar and ctrl for vertical movement, and mouse look. The application configures Panda3D to use a Y-up coordinate system so the shader and engine share the same conventions.
 3. utilize full BRDF, PBR, and ray marched shadows.
 4. allow the user to select  one of three procedurally generated materials for world geometry.
 5. light the scene with a dynamic point light grid that is configurable by the user.
