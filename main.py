@@ -19,6 +19,7 @@ from panda3d.core import (
     ComputeNode,
     CardMaker,
     Mat4,
+    OrthographicLens,
 )
 
 from procedural_materials import MarbleMaterial
@@ -78,6 +79,11 @@ class MainMenuApp(ShowBase):
 
     def __init__(self):
         super().__init__()
+        lens = OrthographicLens()
+        lens.setFilmSize(20, 20)
+        lens.setNearFar(-1000, 1000)
+        self.cam.node().setLens(lens)
+        self.camLens = lens
         self.light_spacing = Vec3(4.0, 4.0, 4.0)
         self.light_offset = Vec3(0.0, 0.0, 0.0)
         self.light_color = Vec3(1.0, 0.85, 0.8)

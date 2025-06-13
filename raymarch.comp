@@ -22,15 +22,6 @@ const float MAX_DIST = 100.0;
 const float EPSILON = 0.001;
 const float PI = 3.14159265359;
 
-// Panda3D and the compute shader both use Y-up, so these are identity transforms
-vec3 toShaderCoords(vec3 p) {
-    return p;
-}
-
-vec3 fromShaderCoords(vec3 p) {
-    return p;
-}
-
 // Signed distance function
 float lattice(vec3 p){
     // Repeat space.
@@ -188,8 +179,8 @@ void main() {
     vec4 far_pt = inv_view_proj * vec4(uv * 2.0 - 1.0, 1.0, 1.0);
 
     // Rays originate from the near plane as required for orthographic lenses (see docs.gl).
-    vec3 ro = toShaderCoords(near_pt.xyz / near_pt.w);
-    vec3 rd = normalize(toShaderCoords((far_pt.xyz / far_pt.w) - (near_pt.xyz / near_pt.w)));
+    vec3 ro = near_pt.xyz / near_pt.w;
+    vec3 rd = normalize((far_pt.xyz / far_pt.w - (near_pt.xyz / near_pt.w)));
 
     float t = 0.0;
     float dist = 0.0;
@@ -206,8 +197,8 @@ void main() {
     if (dist < EPSILON) {
         vec3 pos_sdf = ro + rd * t;
         vec3 n_sdf = get_normal(pos_sdf);
-        vec3 pos = fromShaderCoords(pos_sdf);
-        vec3 n = normalize(fromShaderCoords(n_sdf));
+        vec3 pos = pos_sdf;
+        vec3 n = normalize(n_sdf);
         color = shade(pos, n);
     }
 
