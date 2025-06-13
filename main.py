@@ -107,7 +107,17 @@ class MainMenuApp(ShowBase):
         self.light_offset = Vec3(0.0, 0.0, 0.0)
         self.light_color = Vec3(1.0, 0.85, 0.8)
         self._build_menu()
-        self.accept("escape", self._build_menu)
+        self.accept("escape", self._toggle_menu)
+    def _toggle_menu(self):
+
+        """Toggle the in-game menu when rendering is active."""
+        # See Panda3D event handling: https://docs.panda3d.org/1.10/python/programming/events
+
+        if hasattr(self, "menu_frame") and hasattr(self, "compute_np") and not hasattr(self, "controller"):
+            self._resume_render()
+        else:
+            self._build_menu()
+
 
     def _build_menu(self):
         if hasattr(self, "menu_frame"):
@@ -266,6 +276,19 @@ class MainMenuApp(ShowBase):
         self.win.requestProperties(props)
         self.controller = FirstPersonController(self)
         self._setup_compute()
+    def _resume_render(self):
+        """Resume rendering by closing the menu and re-enabling control."""
+        # See WindowProperties docs: https://docs.panda3d.org/1.10/python/reference/coreclasses/windowproperties
+
+        if hasattr(self, "menu_frame"):
+            self.menu_frame.destroy()
+            del self.menu_frame
+        props = WindowProperties()
+        props.setCursorHidden(True)
+        props.setMouseMode(WindowProperties.M_relative)
+        self.win.requestProperties(props)
+        self.controller = FirstPersonController(self)
+
 
     def _on_settings(self):
         self._build_options_menu()
