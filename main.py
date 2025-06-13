@@ -182,7 +182,9 @@ class MainMenuApp(ShowBase):
         self.compute_node.add_dispatch(groups_x, groups_y, 1)
         self.compute_np = self.render.attach_new_node(self.compute_node)
         self.compute_np.set_shader(self.compute_shader)
-        self.compute_np.set_shader_input("outputImage", self.output_tex, write=True)
+        # Provide the texture as a writable image for the compute shader.
+        # Panda3D expects the read/write flags to be passed positionally.
+        self.compute_np.set_shader_input("outputImage", self.output_tex, False, True)
 
         material = MarbleMaterial()
         albedo, rough = material.generate()
