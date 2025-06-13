@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Ghosts - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Ghosts</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Queries.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Character_Controller.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Ghost objects are intangible objects. They do collide with other objects, but they won't create any collision response (forces etc.) from such collisions. Ghost objects keep track of all objects they collide with, and it is possible to query them for all objects they currently overlap with.
+</p><p>Ghost objects therefore can be used to implement a sensor, which detects the presence of any (or a particular) object within the sensor's shape. For example an automatic door which should open if the player is in front of the door, or an area which triggers some event if the player moves through the area.
+</p><p>Example for how to setup a ghost object:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletGhostNode<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletBoxShape<br />&#160;<br />shape = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />ghost = BulletGhostNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'Ghost'</span><span style="color: black;">&#41;</span><br />ghost.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape<span style="color: black;">&#41;</span><br />ghostNP = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>ghost<span style="color: black;">&#41;</span><br />ghostNP.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />ghostNP.<span style="color: black;">setCollideMask</span><span style="color: black;">&#40;</span>BitMask32<span style="color: black;">&#40;</span>0x0f<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />world.<span style="color: black;">attachGhost</span><span style="color: black;">&#40;</span>ghost<span style="color: black;">&#41;</span></pre>
+
+<p>Example for how to get overlapping objects:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> checkGhost<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, task<span style="color: black;">&#41;</span>:<br />  ghost = ghostNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">print</span> ghost.<span style="color: black;">getNumOverlappingNodes</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">for</span> node <span style="color: #ff7700;font-weight:bold;">in</span> ghost.<span style="color: black;">getOverlappingNodes</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />    <span style="color: #ff7700;font-weight:bold;">print</span> node<br />&#160;<br />  <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">cont</span><br />&#160;<br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>checkGhost, <span style="color: #483d8b;">'checkGhost'</span><span style="color: black;">&#41;</span></pre>
+
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 13/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2611-0!*!*!*!*!*!* and timestamp 20171008061320 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Queries.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Character_Controller.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

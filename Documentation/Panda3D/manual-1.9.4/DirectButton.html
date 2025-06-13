@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectButton - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectButton</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectGUI.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectCheckButton.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>DirectButton is a DirectGui object that will respond to the mouse and can execute an arbitrary function when the user clicks on the object.  This is actually implemented by taking advantage of the "state" system supported by every DirectGui object.
+</p><p>Each DirectGui object has a predefined number of available "states", and a current state.  This concept of "state" is completely unrelated to Panda's <a href="Finite_State_Machines.html" title="Finite State Machines">FSM</a> object.  For a DirectGui object, the current state is simply as an integer number, which is used to select one of a list of different NodePaths that represent the way the DirectGui object appears in each state.  Each DirectGui object can therefore have a completely different appearance in each of its states.
+</p><p>Most types of DirectGui objects do not use this state system, and only have one state, which is state 0.  The DirectButton is presently the only predefined object that has more than one state defined by default.  In fact, DirectButton defines four states, numbered 0 through 3, which are called <i>ready, press, rollover,</i> and <i>disabled,</i> in that order.  Furthermore, the DirectButton automatically manages its current state into one of these states, according to the user's interaction with the mouse.
+</p><p>With a DirectButton, then, you have the flexibility to define four completely different NodePaths, each of which represents the way the button appears in a different state.  Usually, you want to define these such that the <i>ready</i> state is the way the button looks most of the time, the <i>press</i> state looks like the button has been depressed, the <i>rollover</i> state is lit up, and the <i>disabled</i> state is grayed out.  In fact, the DirectButton interfaces will set these NodePaths up for you, if you use the simple forms of the constructor (for instance, if you specify just a single text string to the <code>text</code> parameter). 
+</p><p>Sometimes you want to have explicit control over the various states, for instance to display a different text string in each state.  To do this, you can pass a 4-tuple to the text parameter (or to many of the other parameters, such as relief or geom), where each element of the tuple is the parameter value for the corresponding state, like this:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>b = DirectButton<span style="color: black;">&#40;</span>text = <span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;OK&quot;</span>, <span style="color: #483d8b;">&quot;click!&quot;</span>, <span style="color: #483d8b;">&quot;rolling over&quot;</span>, <span style="color: #483d8b;">&quot;disabled&quot;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>The above example would create a DirectButton whose label reads "OK" when it is not being touched, but it will change to a completely different label as the mouse rolls over it and clicks it.
+</p><p>Another common example is a button you have completely customized by painting four different texture maps to represent the button in each state.  Normally, you would convert these texture maps into an egg file using <code>egg-texture-cards</code> like this:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-bash" style="font-family: monospace;"><pre>egg-texture-cards <span style="color: #660033;">-o</span> button_maps.egg <span style="color: #660033;">-p</span> <span style="color: #000000;">240</span>,<span style="color: #000000;">240</span> button_ready.png button_click.png button_rollover.png button_disabled.png</pre></div></div>
+<p>And then you would load up the that egg file in Panda and apply it to the four different states like this:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>maps = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'button_maps'</span><span style="color: black;">&#41;</span>
+b = DirectButton<span style="color: black;">&#40;</span>geom = <span style="color: black;">&#40;</span>maps.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/button_ready'</span><span style="color: black;">&#41;</span>,
+                         maps.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/button_click'</span><span style="color: black;">&#41;</span>,
+                         maps.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/button_rollover'</span><span style="color: black;">&#41;</span>,
+                         maps.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/button_disabled'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>You can also access one of the state-specific NodePaths after the button has been created with the interface <code>myButton.stateNodePath[stateNumber]</code>.  Normally, however, you should not need to access these NodePaths directly.
+</p><p>The following are the DirectGui keywords that are specific to a DirectButton.  (These are in addition to the generic DirectGui keywords described on the <a href="DirectGUI.html" title="DirectGUI">previous page</a>.)
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>command
+</td>
+<td>Command the button performs when clicked
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>commandButtons
+</td>
+<td>Which mouse button must be clicked to do the command
+</td>
+<td>LMB, MMB, or RMB
+</td></tr>
+<tr>
+<td>rolloverSound
+</td>
+<td>The sound made when the cursor rolls over the button
+</td>
+<td>AudioSound instance
+</td></tr>
+<tr>
+<td>clickSound
+</td>
+<td>The sound made when the cursor clicks on the button
+</td>
+<td>AudioSound instance
+</td></tr>
+<tr>
+<td>pressEffect
+</td>
+<td>Whether or not the button sinks in when clicked
+</td>
+<td>&lt;0 or 1&gt;
+</td></tr>
+<tr>
+<td>state
+</td>
+<td>Whether or not the button is disabled
+</td>
+<td>DGG.NORMAL or DGG.DISABLED
+</td></tr></table>
+<p>Like any other <a href="DirectGui.html" title="DirectGui" class="mw-redirect">DirectGui</a> widget, you can change any of the properties by treating the element as a dictionary:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>button<span style="color: black;">&#91;</span><span style="color: #483d8b;">&quot;state&quot;</span><span style="color: black;">&#93;</span> = DGG.<span style="color: black;">DISABLED</span></pre></div></div>
+<h2> <span class="mw-headline" id="Example"> Example </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> TextNode
+&#160;
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;This is my Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Callback function to set  text</span>
+<span style="color: #ff7700;font-weight:bold;">def</span> setText<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:
+        bk_text = <span style="color: #483d8b;">&quot;Button Clicked&quot;</span>
+        textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>bk_text<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add button</span>
+b = DirectButton<span style="color: black;">&#40;</span>text = <span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;OK&quot;</span>, <span style="color: #483d8b;">&quot;click!&quot;</span>, <span style="color: #483d8b;">&quot;rolling over&quot;</span>, <span style="color: #483d8b;">&quot;disabled&quot;</span><span style="color: black;">&#41;</span>, scale=.<span style="color: #ff4500;">05</span>, command=setText<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Run the tutorial</span>
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>Note that you will not be able to set the text unless the mayChange flag is 1. This is an optimization, which is easily missed by newcomers.
+</p><p>When you are positioning your button, keep in mind that the button's vertical center is located at the base of the text.  For example, if you had a button with the word "Apple", the vertical center would be aligned with the base of the letter "A".
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 70/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:968-0!*!0!*!*!*!* and timestamp 20171007174355 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectGUI.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectCheckButton.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

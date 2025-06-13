@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Softbody Rope - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Softbody Rope</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Softbodies.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Softbody_Patch.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Soft body ropes are best compared to chains of interconnected nodes. This page deals with setup, visualization and attaching things to soft body ropes.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Setup">Setup</span></h2>
+<p>The following code will create a soft body rope with 8 segment (variable <code>res</code>), and thus 8 + 2 = 10 nodes. <code>p1</code> is the initial position of the first node, and <code>p2</code> is the initial position of the last node. <code>fixeds</code> will be explained later on this page.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletSoftBodyNode<br />&#160;<br />info = <span style="color: #008000;">self</span>.<span style="color: black;">world</span>.<span style="color: black;">getWorldInfo</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setAirDensity</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1.2</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setWaterDensity</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setWaterOffset</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setWaterNormal</span><span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />res = <span style="color: #ff4500;">8</span><br />p1 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span><br />p2 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span><br />fixeds = <span style="color: #ff4500;">0</span><br />&#160;<br />bodyNode = BulletSoftBodyNode.<span style="color: black;">makeRope</span><span style="color: black;">&#40;</span>info, p1, p2, res, fixeds<span style="color: black;">&#41;</span> <br />bodyNode.<span style="color: black;">setTotalMass</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">50.0</span><span style="color: black;">&#41;</span><br />bodyNP = worldNP.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>bodyNode<span style="color: black;">&#41;</span><br />world.<span style="color: black;">attachSoftBody</span><span style="color: black;">&#40;</span>bodyNode<span style="color: black;">&#41;</span></pre>
+
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Visualisation">Visualisation</span></h2>
+<p>So far we have a physical object, the soft body rope, but aside from the debug renderer this object is not shown in our scene. We need something to visualize the rope.
+</p><p>There are two ways of rendering the rope. First we can make use of a nurbs curse, or we can simple render the rope using geom lines. First we have a look at how to render the rope using geom lines.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> GeomNode<br />&#160;<br />geom = BulletHelper.<span style="color: black;">makeGeomFromLinks</span><span style="color: black;">&#40;</span>bodyNode<span style="color: black;">&#41;</span><br />&#160;<br />visNode = GeomNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">''</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">addGeom</span><span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span><br />visNP = bodyNP.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>visNode<span style="color: black;">&#41;</span><br />&#160;<br />bodyNode.<span style="color: black;">linkGeom</span><span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span></pre>
+
+<p>The class <code>BulletHelper</code> has a convenience method which creates a ready-to-use <code>Geom</code> for us. We only need to wrap the <code>Geom</code> in a <code>GeomNode</code>, and insert it into the scene graph. Since we want the visualisation of the rope to be at the same place as the rope we insert the <code>GeomNode</code> as a child of the <code>BulletSoftBodyNode</code>.
+</p><p>There is just one thing missing. The <code>GeomNode</code> doesn't know that it is the visualization of a soft body rope. When advancing the simulation time the soft body rope will deform, but the visualization will always stay the way it has been created. To fix this we can tell the soft body node that this particular <code>Geom</code> is it's visualization. The soft body node will now update the <code>Geom</code> each frame. This is done in the last line, by linking the geom to the soft body node.
+</p><p>The result doesn't look very good. It's just a thin line. But instead of the above code we can use a nurbs curve for visualization.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> RopeNode<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> NurbsCurveEvaluator<br />&#160;<br />curve = NurbsCurveEvaluator<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />curve.<span style="color: black;">reset</span><span style="color: black;">&#40;</span>res + <span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><br />&#160;<br />bodyNode.<span style="color: black;">linkCurve</span><span style="color: black;">&#40;</span>curve<span style="color: black;">&#41;</span><br />&#160;<br />visNode = RopeNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">''</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">setCurve</span><span style="color: black;">&#40;</span>curve<span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">setRenderMode</span><span style="color: black;">&#40;</span>RopeNode.<span style="color: black;">RMTube</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">setUvMode</span><span style="color: black;">&#40;</span>RopeNode.<span style="color: black;">UVParametric</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">setNumSubdiv</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">setNumSlices</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">8</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">setThickness</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.4</span><span style="color: black;">&#41;</span><br />visNP = <span style="color: #008000;">self</span>.<span style="color: black;">worldNP</span>.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>visNode<span style="color: black;">&#41;</span><br />visNP.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'some_texture.jpg'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+
+<p>First we create a nurbs curve (<code>NurbsCurveEvaluator</code>), and then we link this nurbs curve to the soft body rope node. The soft body node will update the nurbs curve every frame from now on.
+</p><p>But we are not done yet. We still need to create something that can be seen in the scene graph. A <code>RopeNode</code> can render a <code>NurbsCurveEvaluator</code>. For details on how to configure the <code>RopeNode</code> please refer to the Panda3D API documentation; both the <code>RopeNode</code> and the <code>NurbsCurveEvaluator</code> are not part of the panda3d.bullet, but core Panda3D classes.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Attaching_the_rope">Attaching the rope</span></h2>
+<p>Now we have created a rope, and we can render it. Next we want to attach the rope to something, that is "glue" it either to some other object, usually a rigid body, or to a specific position of the world.
+</p><p>At the beginning of this page we promised to deal with the <code>fixeds</code> parameter later on the page. This is the place. Using the <code>fixeds</code> parameter we can attach the rope to a position in the world (global coordinates!). Depending on the value of this parameter we can attach different nodes/vertices of the rope:
+</p>
+<ul>
+<li>0: No node/vertex is attached.</li>
+<li>1: Only the first node/vertex is attached.</li>
+<li>2: Only the last node/vertex is attached.</li>
+<li>3: Both the first and the last node/vertex are attached.</li>
+</ul>
+<p>Or we want to attach the soft body rope to a rigid body. In the following code snippet the last node/vertex of a soft body rope is attached to a rigid body.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># NodePath for some BulletSoftBody &quot;rope&quot;</span><br />softNP = ...<br />&#160;<br /><span style="color: #808080; font-style: italic;"># NodePath for some BulletRigidBody</span><br />rigidNP = ...<br />&#160;<br /><span style="color: #808080; font-style: italic;"># Index of the last node of the rope</span><br />idx = softNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">getNumNodes</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> - <span style="color: #ff4500;">1</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Attach the last node of the rope with the rigid body</span><br />softNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">appendAnchor</span><span style="color: black;">&#40;</span>idx, rigidNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 248/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2615-0!*!*!!*!*!* and timestamp 20171008040731 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Softbodies.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Softbody_Patch.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

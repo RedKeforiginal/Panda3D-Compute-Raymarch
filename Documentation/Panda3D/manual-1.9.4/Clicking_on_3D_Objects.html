@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Clicking on 3D Objects - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Clicking on 3D Objects</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bitmask_Example.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Garbage_Collection.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p>
+<p>The simplest way to click on 3D objects in Panda3D is to use very simplistic collision detection coupled with event processing.</p>
+<p>First, after a <code>CollisonTraverser</code> and a <code>CollisionHandler</code> have been setup, attach a <code>CollisionRay</code> node to the camera. This node will have its <code>setFromCollideMask()</code> set to <code>GeomNode.getDefaultCollideMask()</code> in order to be as general as possible.</p>
+<p>
+</p>
+<pre class="python">pickerNode = CollisionNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'mouseRay'</span><span style="color: black;">&#41;</span><br />pickerNP = camera.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>pickerNode<span style="color: black;">&#41;</span><br />pickerNode.<span style="color: black;">setFromCollideMask</span><span style="color: black;">&#40;</span>GeomNode.<span style="color: black;">getDefaultCollideMask</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />pickerRay = CollisionRay<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />pickerNode.<span style="color: black;">addSolid</span><span style="color: black;">&#40;</span>pickerRay<span style="color: black;">&#41;</span><br />myTraverser.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>pickerNP, myHandler<span style="color: black;">&#41;</span></pre>
+<p>
+
+</p>
+<p>For any object that you want to be pickable you should add a flag to it. The easiest way is to use the <code>setTag()</code> function:</p>
+<p>
+</p>
+<pre class="python">object1.<span style="color: black;">setTag</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'myObjectTag'</span>, <span style="color: #483d8b;">'1'</span><span style="color: black;">&#41;</span><br />object2.<span style="color: black;">setTag</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'myObjectTag'</span>, <span style="color: #483d8b;">'2'</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p>
+<p>The above example sets the tag <code>'myObjectTag'</code> on two objects in your graph that you want to designate as pickable. We will check for the presence of this tag after we get the response back from the collision system. Because <a href="Loading_Actors_and_Animations.html" title="Loading Actors and Animations">Actors</a> uses a different setup the collision system will return the geometry but not the NodePath. Use <code>object.setPythonTag('myObjectTag', 1)</code> and <code>object.getPythonTag('myObjectTag')</code> instead to return the nodepath of an Actor.</p>
+<p>Now assume that the function <code>myFunction()</code> is set up to be called for the <code>'mouse1'</code> event. In <code>myFunction()</code> is where you call <code>pickerRay.setFromLens(origin, destX, destY)</code>. This makes the ray's origin <code>origin</code> and the ray's vector the direction from <code>origin</code> to the point (<code>destX</code>, <code>destY</code>).</p>
+<p>
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> myFunction<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />   <span style="color: #808080; font-style: italic;"># First we check that the mouse is not outside the screen.</span><br />   <span style="color: #ff7700;font-weight:bold;">if</span> base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">hasMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />      <span style="color: #808080; font-style: italic;"># This gives up the screen coordinates of the mouse.</span><br />      mpos = base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">getMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />      <span style="color: #808080; font-style: italic;"># This makes the ray's origin the camera and makes the ray point </span><br />      <span style="color: #808080; font-style: italic;"># to the screen coordinates of the mouse.</span><br />      pickerRay.<span style="color: black;">setFromLens</span><span style="color: black;">&#40;</span>base.<span style="color: black;">camNode</span>, mpos.<span style="color: black;">getX</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, mpos.<span style="color: black;">getY</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p>
+<p>After this, you now call the traverser like any other collision, get the closest object and "pick" it.</p>
+<p><br />
+
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> myFunction<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />   mpos = base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">getMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />   pickerRay.<span style="color: black;">setFromLens</span><span style="color: black;">&#40;</span>base.<span style="color: black;">camNode</span>, mpos.<span style="color: black;">getX</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, mpos.<span style="color: black;">getY</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />   myTraverser.<span style="color: black;">traverse</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />   <span style="color: #808080; font-style: italic;"># Assume for simplicity's sake that myHandler is a CollisionHandlerQueue.</span><br />   <span style="color: #ff7700;font-weight:bold;">if</span> myHandler.<span style="color: black;">getNumEntries</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: #66cc66;">&gt;</span> <span style="color: #ff4500;">0</span>:<br />      <span style="color: #808080; font-style: italic;"># This is so we get the closest object</span><br />      myHandler.<span style="color: black;">sortEntries</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />      pickedObj = myHandler.<span style="color: black;">getEntry</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>.<span style="color: black;">getIntoNodePath</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p>
+<p>The node returned by the collision system may not be the object itself, but might be just a part of the object. In particular, it will be one of the <code>GeomNodes</code> that make up the object. (The <code>GeomNode</code> class contains the visible geometry primitives that are used to define renderable objects in Panda3D.) Since your object might consist of more than one <code>GeomNode</code>, what you probably would prefer to get is the <code>NodePath</code> that represents the parent of all of these <code>GeomNodes</code>; that is, the <code>NodePath</code> that you set the <code>'myObjectTag'</code> tag on above.</p>
+<p>You can use <code>nodePath.findNetTag()</code> to return the parent <code>NodePath</code> that contains a specified tag.</p>
+<p>(There are also other, similar methods on <code>NodePath</code> that can be used to query the tag specified on a parent node, such as <code>getNetTag()</code> and <code>hasNetTag()</code>. For simplicity, we shall restrict this example to <code>findNetTag()</code>.)</p>
+<p><br />
+</p>
+<p>Now you can edit <code>myFunction()</code> to look like this:</p>
+<p>
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> myFunction<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />   mpos = base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">getMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />   pickerRay.<span style="color: black;">setFromLens</span><span style="color: black;">&#40;</span>base.<span style="color: black;">camNode</span>, mpos.<span style="color: black;">getX</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, mpos.<span style="color: black;">getY</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />   myTraverser.<span style="color: black;">traverse</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />   <span style="color: #808080; font-style: italic;"># Assume for simplicity's sake that myHandler is a CollisionHandlerQueue.</span><br />   <span style="color: #ff7700;font-weight:bold;">if</span> myHandler.<span style="color: black;">getNumEntries</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: #66cc66;">&gt;</span> <span style="color: #ff4500;">0</span>:<br />      <span style="color: #808080; font-style: italic;"># This is so we get the closest object.</span><br />      myHandler.<span style="color: black;">sortEntries</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />      pickedObj = myHandler.<span style="color: black;">getEntry</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>.<span style="color: black;">getIntoNodePath</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />      pickedObj = pickedObj.<span style="color: black;">findNetTag</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'myObjectTag'</span><span style="color: black;">&#41;</span><br />      <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #ff7700;font-weight:bold;">not</span> pickedObj.<span style="color: black;">isEmpty</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />         handlePickedObject<span style="color: black;">&#40;</span>pickedObj<span style="color: black;">&#41;</span></pre>
+<p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 119/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1074-0!*!0!*!*!*!* and timestamp 20171007182642 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bitmask_Example.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Garbage_Collection.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Collision Handlers - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Collision Handlers</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Collision_Solids.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Collision_Entries.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>You will need to create a CollisionHandler that specifies what to do when a collision event is detected. Each object can only have one collision handler associated with it. There are several possible kinds of CollisionHandler available.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Collision_Handlers.html#CollisionHandlerQueue"><span class="tocnumber">1</span> <span class="toctext">CollisionHandlerQueue</span></a></li>
+<li class="toclevel-1"><a href="Collision_Handlers.html#CollisionHandlerEvent"><span class="tocnumber">2</span> <span class="toctext">CollisionHandlerEvent</span></a></li>
+<li class="toclevel-1"><a href="Collision_Handlers.html#CollisionHandlerPusher"><span class="tocnumber">3</span> <span class="toctext">CollisionHandlerPusher</span></a></li>
+<li class="toclevel-1"><a href="Collision_Handlers.html#PhysicsCollisionHandler"><span class="tocnumber">4</span> <span class="toctext">PhysicsCollisionHandler</span></a></li>
+<li class="toclevel-1"><a href="Collision_Handlers.html#CollisionHandlerFloor"><span class="tocnumber">5</span> <span class="toctext">CollisionHandlerFloor</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="CollisionHandlerQueue">CollisionHandlerQueue</span></h2>
+<p>The simplest kind of CollisionHandler, this object simply records the collisions that were detected during the most recent traversal.  You can then iterate through the list using <code>queue.getNumEntries()</code> and <code>queue.getEntry()</code>:
+</p><p>
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>queue = CollisionHandlerQueue<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+traverser.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>fromObject, queue<span style="color: black;">&#41;</span>
+traverser.<span style="color: black;">traverse</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #ff7700;font-weight:bold;">for</span> entry <span style="color: #ff7700;font-weight:bold;">in</span> queue.<span style="color: black;">getEntries</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:
+    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">&#40;</span>entry<span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p><p>
+</p><p>By default, the <a href="Collision_Entries.html" title="Collision Entries">Collision Entries</a> appear in the queue in no particular order.  You can arrange them in order from nearest to furthest by calling <code>queue.sortEntries()</code> after the traversal.
+</p>
+<h2> <span class="mw-headline" id="CollisionHandlerEvent">CollisionHandlerEvent</span></h2>
+<p>This is another simple kind of CollisionHandler.  Rather than saving up the collisions, it generates a <a href="Event_Handling.html" title="Event Handling" class="mw-redirect">Panda event</a> when collision events are detected.
+</p><p>There are three kinds of events that may be generated: the "in" event, when a particular object collides with another object that it didn't in the previous pass, the "out" event, when an object is no longer colliding with an object it collided with in the previous pass, and the "again" event, when an object is still colliding with the same object that it did in the previous pass.
+</p><p>For each kind of event, the CollisionHandlerEvent will construct an event name out of the names of the from and into objects that were involved in the collision.  The exact event name is controlled by a pattern string that you specify.  For instance:
+</p><p>
+</p>
+<pre class="python">handler.<span style="color: black;">addInPattern</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'%fn-into-%in'</span><span style="color: black;">&#41;</span><br />handler.<span style="color: black;">addAgainPattern</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'%fn-again-%in'</span><span style="color: black;">&#41;</span><br />handler.<span style="color: black;">addOutPattern</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'%fn-out-%in'</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>In the pattern string, the following sequences have special meaning:
+</p>
+<table>
+<tr><td style="vertical-align: top;">%fn</td>
+<td>the name of the "from" object's node</td></tr>
+<tr><td style="vertical-align: top;">%in</td>
+<td>the name of the "into" object's node</td></tr>
+<tr><td style="vertical-align: top;">%fs</td>
+<td>'t' if "from" is declared to be tangible, 'i' if intangible</td></tr>
+<tr><td style="vertical-align: top;">%is</td>
+<td>'t' if "into" is declared to be tangible, 'i' if intangible</td></tr>
+<tr><td style="vertical-align: top;">%ig</td>
+<td>'c' if the collision is into a CollisionNode, 'g' if it is an ordinary visible GeomNode</td></tr>
+<tr><td style="vertical-align: top;">%(tag)fh</td>
+<td>generate event only if "from" node has the indicated tag</td></tr>
+<tr><td style="vertical-align: top;">%(tag)fx</td>
+<td>generate event only if "from" node does not have the indicated tag</td></tr>
+<tr><td style="vertical-align: top;">%(tag)ih</td>
+<td>generate event only if "into" node has the indicated tag</td></tr>
+<tr><td style="vertical-align: top;">%(tag)ix</td>
+<td>generate event only if "into" node does not have the indicated tag</td></tr>
+<tr><td style="vertical-align: top;">%(tag)ft</td>
+<td>the indicated tag value of the "from" node.</td></tr>
+<tr><td style="vertical-align: top;">%(tag)it</td>
+<td>the indicated tag value of the "into" node.</td></tr>
+</table>
+<p>You may use as many of the above sequences as you like, or none, in the pattern string.  In the tag-based sequences, the parentheses around (tag) are literal; the idea is to write the name of the tag you want to look up, surrounded by parentheses.  The tag is consulted using the <code>nodePath.getNetTag()</code> interface.
+</p><p>In any case, the event handler function that you write to service the event should receive one parameter (in addition to self, if it is a method): the <a href="Collision_Entries.html" title="Collision Entries">CollisionEntry</a>.  For example:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">class</span> MyObject<span style="color: black;">&#40;</span>DirectObject.<span style="color: black;">DirectObject</span><span style="color: black;">&#41;</span>:<br />    <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:<br />      <span style="color: #008000;">self</span>.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'car-into-rail'</span>, handleRailCollision<span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">def</span> handleRailCollision<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, entry<span style="color: black;">&#41;</span>:<br />      <span style="color: #ff7700;font-weight:bold;">print</span> entry</pre>
+<p>
+</p><p>Note that all of the following versions of CollisionHandler also inherit from CollisionHandlerEvent, so any of them can be set up to throw events in the same way.
+</p>
+<h2> <span class="mw-headline" id="CollisionHandlerPusher">CollisionHandlerPusher</span></h2>
+<p>This is the first of the more sophisticated handlers.  The CollisionHandlerPusher, in addition to inheriting all of the event logic from CollisionHandlerEvent, will automatically push back on its from object to keep it out of walls.  The visual effect is that your object will simply stop moving when it reaches a wall if it hits the wall head-on, or it will slide along the wall smoothly if it strikes the wall at an angle.
+</p><p>The CollisionHandlerPusher needs to have a handle to the NodePath that it will push back on, for each from object; you pass this information to <code>pusher.addCollider</code>.  This should be the node that is actually moving.  This is often, but not always, the same NodePath as the CollisionNode itself, but it might be different if the CollisionNode is set up as a child of the node that is actually moving.
+</p>
+<pre class="python">smiley = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'smiley.egg'</span><span style="color: black;">&#41;</span><br />fromObject = smiley.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>CollisionNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'colNode'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />fromObject.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addSolid</span><span style="color: black;">&#40;</span>CollisionSphere<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />pusher = CollisionHandlerPusher<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />pusher.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>fromObject, smiley<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p><br />
+Don't be confused by the call to <code>pusher.addCollider</code>; it looks a lot like the call to <code>traverser.addCollider</code>, but it's not the same thing, and you still need to add the collider and its handler to the traverser:
+</p>
+<pre class="python">traverser.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>fromObject, pusher<span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>x, y, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>If you are using Panda's drive mode to move the camera around (or some other node), then you also need to tell the pusher about the drive node, by adding it into the <code>pusher.addCollider</code> call:
+</p>
+<pre class="python">fromObject = base.<span style="color: black;">camera</span>.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>CollisionNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'colNode'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />fromObject.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addSolid</span><span style="color: black;">&#40;</span>CollisionSphere<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />pusher = CollisionHandlerPusher<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />pusher.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>fromObject, base.<span style="color: black;">camera</span>, base.<span style="color: black;">drive</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p>
+<h2> <span class="mw-headline" id="PhysicsCollisionHandler">PhysicsCollisionHandler</span></h2>
+<p>This kind of handler further specializes CollisionHandlerPusher to integrate with Panda's <a href="Physics_Engine.html" title="Physics Engine" class="mw-redirect">Physics Engine</a>.  It requires that the NodePath you pass as the second parameter to <code>pusher.addCollider</code> actually contains an ActorNode, the type of node that is moved by forces in the physics system.
+</p>
+<pre class="python">anp = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>ActorNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'actor'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />fromObject = anp.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>CollisionNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'colNode'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />fromObject.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addSolid</span><span style="color: black;">&#40;</span>CollisionSphere<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />pusher = PhysicsCollisionHandler<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />pusher.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>fromObject, anp<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p><p>Whenever you have an ActorNode that you want to respond to collisions, we recommend that you use a PhysicsCollisionHandler rather than an ordinary CollisionHandlerPusher.  The PhysicsCollisionHandler will keep the object out of walls, just like the CollisionHandlerPusher does, but it will also update the object's velocity within the physics engine, which helps to prevent the physics system from becoming unstable due to large accumulated velocities.
+</p>
+<h2> <span class="mw-headline" id="CollisionHandlerFloor">CollisionHandlerFloor</span></h2>
+<p>This collision handler is designed to serve one very specialized purpose: it keeps an object on the ground, or falling gently onto the ground, even if the floor is not level, without involving physics.
+</p><p>It is intended to be used with a <code>CollisionRay</code> or <code>CollisionSegment</code>.  The idea is that you attach a ray to your object, pointing downward, such that the topmost intersection the ray detects will be the floor your object should be resting on.  Each frame, the CollisionHandlerFloor simply sets your object's z value to the detected intersection point (or, if it is so configured, it slowly drops the object towards this point until it reaches it).
+</p><p>Using the CollisionHandlerFloor can be an easy way to simulate an avatar walking over uneven terrain, without having to set up a complicated physics simulation (or involve physics in any way).  Of course, it does have its limitations.
+</p>
+<pre class="python">smiley = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'smiley.egg'</span><span style="color: black;">&#41;</span><br />fromObject = smiley.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>CollisionNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'colNode'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />fromObject.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addSolid</span><span style="color: black;">&#40;</span>CollisionRay<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />lifter = CollisionHandlerFloor<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />lifter.<span style="color: black;">addCollider</span><span style="color: black;">&#40;</span>fromObject, smiley<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 247/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:958-0!*!0!!en!*!* and timestamp 20171008002535 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Collision_Solids.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Collision_Entries.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

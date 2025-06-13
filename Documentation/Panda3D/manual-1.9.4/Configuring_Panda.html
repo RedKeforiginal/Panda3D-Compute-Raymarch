@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Configuring Panda3D - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Configuring Panda3D</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Configuration_File.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_All_Config_Variables.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In the <i>etc</i> subdirectory, you will find a configuration file
+<i>Config.prc</i>.  This controls several of Panda's configuration options
+- does it use OpenGL or DirectX, how much debugging output does it
+print, and so forth.  The following table lists several of the most
+commonly-used variables.
+</p><p>For a full documentation about Panda3D's configuration system, click <a rel="nofollow" class="external text" href="http://panda3d.cvs.sourceforge.net/*checkout*/panda3d/panda/src/doc/howto.use_config.txt">here</a> to view the original documentation file.
+</p><p>To know about accessing config variables from within your code, please see <a href="Accessing_Config_Vars_in_a_Program.html" title="Accessing Config Vars in a Program">Accessing Config Vars in a Program</a>.
+</p><p>To get a more complete list of variables, see the <a href="List_of_all_config_variables.html" title="List of all config variables" class="mw-redirect">list of all config variables</a>.
+</p><p><br />
+</p>
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th> Variable
+</th>
+<th> Values
+</th>
+<th> Default
+</th>
+<th> Details
+</th></tr>
+<tr>
+<td> load-display
+</td>
+<td> pandagl<br />pandadx9<br />pandadx8<br />tinydisplay
+</td>
+<td> pandagl
+</td>
+<td> Specifies which graphics GSG to use for rendering (OpenGL, Direct3D 8/9 or TinyPanda software rendering)
+</td></tr>
+<tr>
+<td> aux-display
+</td>
+<td> pandagl<br />pandadx9<br />pandadx8<br />tinydisplay
+</td>
+<td> pandagl
+</td>
+<td> Specifies which graphics GSG to use if the GSG specified in load-display fails; May be specified multiple times to create multiple fallbacks.
+</td></tr>
+<tr>
+<td> win-size
+</td>
+<td> Number of pixels
+</td>
+<td> 640 480
+</td>
+<td> Specifies the size of the Panda3D window
+</td></tr>
+<tr>
+<td> win-origin
+</td>
+<td> Pixel offsets
+</td>
+<td> 50 50
+</td>
+<td> Specifies the offset of the Panda3D window
+</td></tr>
+<tr>
+<td> window-title
+</td>
+<td> Window title
+</td>
+<td> Panda
+</td>
+<td> Specifies the title of the Panda3D window
+</td></tr>
+<tr>
+<td> fullscreen
+</td>
+<td> true<br />false
+</td>
+<td> false
+</td>
+<td> Enables full-screen mode (true or false)
+</td></tr>
+<tr>
+<td> undecorated
+</td>
+<td> true<br />false
+</td>
+<td> false
+</td>
+<td> Removes border from window (true or false)
+</td></tr>
+<tr>
+<td> cursor-hidden
+</td>
+<td> true<br />false
+</td>
+<td> false
+</td>
+<td> Hides mouse cursor (true or false)
+</td></tr>
+<tr>
+<td> sync-video
+</td>
+<td> true<br />false
+</td>
+<td> true
+</td>
+<td> Limits the frame rate to monitor's capabilities
+</td></tr>
+<tr>
+<td> show-frame-rate-meter
+</td>
+<td> true<br />false
+</td>
+<td> false
+</td>
+<td> Shows the frame rate (in frames per second) at the upper right corner of the screen (true or false)
+</td></tr>
+<tr>
+<td> notify-level-[package]
+</td>
+<td> fatal<br />error<br />warning<br />info<br />debug<br />spam
+</td>
+<td> info
+</td>
+<td> Sets notification levels for various Panda3D packages to control the amount of information printed during execution (fatal being least, spam being most)
+</td></tr>
+<tr>
+<td> model-path
+</td>
+<td> Path string
+</td>
+<td> see config file
+</td>
+<td> Adds specified path to the list of paths searched when loading a model
+</td></tr>
+<tr>
+<td> audio-library-name
+</td>
+<td> p3openal_audio<br />p3fmod_audio<br />p3miles_audio<br />null
+</td>
+<td> p3openal_audio
+</td>
+<td> Loads the appropriate audio library
+</td></tr>
+<tr>
+<td> want-directtools
+</td>
+<td> true<br />false
+</td>
+<td> true<br />line commented out
+</td>
+<td> Enables directtools, a suite of interactive object/camera manipulation tools
+</td></tr>
+<tr>
+<td> want-tk
+</td>
+<td> true<br />false
+</td>
+<td> true<br />line commented out
+</td>
+<td> Enables support for using Tkinter/PMW (Python's wrappers around Tk)
+</td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 24/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:931-0!*!0!*!*!*!* and timestamp 20171007114850 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Configuration_File.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_All_Config_Variables.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

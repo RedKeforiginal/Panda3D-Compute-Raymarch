@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Controlling a Joint Procedurally - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Controlling a Joint Procedurally</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Attaching_an_Object_to_a_Joint.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Level_of_Detail.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Sometimes one wishes to procedurally take control of a model's joint.  For example, if you wish to force a character model's eyes to follow the mouse, you will need to procedurally take control of the neck and head.  To achieve this, use <i>controlJoint</i>.
+</p>
+<pre class="python">myNodePath = actor.<span style="color: black;">controlJoint</span><span style="color: black;">&#40;</span><span style="color: #008000;">None</span>,<span style="color: #483d8b;">&quot;modelRoot&quot;</span>,<span style="color: #483d8b;">&quot;Joint Name&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>This creates a dummy node.  Every frame, the transform is copied from the dummy node into the joint.  By setting the transform of the dummy node, you can control the joint.  Normally, one would want to use <code>setHpr</code> to rotate the joint without moving it.  The dummy node is initialized in such a way that the joint is in its default location, the one specified in the model's egg file.
+</p><p>You must store a local (not global) transform in the dummy node.  In other words, the transform is relative to the joint's parent bone.  If you are controlling the forearm of a model, for instance, the transform will be relative to the upperarm.
+</p><p>The string "modelRoot" represents the name of the model node - the string "modelRoot" is usually the correct value.
+</p><p>The string "Joint Name" represents the name of the joint. Typically it would be something like "Femur", or "Neck", or "L Finger1". This is usually set inside the modeling package. For example, in MAX, each object in the scene has a name, including the bones. If necessary, you can determine the joint names by scanning the egg file for strings like <code>&lt;Joint&gt; Femur</code>.  You can also use the call <code>actor.listJoints()</code> to show the complete hierarchy of joints.
+</p>
+<h2> <span class="mw-headline" id="Cautions_and_limitations">Cautions and limitations</span></h2>
+<p>Prior to Panda3D version 1.5, there were several important limitations to controlJoint().  These have been lifted as of Panda3D version 1.5.
+</p>
+<ul>
+<li>In previous versions of Panda, controlJoint only worked when an animation is playing on the joint.  This is no longer true; controlJoint now takes effect whether an animation is playing or not.</li>
+<li>It used to be important to make all of your controlJoint() calls for a particular model before you made the first call to play(), loop(), or pose().  This is no longer necessary; you may call controlJoint() at any time.</li>
+<li>In previous versions of Panda, controlJoint could not be undone.  Beginning in Panda3D version 1.5, you may call releaseJoint("modelRoot", "Joint Name") to undo a previous call to controlJoint().</li>
+</ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 38/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1061-0!*!*!*!*!*!* and timestamp 20171008084647 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Attaching_an_Object_to_a_Joint.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Level_of_Detail.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

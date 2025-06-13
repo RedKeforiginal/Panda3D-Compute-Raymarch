@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Common State Changes - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Common State Changes</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Scene_Graph_Manipulations.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Manipulating_a_Piece_of_a_Model.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Summary">Summary</span></h2>
+<p>This page lists some of the most common changes you can make to a 3D node.
+This page is really only a quick cheat-sheet summary: the 
+detailed documentation for these operations comes later in the manual.
+</p>
+<h2> <span class="mw-headline" id="State_Change_Cheat_Sheet">State Change Cheat Sheet</span></h2>
+<p>Two of the most common changes are position and orientation.
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>X, Y, Z<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span>Yaw, Pitch, Roll<span style="color: black;">&#41;</span></pre>
+<p>By default in Panda3D, the X axis points to the right, the Y axis is forward, and Z is up.  An object's rotation is usually described using Euler angles called Heading, Pitch, and Roll (sometimes called Yaw, Pitch, and Roll in other packages)--these specify angle rotations in degrees.  (If you are more comfortable using quaternions, the <code>setQuat()</code> method can be used to specify the rotation as a quaternion.)
+</p><p>You can change an object's size, either uniformly, or with a different value of x, y, and z.
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setScale</span><span style="color: black;">&#40;</span>S<span style="color: black;">&#41;</span></pre>
+<p>Sometimes it is convenient to adjust a single component individually:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setX</span><span style="color: black;">&#40;</span>X<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setY</span><span style="color: black;">&#40;</span>Y<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setZ</span><span style="color: black;">&#40;</span>Z<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setH</span><span style="color: black;">&#40;</span>H<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setP</span><span style="color: black;">&#40;</span>P<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setR</span><span style="color: black;">&#40;</span>R<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setSx</span><span style="color: black;">&#40;</span>SX<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setSy</span><span style="color: black;">&#40;</span>SY<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setSz</span><span style="color: black;">&#40;</span>SZ<span style="color: black;">&#41;</span></pre>
+<p>Or all at the same time:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setPosHprScale</span><span style="color: black;">&#40;</span>X, Y, Z, H, P, R, SX, SY, SZ<span style="color: black;">&#41;</span></pre>
+<p>You can also query the current transform information for any of the above:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">getPos</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">getX</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">getY</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">getZ</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Also, by using the functions <code>setTag()</code> and <code>getTag()</code> you can store your own information in key value pairs. For example:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setTag</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Key&quot;</span>, <span style="color: #483d8b;">&quot;value&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>You can also store Python objects as tags by using the <code>setPythonTag</code> function with the same arguments.
+</p><p>As a more advanced feature, you may also set or query the position (or any of the above transform properties) of a particular NodePath with respect to another one.  To do this, specify the relative NodePath as the first parameter:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>otherNodePath, X, Y, Z<span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">getPos</span><span style="color: black;">&#40;</span>otherNodePath<span style="color: black;">&#41;</span></pre>
+<p>Putting a NodePath as the first parameter to any of the transform setters or getters makes it a relative operation.  The above <code>setPos()</code> means to set myNodePath to the position (X, Y, Z), relative to otherNodePath--that is, the position myNodePath would be in if it were a child of otherNodePath and its position were set to (X, Y, Z).  The <code>getPos()</code> call returns the position myNodePath would have if it were a child of otherNodePath.
+</p><p>It is also important to note that you can use the NodePath in its own relative sets and gets. This maybe helpful in situations where you are concerned with distances. For example:
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># Move myNodePath 3 units forward in the x</span><br />myNodePath.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>myNodePath, <span style="color: #ff4500;">3</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span></pre>
+<p>These relative sets and gets are a very powerful feature of Panda's scene graph, but they can also be confusing; don't worry if it doesn't make sense right now.
+</p><p>The <code>lookAt()</code> method rotates a model to face another object; that is, it rotates the first object so that its +Y axis points toward the second object.  Note that a particular model might or might not have been generated with the +Y axis forward, so this doesn't necessarily make a model "look at" the given object.
+</p>
+<pre class="python">myNodePath.<span style="color: black;">lookAt</span><span style="color: black;">&#40;</span>otherObject<span style="color: black;">&#41;</span></pre>
+<p>Color changes are another common alteration. Values for color are floating point numbers from 0 to 1, 0 being black, 1 being white.
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span>R, G, B, A<span style="color: black;">&#41;</span></pre>
+<p>If models have textures, they may not be distinguishable or even visible at certain color settings. Setting the color to white may restore the visibility of the texture, but it is better to simply clear the current color settings.
+</p>
+<pre class="python">myNodePath.<span style="color: black;">clearColor</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Note the fourth component of color is alpha.  This is usually used to indicate transparency, and it is usually 1.0 to indicate the object is not transparent.  If you set the alpha to a value between 0 and 1, you can fade the object to invisible.  However, in order for the alpha value to be respected, you must first enable transparency:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setTransparency</span><span style="color: black;">&#40;</span>TransparencyAttrib.<span style="color: black;">MAlpha</span><span style="color: black;">&#41;</span></pre>
+<p>The parameter to <code>setTransparency()</code> is usually <code>TransparencyAttrib.MAlpha</code>, which is ordinary transparency.  You can also explicitly turn transparency off with <code>TransparencyAttrib.MNone</code>.  (Other transparency modes are possible, but that is a more advanced topic.  Some older code may pass just 0 or 1 for this parameter, but it is better to name the mode.)  If you don't explicitly enable transparency first, the alpha component of color may be ignored.  Be sure you don't enable transparency unnecessarily, since it does enable a more expensive rendering mode.
+</p><p>Setting an object's color completely replaces any color on the vertices.  However, if you have created a model with per-vertex color, you might prefer to modulate the object's color without losing the per-vertex color.  For this there is the <code>setColorScale()</code> variant, which multiples the indicated color values by the object's existing color:
+</p><p>
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setColorScale</span><span style="color: black;">&#40;</span>R, G, B, A<span style="color: black;">&#41;</span></pre>
+<p>
+
+</p><p>One use of <code>setColorScale()</code> is to apply it at the top of the scene graph (e.g. render) to darken the entire scene uniformly, for instance to implement a fade-to-black effect.
+</p><p>Since alpha is so important, there is also a method for scaling it without affecting the other color components:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setAlphaScale</span><span style="color: black;">&#40;</span>SA<span style="color: black;">&#41;</span></pre>
+<p>To temporarily prevent an object from being drawn on all cameras, use <code>hide()</code> and <code>show()</code>:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">hide</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">show</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>If you want to hide an object for one camera but not another, you can use the <code>hide()</code> and <code>show()</code> commands in conjunction with the <code>camera.setCameraMask()</code> function:
+</p>
+<pre class="python">camera1.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setCameraMask</span><span style="color: black;">&#40;</span>BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />camera2.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setCameraMask</span><span style="color: black;">&#40;</span>BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">hide</span><span style="color: black;">&#40;</span>BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">show</span><span style="color: black;">&#40;</span>BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># Now myNodePath will only be shown on camera2...</span></pre>
+<p>Please note that using hide/show without an argument will mess up any hide/shows with the argument (show(bit) will not undo a hide()...)  To hide an object from all cameras instead use <code>nodepath.hide(BitMask32.allOn())</code>. To set the camera mask for the default camera use base.cam, not base.camera, as base.camera is not an actual camera but a dummy node to hold cameras. Please see the camera section for information on how to set up multiple cameras.
+</p><p><br />
+Any object that is parented to the object that is hidden will also be hidden.
+</p><p>If you have trouble to place, scale or rotate your nodes you can use the <code>place()</code> function to bring up a small GUI which will help you. You need to have TkInter installed to use it.
+</p>
+<pre class="python">myNodePath.<span style="color: black;">place</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 470/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:962-0!*!*!!*!*!* and timestamp 20171007194602 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Scene_Graph_Manipulations.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Manipulating_a_Piece_of_a_Model.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

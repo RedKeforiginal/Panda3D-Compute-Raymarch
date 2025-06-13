@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Converting Egg to Bam - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Converting Egg to Bam</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Converting_from_other_Formats.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Parsing_and_Generating_Egg_Files.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Panda's native egg file format is human-readable.  This is convenient, but the files can get very large, and they can a little bit slow to load.  To accelerate loading, Panda supports a second native format, bam.  These files are smaller and are loaded very rapidly, but they cannot be viewed or edited in a text editor.  Also, bam files are specific to the version of Panda they are created with, so they are not a good choice for long-term storage of your models.
+</p><p>Texture pathnames in an egg file are first assumed to be relative to the egg file itself. If the texture is not found at that location, panda will search its model-path, which is specified in the panda config file.  When doing this, panda concatenates the directory which is part of the model-path to the entire string in the egg-file.  So if the model-path names the directory "/d/stuff", and the texture-path in the egg file is "mytextures/tex.png", then panda looks in "/d/stuff/mytextures/tex.png."
+</p><p>Texture pathnames in a bam file may be stored relative to the bam file itself, relative to a directory on the model-path, or with a full pathname to the file, depending on the parameters given to the egg2bam program.
+</p><p>The program egg2bam is used to convert egg files to bam files.  Egg2bam will complain if the textures aren't present.  You must install the textures (into your model path) before you convert the bam file.  You can run the egg2bam program as follows:
+</p>
+<pre class="class">
+egg2bam -ps rel -o bamFileName.bam eggFileName.egg
+</pre>
+<p>Here, "-ps rel" means to record the textures in the bam filename relative to the filename itself; if you use this option, you should ensure that you do not move the bam file later without also moving the textures.  (The default option is to assume the textures have already been installed along the model path, and record them relative to the model path.  If you use the default option, you should ensure the textures are already installed in their appropriate place, and the model-path is defined, before you run egg2bam.)
+</p><p>The egg2bam program accepts a number of other parameters that may be seen by running <code>egg2bam -h</code>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:964-0!*!*!*!*!*!* and timestamp 20171007172156 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Converting_from_other_Formats.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Parsing_and_Generating_Egg_Files.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

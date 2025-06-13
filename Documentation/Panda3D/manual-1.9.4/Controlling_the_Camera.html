@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Controlling the Camera - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Controlling the Camera</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_the_Grassy_Scenery.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_and_Animating_the_Panda_Model.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Controlling_the_Camera.html#Default_Camera_Control_System"><span class="tocnumber">1</span> <span class="toctext">Default Camera Control System</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Controlling_the_Camera.html#Tasks"><span class="tocnumber">2</span> <span class="toctext">Tasks</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="Controlling_the_Camera.html#Update_the_Code"><span class="tocnumber">2.1</span> <span class="toctext">Update the Code</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="Controlling_the_Camera.html#Run_the_Program"><span class="tocnumber">2.2</span> <span class="toctext">Run the Program</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Default_Camera_Control_System"> Default Camera Control System </span></h2>
+<p>By default, Panda3D runs a task that allows you to move the camera using the mouse.
+
+</p><p>The keys to navigate are:
+</p>
+<table class="wikitable sortable" border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="width: 150px;">Key
+</th>
+<th style="width: 300px;">Action
+</th></tr>
+<tr>
+<td> Left Button
+</td>
+<td> Pan left and right.
+</td></tr>
+<tr>
+<td> Right Button
+</td>
+<td> Move forwards and backwards.
+</td></tr>
+<tr>
+<td> Middle Button
+</td>
+<td> Rotate around the origin of the application.
+</td></tr>
+<tr>
+<td> Right and Middle Buttons
+</td>
+<td> Roll the point of view around the view axis.
+</td></tr></table>
+<p>Go ahead and try this camera control system. The problem with it is that it is sometimes awkward. It is not always easy to get the camera pointed in the direction we want.
+</p>
+<h2> <span class="mw-headline" id="Tasks"> <a href="Tasks.html" title="Tasks">Tasks</a> </span></h2>
+<h3> <span class="mw-headline" id="Update_the_Code"> Update the Code </span></h3>
+<p>Instead, we are going to write a <i>task</i> that controls the camera's position explicitly. A <i>task</i> is nothing but a procedure that gets called every frame.  Update your code as follows:</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> <span style="color: #dc143c;">math</span> <span style="color: #ff7700;font-weight:bold;">import</span> pi, sin, cos
+&#160;
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span>.<span style="color: black;">ShowBase</span> <span style="color: #ff7700;font-weight:bold;">import</span> ShowBase
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">task</span> <span style="color: #ff7700;font-weight:bold;">import</span> Task
+&#160;
+<span style="color: #ff7700;font-weight:bold;">class</span> MyApp<span style="color: black;">&#40;</span>ShowBase<span style="color: black;">&#41;</span>:
+    <span style="color: #ff7700;font-weight:bold;">def</span> <span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>:
+        ShowBase.<span style="color: #0000cd;">__init__</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>
+&#160;
+        <span style="color: #808080; font-style: italic;"># Load the environment model.</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">scene</span> = <span style="color: #008000;">self</span>.<span style="color: black;">loader</span>.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models/environment&quot;</span><span style="color: black;">&#41;</span>
+        <span style="color: #808080; font-style: italic;"># Reparent the model to render.</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">scene</span>.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">render</span><span style="color: black;">&#41;</span>
+        <span style="color: #808080; font-style: italic;"># Apply scale and position transforms on the model.</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">scene</span>.<span style="color: black;">setScale</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.25</span>, <span style="color: #ff4500;">0.25</span>, <span style="color: #ff4500;">0.25</span><span style="color: black;">&#41;</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">scene</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-8</span>, <span style="color: #ff4500;">42</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+&#160;
+        <span style="color: #808080; font-style: italic;"># Add the spinCameraTask procedure to the task manager.</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">taskMgr</span>.<span style="color: black;">add</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">spinCameraTask</span>, <span style="color: #483d8b;">&quot;SpinCameraTask&quot;</span><span style="color: black;">&#41;</span>
+&#160;
+    <span style="color: #808080; font-style: italic;"># Define a procedure to move the camera.</span>
+    <span style="color: #ff7700;font-weight:bold;">def</span> spinCameraTask<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, task<span style="color: black;">&#41;</span>:
+        angleDegrees = task.<span style="color: #dc143c;">time</span> <span style="color: #66cc66;">*</span> <span style="color: #ff4500;">6.0</span>
+        angleRadians = angleDegrees <span style="color: #66cc66;">*</span> <span style="color: black;">&#40;</span>pi / <span style="color: #ff4500;">180.0</span><span style="color: black;">&#41;</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">camera</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">20</span> <span style="color: #66cc66;">*</span> sin<span style="color: black;">&#40;</span>angleRadians<span style="color: black;">&#41;</span>, <span style="color: #ff4500;">-20.0</span> <span style="color: #66cc66;">*</span> cos<span style="color: black;">&#40;</span>angleRadians<span style="color: black;">&#41;</span>, <span style="color: #ff4500;">3</span><span style="color: black;">&#41;</span>
+        <span style="color: #008000;">self</span>.<span style="color: black;">camera</span>.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span>angleDegrees, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+        <span style="color: #ff7700;font-weight:bold;">return</span> Task.<span style="color: black;">cont</span>
+&#160;
+app = MyApp<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>
+app.<span style="color: black;">run</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p>The procedure <code>taskMgr.add()</code> tells Panda3D's <i>task manager</i> to call the procedure <code>spinCameraTask()</code> every frame. This is a procedure that we have written to control the camera. As long as the procedure <code>spinCameraTask()</code> returns the constant <code>Task.cont</code>, the task manager will continue to call it every frame.
+</p><p>
+</p><p>In our code, the procedure <code>spinCameraTask()</code> calculates the desired position of the camera based on how much time has elapsed. The camera rotates 6 degrees every second. The first two lines compute the desired orientation of the camera; first in degrees, and then in radians. The <code>setPos()</code> call actually sets the position of the camera. (Remember that Y is horizontal and Z is vertical, so the position is changed by animating X and Y while Z is left fixed at 3 units above ground level.) The <code>setHpr()</code> call actually sets the orientation.
+</p>
+<h3> <span class="mw-headline" id="Run_the_Program"> Run the Program </span></h3>
+<p>The camera should no longer be underground; and furthermore, it should now be rotating about the clearing:
+</p><p><a href="File%253ATutorial2.jpg.html" class="image"><img alt="Tutorial2.jpg" src="Tutorial2.jpg" width="400" height="300" /></a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 160/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:937-0!*!0!!en!2!* and timestamp 20171007130146 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_the_Grassy_Scenery.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_and_Animating_the_Panda_Model.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

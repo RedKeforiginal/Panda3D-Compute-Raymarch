@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Creating the GeomPrimitive objects - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Creating the GeomPrimitive objects</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Creating_and_filling_a_GeomVertexData.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Putting_your_new_geometry_in_the_scene_graph.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Now that you have a <a href="GeomVertexData.html" title="GeomVertexData">GeomVertexData</a> with a set of vertices, you can
+create one or more <a href="GeomPrimitive.html" title="GeomPrimitive"><b>GeomPrimitive</b></a> objects that use the vertices in your
+GeomVertexData.
+</p><p>In general, you do this by first creating a GeomPrimitive of the
+appropriate type, and then calling addVertex() for each vertex in your
+primitive, followed by closePrimitive() after each primitive is
+complete.
+</p><p>Different GeomPrimitive types have different requirements for the
+number of vertices per primitive.  Some always have a fixed amount of
+vertices, like GeomTriangles, GeomLines and GeomPoints.  You should
+simply add all of the vertices for these primitives.  Some people call
+close_primitive after adding every primitive, but this is not strictly
+necessary.
+Other GeomPrimitive types have a variable number of vertices, like
+GeomTristrips, GeomTrifans and GeomLinestrips.  Because you need to
+tell Panda3D how many vertices are in every primitive, you should call
+close_primitive() after adding every primitive.
+</p><p>For example:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>prim = GeomTriangles<span style="color: black;">&#40;</span>Geom.<span style="color: black;">UHStatic</span><span style="color: black;">&#41;</span>
+&#160;
+prim.<span style="color: black;">addVertex</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+prim.<span style="color: black;">addVertex</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+prim.<span style="color: black;">addVertex</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span>
+<span style="color: #808080; font-style: italic;"># thats the first triangle</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># you can also add a few at once</span>
+prim.<span style="color: black;">addVertices</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">3</span><span style="color: black;">&#41;</span>
+&#160;
+prim.<span style="color: black;">addVertices</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">5</span>, <span style="color: #ff4500;">6</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<p>Note that the GeomPrimitive constructor requires one parameter, which
+is a usage hint, similar to the usage hint required for the
+<a href="GeomVertexData.html" title="GeomVertexData">GeomVertexData</a> constructor.  Like that usage hint, this tells Panda
+whether you will frequently adjust the vertex indices on this
+primitive after it has been created.  Since it is very unusual to
+adjust the vertex indices on a primitive (usually, if you intend to
+animate the vertices, you would operate on the vertices, not these
+indices), this is almost always <code>Geom.UH_static</code>, even if the primitive
+is associated with a dynamic GeomVertexData.  However, there may be
+special rendering effects in which you actually do manipulate this
+vertex index table in-place every few frames, in which case you should use
+Geom.UHDynamic.  As with the GeomVertexData, this is only a
+performance hint; you're not required to adhere to the usage you
+specify.
+</p><p>If you are unsure about this parameter, you should use <code>Geom.UH_static</code>.
+</p><p>The above sample code defines a GeomTriangles object that looks like
+this:
+</p>
+<center><table style="border-collapse: collapse">
+<tr>
+<td style="padding-left: 64pt"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">0</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">1</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">2</td>
+</tr>
+<tr>
+<td> </td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">2</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">1</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">3</td>
+</tr>
+<tr>
+<td> </td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">0</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">5</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; background: #c1beea; text-align: center">6</td>
+</tr>
+</table></center>
+<p>The actual positions of the vertices depends on the values of the vertices numbered 0, 1, 2, 3, and 5 in the associated <a href="GeomVertexData.html" title="GeomVertexData">GeomVertexData</a> (you will associate your GeomPrimitives with a GeomVertexData <a href="Putting_your_new_geometry_in_the_scene_graph.html" title="Putting your new geometry in the scene graph">in the next step</a>, when you attach the GeomPrimitives to a <a href="Geom.html" title="Geom">Geom</a>).
+</p><p>Finally, there are a few handy shortcuts for adding multiple vertices
+at once:
+</p>
+<table>
+<tr>
+<td><div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>add_vertices<span style="color: black;">&#40;</span>v1, v2<span style="color: black;">&#41;</span>
+add_vertices<span style="color: black;">&#40;</span>v1, v2, v3<span style="color: black;">&#41;</span>
+add_vertices<span style="color: black;">&#40;</span>v1, v2, v3, v4<span style="color: black;">&#41;</span></pre></div></div>
+</td>
+<td>Adds 2, 3, or 4 vertices in a single call.
+</td></tr>
+<tr>
+<td><div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>add_consecutive_vertices<span style="color: black;">&#40;</span>start, numVertices<span style="color: black;">&#41;</span></pre></div></div>
+</td>
+<td>Adds <i>numVertices</i> consecutive vertices, beginning at vertex <i>start</i>. For instance, add_consecutive_vertices(5, 3) adds vertices 5, 6, 7.
+</td></tr>
+<tr>
+<td><div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>add_next_vertices<span style="color: black;">&#40;</span>numVertices<span style="color: black;">&#41;</span></pre></div></div>
+</td>
+<td>Adds <i>numVertices</i> consecutive vertices, beginning with the next vertex after the last vertex you added, or beginning at vertex 0 if these are the first vertices. For instance, <code>add_vertex(10)</code> adds vertex 10. If you immediately call <code>add_next_vertices(4)</code>, it adds vertices 11, 12, 13, 14.
+</td></tr></table>
+<p>None of the above shortcut methods calls <code>close_primitive()</code> for you; it is still your responsibility to call <code>close_primitive()</code> each time you add the appropriate number of vertices.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 45/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1771-0!*!0!*!*!*!* and timestamp 20171007194703 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Creating_and_filling_a_GeomVertexData.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Putting_your_new_geometry_in_the_scene_graph.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectEntry - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectEntry</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectDialog.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectFrame.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The DirectEntry creates a field that accepts text entered by the user.  It provides a blinking cursor and support for backspace and the arrow keys.  It can accept either a single line of text, with a fixed width limit (it doesn't scroll), or it can accept multiple word-wrapped lines.  
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>initialText
+</td>
+<td>Initial text to load in the field
+</td>
+<td>String
+</td></tr>
+<tr>
+<td>entryFont
+</td>
+<td>Font to use for text entry
+</td>
+<td>Font object
+</td></tr>
+<tr>
+<td>width
+</td>
+<td>Width of field in screen units
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>numLines
+</td>
+<td>Number of lines in the field
+</td>
+<td>Integer
+</td></tr>
+<tr>
+<td>cursorKeys
+</td>
+<td>True to enable the use of cursor keys (arrow keys)
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>obscured
+</td>
+<td>True to hide passwords, etc.
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>command
+</td>
+<td>Function to call when enter is pressed(the text in the field is passed to the function)
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>rolloverSound
+</td>
+<td>The sound made when the cursor rolls over the field
+</td>
+<td>Sound File Path
+</td></tr>
+<tr>
+<td>clickSound
+</td>
+<td>The sound made when the cursor inside the field
+</td>
+<td>Sound File Path
+</td></tr>
+<tr>
+<td>focus
+</td>
+<td>Whether or not the field begins with focus (focusInCommand is called if true)
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>backgroundFocus
+</td>
+<td>If true, field begins with focus but with hidden cursor, and focusInCommand is not called
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>focusInCommand
+</td>
+<td>Function called when the field gains focus
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>focusInExtraArgs
+</td>
+<td>Extra arguments to the function specified in focusInCommand
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>focusOutCommand
+</td>
+<td>Function called when the field loses focus
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>focusOutExtraArgs
+</td>
+<td>Extra arguments to the function specified in focusOutCommand
+</td>
+<td>[Extra Arguments]
+</td></tr></table>
+<h2> <span class="mw-headline" id="Example"> Example </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText 
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;This is my Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#callback function to set  text </span>
+<span style="color: #ff7700;font-weight:bold;">def</span> setText<span style="color: black;">&#40;</span>textEntered<span style="color: black;">&#41;</span>:
+	textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>textEntered<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#clear the text</span>
+<span style="color: #ff7700;font-weight:bold;">def</span> clearText<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:
+	b.<span style="color: black;">enterText</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">''</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#add button</span>
+b = DirectEntry<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">&quot;&quot;</span> ,scale=.<span style="color: #ff4500;">05</span>,command=setText,
+initialText=<span style="color: #483d8b;">&quot;Type Something&quot;</span>, numLines = <span style="color: #ff4500;">2</span>,focus=<span style="color: #ff4500;">1</span>,focusInCommand=clearText<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#run the tutorial</span>
+base.<span style="color: black;">run</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>This example implements a text entry widget typically seen in web pages.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 6/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1107-0!*!*!*!*!*!* and timestamp 20171007194649 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectDialog.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectFrame.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

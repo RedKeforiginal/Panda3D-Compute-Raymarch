@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Softbodies - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Softbodies</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Vehicles.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Softbody_Rope.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Soft bodies are similar to rigid bodies, just they are not rigid but soft. This means that the shape of a soft body can change - they are deformable. Bullet is capable of simulating soft body deformation in real-time. This is not to be confused with playback of animation. Animation are computed up in front, usually not in real-time, and then saved to a file.
+</p><p>Bullet simulates soft bodies internally by making up a complex compound objects, consisting of nodes and links. The nodes can be best compared to the vertices of a mesh used to render 3D geometry. The links can be visualized as springs in between the nodes; just that this kind of spring not only responds to compression, but also to bending.
+</p><p>Depending on how the nodes and links are arranged it is possible to create three different kinds of soft bodies:
+</p>
+<ul>
+<li>
+A one dimensional chain of nodes, called a <b>rope</b>. Each node has two links, one to the previous node, and one to the next node. The only exception are the first node and the last node - they have only one link.
+</li>
+<li>
+A two dimensional mesh of nodes, called a <b>patch</b>. The two dimensional mesh can be closed, e. g. the surface of a sphere. In this case Bullet can also assume the volume inside the closed surface mesh should be contained, more or less depending on the setting for the pressure inside the soft body. Typical uses for this kind of soft body are a flag or cloth, or if the soft body is closed an air-filled tire.
+</li>
+<li>
+Finally a three dimensional mesh made up from <b>tetrahedrons</b>. For this kind of soft body a surface mesh is not enough. The whole volume of the body has to be composed from small tetrahedrons.
+</li>
+</ul>
+<p>All three kinds of soft bodies are simulated using the same class, <code>BulletSoftBodyNode</code>. It's just a matter of how the links between the nodes are created.
+</p><p>Panda3D currently provides no low-level interface for creating and modifying the soft body nodes and links directly. Soft bodies are created using factory methods which simplify the process for you.
+</p><p><br />
+<b>Warning:</b>
+Bullet soft body support within Panda3D is at an early stage. Use it with care.
+It is also highly recommended to keep the original Bullet documentation
+close at hand, in order to find the right values e. g. for cluster or
+collision configuration.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2614-0!*!*!*!*!*!* and timestamp 20171008061344 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Vehicles.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Softbody_Rope.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

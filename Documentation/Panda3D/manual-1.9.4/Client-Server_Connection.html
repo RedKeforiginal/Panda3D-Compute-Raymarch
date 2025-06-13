@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Client-Server Connection - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Client-Server Connection</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Datagram_Protocol.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Transmitting_Data.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The first step in network communication is to establish the client-server connection. This entails two sets of operations: one for the server side (which listens for incoming connections), and one for the client side (which establishes a connection to the server). Both of these processes are described below.
+</p>
+<h2> <span class="mw-headline" id="Preparing_the_server_for_connection">Preparing the server for connection</span></h2>
+<p>An average Panda program acting as a server will need to create four classes:
+</p>
+<ul><li> A QueuedConnectionManager, which handles the low-level connection processes, establishes connections, and handles unexpected network termination
+</li></ul>
+<ul><li> A QueuedConnectionListener, which waits for clients to request connection
+</li></ul>
+<ul><li> A QueuedConnectionReader, which buffers incoming data from an active connection
+</li></ul>
+<ul><li> A ConnectionWriter, which allows PyDatagrams to be transmitted out along an active connection
+</li></ul>
+<p>The first step is to instantiate these four classes.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> QueuedConnectionManager<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> QueuedConnectionListener<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> QueuedConnectionReader<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> ConnectionWriter<br />&#160;<br />cManager = QueuedConnectionManager<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />cListener = QueuedConnectionListener<span style="color: black;">&#40;</span>cManager, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />cReader = QueuedConnectionReader<span style="color: black;">&#40;</span>cManager, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />cWriter = ConnectionWriter<span style="color: black;">&#40;</span>cManager,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br />activeConnections=<span style="color: black;">&#91;</span><span style="color: black;">&#93;</span> <span style="color: #808080; font-style: italic;"># We'll want to keep track of these later</span></pre>
+<p>This method of instantiation prepares the classes in single-thread mode, which that realtime communication requires them to be polled periodically.
+</p><p>To accept client connections, the server opens a special "rendezvous" socket at a specific port address. This port address must be known by both the client and the server. Additionally, a backlog is specified; this is the number of incoming connection requests that the connection will track before it starts rejecting connection attempts. The responsibility for managing the rendezvous socket is passed to the QueuedConnectionListener, and a task is spawned to periodically poll the listener.
+</p>
+<pre class="python">port_address=<span style="color: #ff4500;">9099</span> <span style="color: #808080; font-style: italic;">#No-other TCP/IP services are using this port</span><br />backlog=<span style="color: #ff4500;">1000</span> <span style="color: #808080; font-style: italic;">#If we ignore 1,000 connection attempts, something is wrong!</span><br />tcpSocket = cManager.<span style="color: black;">openTCPServerRendezvous</span><span style="color: black;">&#40;</span>port_address,backlog<span style="color: black;">&#41;</span><br />&#160;<br />cListener.<span style="color: black;">addConnection</span><span style="color: black;">&#40;</span>tcpSocket<span style="color: black;">&#41;</span></pre>
+<p><br />
+Since the network handlers we instantiated are polled, we'll create some tasks to do the polling.
+</p>
+<pre class="python">taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>tskListenerPolling,<span style="color: #483d8b;">&quot;Poll the connection listener&quot;</span>,<span style="color: #ff4500;">-39</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span>tskReaderPolling,<span style="color: #483d8b;">&quot;Poll the connection reader&quot;</span>,<span style="color: #ff4500;">-40</span><span style="color: black;">&#41;</span></pre>
+<p>When a connection comes in, the tskListenerPolling function below handles the incoming connection and hands it to the QueuedConnectionReader. The connection is now established.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> PointerToConnection<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> NetAddress<br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> tskListenerPolling<span style="color: black;">&#40;</span>taskdata<span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">if</span> cListener.<span style="color: black;">newConnectionAvailable</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />&#160;<br />    rendezvous = PointerToConnection<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />    netAddress = NetAddress<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />    newConnection = PointerToConnection<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />    <span style="color: #ff7700;font-weight:bold;">if</span> cListener.<span style="color: black;">getNewConnection</span><span style="color: black;">&#40;</span>rendezvous,netAddress,newConnection<span style="color: black;">&#41;</span>:<br />      newConnection = newConnection.<span style="color: black;">p</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />      activeConnections.<span style="color: black;">append</span><span style="color: black;">&#40;</span>newConnection<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Remember connection</span><br />      cReader.<span style="color: black;">addConnection</span><span style="color: black;">&#40;</span>newConnection<span style="color: black;">&#41;</span>     <span style="color: #808080; font-style: italic;"># Begin reading connection</span><br />  <span style="color: #ff7700;font-weight:bold;">return</span> Task.<span style="color: black;">cont</span></pre>
+<p>Once a connection has been opened, the QueuedConnectionReader may begin processing incoming packets. This is similar to the flow of the listener's task, but it is up to the server code to handle the incoming data.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> NetDatagram<br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> tskReaderPolling<span style="color: black;">&#40;</span>taskdata<span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">if</span> cReader.<span style="color: black;">dataAvailable</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />    datagram=NetDatagram<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># catch the incoming data in this instance</span><br />    <span style="color: #808080; font-style: italic;"># Check the return value; if we were threaded, someone else could have</span><br />    <span style="color: #808080; font-style: italic;"># snagged this data before we did</span><br />    <span style="color: #ff7700;font-weight:bold;">if</span> cReader.<span style="color: black;">getData</span><span style="color: black;">&#40;</span>datagram<span style="color: black;">&#41;</span>:<br />      myProcessDataFunction<span style="color: black;">&#40;</span>datagram<span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">return</span> Task.<span style="color: black;">cont</span></pre>
+<p>Note that the QueuedConnectionReader retrieves data from all clients connected to the server. The NetDatagram can be queried using NetDatagram.getConnection to determine which client sent the message.
+</p><p>If the server wishes to send data to the client, it can use the ConnectionWriter to transmit back along the connection.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># broadcast a message to all clients</span><br />myPyDatagram=myNewPyDatagram<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># build a datagram to send</span><br /><span style="color: #ff7700;font-weight:bold;">for</span> aClient <span style="color: #ff7700;font-weight:bold;">in</span> activeConnections:<br />  cWriter.<span style="color: black;">send</span><span style="color: black;">&#40;</span>myPyDatagram,aClient<span style="color: black;">&#41;</span></pre>
+<p>Finally, the server may terminate a connection by removing it from the QueuedConnectionReader's responsibility. It may also deactivate its listener so that no more connections are received
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># terminate connection to all clients</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">for</span> aClient <span style="color: #ff7700;font-weight:bold;">in</span> activeConnections:<br />  cReader.<span style="color: black;">removeConnection</span><span style="color: black;">&#40;</span>aClient<span style="color: black;">&#41;</span><br />activeConnections=<span style="color: black;">&#91;</span><span style="color: black;">&#93;</span><br />&#160;<br /> <span style="color: #808080; font-style: italic;"># close down our listener</span><br />cManager.<span style="color: black;">closeConnection</span><span style="color: black;">&#40;</span>tcpSocket<span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Connecting_with_a_client">Connecting with a client</span></h2>
+<p>The process the client undertakes to connect to a server is extremely similar to the process the server undertakes to receive connections. Like the server, a client instantiates a QueuedConnectionManager, QueuedConnectionReader, and ConnectionWriter. However, there are some differences in the process. 
+In general, a client has no need to open a rendezvous socket or create a QueuedConnectionListener, since it will be doing the connecting itself. Instead, the client connects to a specific server by specifying the server's IP address and the correct socket ID.
+</p>
+<pre class="python">port_address=<span style="color: #ff4500;">9099</span>  <span style="color: #808080; font-style: italic;"># same for client and server</span><br />&#160;<br /> <span style="color: #808080; font-style: italic;"># a valid server URL. You can also use a DNS name</span><br /> <span style="color: #808080; font-style: italic;"># if the server has one, such as &quot;localhost&quot; or &quot;panda3d.org&quot;</span><br />ip_address=<span style="color: #483d8b;">&quot;192.168.0.50&quot;</span><br />&#160;<br /> <span style="color: #808080; font-style: italic;"># how long until we give up trying to reach the server?</span><br />timeout_in_miliseconds=<span style="color: #ff4500;">3000</span>  <span style="color: #808080; font-style: italic;"># 3 seconds</span><br />&#160;<br />myConnection=cManager.<span style="color: black;">openTCPClientConnection</span><span style="color: black;">&#40;</span>ip_address,port_address,timeout_in_miliseconds<span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">if</span> myConnection:<br />  cReader.<span style="color: black;">addConnection</span><span style="color: black;">&#40;</span>myConnection<span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># receive messages from server</span></pre>
+<p>When the client has finished communicating with the server, it can close the connection.
+</p>
+<pre class="python">cManager.<span style="color: black;">closeConnection</span><span style="color: black;">&#40;</span>myConnection<span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 82/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2044-0!*!*!!*!*!* and timestamp 20171008113347 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Datagram_Protocol.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Transmitting_Data.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

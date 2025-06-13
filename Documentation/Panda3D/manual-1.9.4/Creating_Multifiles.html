@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Creating Multifiles - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Creating Multifiles</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multifiles.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Patching.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Multifiles archives are archive files that store game resources.  Think of it as a giant zip file that stores, optionally zips and encrypts your data files, but does not need to be extracted.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Creating_Multifiles.html#The_multify_program"><span class="tocnumber">1</span> <span class="toctext">The multify program</span></a></li>
+<li class="toclevel-1"><a href="Creating_Multifiles.html#Read_Assets"><span class="tocnumber">2</span> <span class="toctext">Read Assets</span></a></li>
+<li class="toclevel-1"><a href="Creating_Multifiles.html#Multifile_objects"><span class="tocnumber">3</span> <span class="toctext">Multifile objects</span></a></li>
+<li class="toclevel-1"><a href="Creating_Multifiles.html#Subfiles"><span class="tocnumber">4</span> <span class="toctext">Subfiles</span></a></li>
+<li class="toclevel-1"><a href="Creating_Multifiles.html#Stream-Based"><span class="tocnumber">5</span> <span class="toctext">Stream-Based</span></a></li>
+<li class="toclevel-1"><a href="Creating_Multifiles.html#Encryption"><span class="tocnumber">6</span> <span class="toctext">Encryption</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="The_multify_program">The multify program</span></h2>
+<p>The multify console program creates such files. You can get information about the commandline parameters by running multify with the <code>-h</code> option. This is how program describes itself:
+</p>
+<pre class="codeblock">
+Usage: multify -[c|r|u|t|x] -f &lt;multifile_name&gt; [options] &lt;subfile_name&gt; ...
+</pre>
+<p>multify is used to store and extract files from a Panda Multifile.
+This is similar to a tar or zip file in that it is an archive file that
+contains a number of subfiles that may later be extracted.
+</p><p>Panda's VirtualFileSystem is capable of mounting Multifiles for direct
+access to the subfiles contained within without having to extract them
+out to independent files first.
+</p><p>The command-line options for multify are designed to be similar to those
+for tar, the traditional Unix archiver utility.
+</p>
+<h2> <span class="mw-headline" id="Read_Assets">Read Assets</span></h2>
+<p>If you want to prepare to read assets from a Multifile directly, you can "mount" it into the virtual file system:
+</p><p>
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> VirtualFileSystem<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Multifile<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Filename<br />&#160;<br />vfs = VirtualFileSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span>, <span style="color: #483d8b;">&quot;.&quot;</span>, VirtualFileSystem.<span style="color: black;">MFReadOnly</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p><p>If you want to read assets, you can mount a whole directory structure from a webserver. 
+</p><p>If your webserver hosts: 
+</p>
+<pre class="codeblock">
+http://localhost/mydir/models/myfile.bam 
+http://localhost/mydir/maps/mytexture.png 
+</pre>
+<p>Put this in your config.prc: 
+</p>
+<pre class="codeblock">
+vfs-mount-url http://myserver/mydir /mydir 
+model-path /mydir
+</pre>
+<p>Or, equivalently, write this Python code at startup: 
+</p>
+<pre class="python">vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>VirtualFileMountHTTP<span style="color: black;">&#40;</span><span style="color: #483d8b;">'http://myserver/mydir'</span><span style="color: black;">&#41;</span>, <span style="color: #483d8b;">'/mydir'</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span> <br />getModelPath<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">appendDirectory</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'/mydir'</span><span style="color: black;">&#41;</span></pre>
+<p>and then you can load models like this in your Python code: 
+</p>
+<pre class="python">model = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'models/myfile.bam'</span><span style="color: black;">&#41;</span> <br />texture = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'maps/mytexture.png'</span><span style="color: black;">&#41;</span></pre>
+<p>If you want to prepare for reading and writing assets to a Multifile do the following. 
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> VirtualFileSystem<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Multifile<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Filename<br />&#160;<br />mf = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mf.<span style="color: black;">openReadWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models.mf&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br />vfs = VirtualFileSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">if</span> vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>mf, <span style="color: #483d8b;">&quot;.&quot;</span>, VirtualFileSystem.<span style="color: black;">MFReadOnly</span><span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">'mounted'</span></pre>
+<p>If you want to prepare for reading and writing assets to a 'subdirectory' Multifile do the following. Note "mysys" must always be literally written in any python code. E.g. "mysys/memfdir/mfbar2.txt"
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> VirtualFileSystem<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Multifile<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Filename<br />&#160;<br />mf = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mf.<span style="color: black;">openReadWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models.mf&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br />vfs = VirtualFileSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">if</span> vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>mf, <span style="color: #483d8b;">&quot;mysys&quot;</span>, VirtualFileSystem.<span style="color: black;">MFReadOnly</span><span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">'mounted'</span></pre>
+<p>If you are having problems loading from multifiles you can list the complete contents of your .mf file with a command like:
+</p>
+<pre class="codeblock">
+multify -tvf mymultifile.mf
+</pre>
+<p>Doing a sanity inspection like this can be useful to ensure that your assets are in the right place within the multifile.
+</p>
+<h2> <span class="mw-headline" id="Multifile_objects">Multifile objects</span></h2>
+<p>The Multifile class is designed for opening, reading and writing multifiles. You can open a new multifile by creating an instance of the class and calling the <code>openRead</code> method:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Multifile<br />&#160;<br />mf = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mf.<span style="color: black;">openRead</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>The <code>openRead</code> method opens the multifile as read-only. If you want to make changes to it and write it back to disk, you will need to use the <code>openReadWrite</code> method. Also, there exists <code>openWrite</code> to create a new multifile.
+</p><p>If you have made important structural changes to a Multifile, it is recommended to rewrite the multifile using the <code>repack()</code> method. (This won't work if you've opened it using <code>openRead</code>.) If you are uncertain about whether it has become suboptimal, you can call <code>needsRepack()</code> which returns True if the Multifile is suboptimal and should be repacked.
+</p><p>To write it back to disk, you can use the <code>flush()</code> method which flushes the changes you've made to the multifile back to disk, or the <code>close()</code> method if you're done with the file.
+</p><p>To mount Multifile objects into the VirtualFileSystem without writing them to disk first, here's an example on how to mount them:
+</p>
+<pre class="python">yourMF = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;">#... now do something with yourMF</span><br />&#160;<br />vfs = VirtualFileSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>yourMF, <span style="color: #483d8b;">&quot;.&quot;</span>, VirtualFileSystem.<span style="color: black;">MFReadOnly</span><span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Subfiles">Subfiles</span></h2>
+<p>Files that are added to a multifile are called <i>subfiles</i>. You can add existing files to a multifile object using the <code>addSubfile</code> function. This function takes three arguments: the target filename, the existing source file and the compression level (1-9). There is also <code>updateSubfile</code>, which does the same thing but if the file already exists, only updates it if the content is different.
+</p><p>There are several other methods which operate on subfiles, which you can find in the <a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=Multifile">API Reference.</a>
+Here are a few examples of working with subfiles:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> VirtualFileSystem<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Multifile<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Filename<br />&#160;<br />m = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Add an existing real os file with compression level 6</span><br />m.<span style="color: black;">openReadWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">addSubfile</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;bar.txt&quot;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;/tmp/bar.txt&quot;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">6</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">flush</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Destroy the contents of the multifile</span><br /><span style="color: #808080; font-style: italic;"># Add an existing real os file to be the first multifile</span><br />m.<span style="color: black;">openWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">addSubfile</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;bar.txt&quot;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;/tmp/bar.txt&quot;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">6</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">flush</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Permanently re-order in ascending order the </span><br /><span style="color: #808080; font-style: italic;"># directories and files in the multifile</span><br />m.<span style="color: black;">openReadWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">repack</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">flush</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Open a multifile and replace the contents of the mulifile file</span><br /><span style="color: #808080; font-style: italic;"># with new contents</span><br />m = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">openReadWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">updateSubfile</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;bar.txt&quot;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;/tmp/bar2.txt&quot;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">9</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">flush</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Open a multifile and extract all files smaller than 3kb</span><br /><span style="color: #808080; font-style: italic;"># New real os files are created with the contents of the multifile data</span><br />m = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">openRead</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span>m.<span style="color: black;">getNumSubfiles</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">if</span> m.<span style="color: black;">getSubfileLength</span><span style="color: black;">&#40;</span>i<span style="color: black;">&#41;</span> <span style="color: #66cc66;">&lt;</span> <span style="color: #ff4500;">3</span> <span style="color: #66cc66;">*</span> <span style="color: #ff4500;">1024</span>:<br />    m.<span style="color: black;">extractSubfile</span><span style="color: black;">&#40;</span>i, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;/tmp/&quot;</span> + m.<span style="color: black;">getSubfileName</span><span style="color: black;">&#40;</span>i<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Find, print and remove a file named bar.txt</span><br />barIdx = m.<span style="color: black;">findSubfile</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;bar.txt&quot;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">if</span> barIdx <span style="color: #66cc66;">!</span>= <span style="color: #ff4500;">-1</span>:<br />  <span style="color: #808080; font-style: italic;"># It returns -1 if it doesn't exist</span><br />  <span style="color: #ff7700;font-weight:bold;">print</span> m.<span style="color: black;">readSubfile</span><span style="color: black;">&#40;</span>barIdx<span style="color: black;">&#41;</span><br />  m.<span style="color: black;">removeSubfile</span><span style="color: black;">&#40;</span>barIdx<span style="color: black;">&#41;</span><br />m.<span style="color: black;">flush</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />m.<span style="color: black;">close</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+<p>If the foo.mf file were to have a contained bar.egg.pz file, load the egg and use it similar to other model loading methods.
+</p>
+<pre class="python">nodepath = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo/bar&quot;</span><span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Stream-Based">Stream-Based</span></h2>
+<p>Multifile algorithms are stream-based and not random-based.
+In a running game, from the output, if a message is received saying something similar to the words <code>seek error for offset</code> then a file in the multifile is trying to be accessed by a random-based method.
+For multifiles and fonts, an example of a random-based file is an .rgb file.
+An alternative different from the use of an .rgb file is the use of a .ttf instead. An example follows.
+</p>
+<pre class="codeblock">
+# models is the original directory
+# models.mf it the new target multifile
+multify -c -f models.mf -v models
+</pre>
+<p>In the game, from the multifile models.mf, load the .ttf file.
+</p>
+<pre class="python">font = loader.<span style="color: black;">loadFont</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models/arial.ttf&quot;</span><span style="color: black;">&#41;</span></pre>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Encryption">Encryption</span></h2>
+<p>Multifiles can also encrypt your files with a password. To do so, you need to set the encryption flag and password using the <code>setEncryptionFlag</code> and <code>setEncryptionPassword</code> methods, before adding, extracting or reading multifiles. 
+</p><p>At the OS prompt, to create a password protected multifile and print out the contents do the following.
+</p>
+<pre class="codeblock">
+# models is the original directory
+# models.mf it the new target multifile
+multify -c -f models.mf -ep &quot;mypass&quot; -v models
+</pre>
+<p>This code creates a multifile and adds an encrypted file to it:
+</p>
+<pre class="python">m = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">openReadWrite</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">setEncryptionFlag</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">setEncryptionPassword</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foobar&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Add a new file to the multifile</span><br />m.<span style="color: black;">addSubfile</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;bar.txt&quot;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;/tmp/bar.txt&quot;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">flush</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">close</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>You can read encrypted multifiles the same way:
+</p>
+<pre class="python">m = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">openRead</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">setEncryptionFlag</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />m.<span style="color: black;">setEncryptionPassword</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foobar&quot;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># Prints the contents of the multifile</span><br /><span style="color: #ff7700;font-weight:bold;">print</span> m.<span style="color: black;">readSubfile</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;bar.txt&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>At the OS prompt, to see the contents of a password protected multifile perform
+</p>
+<pre class="codeblock">
+multify -tvf models.mf -p &quot;mypass&quot;
+</pre>
+<p><br />
+You can test the reading in a of password-protected multifile, followed by the mounting of the file using the following code.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Multifile<br />mf = Multifile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mf.<span style="color: black;">openRead</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models.mf&quot;</span><span style="color: black;">&#41;</span><br />mf.<span style="color: black;">setEncryptionFlag</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />mf.<span style="color: black;">setEncryptionPassword</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;mypass&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> VirtualFileSystem<br />vfs = VirtualFileSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">if</span> vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>mf, <span style="color: #483d8b;">&quot;.&quot;</span>, VirtualFileSystem.<span style="color: black;">MFReadOnly</span><span style="color: black;">&#41;</span>:<br />   <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">'mounted'</span></pre>
+<p>When running the game, the following should be seen.
+</p>
+<pre class="codeblock">
+mounted
+</pre>
+<p><br />
+You can check if a certain subfile is encrypted or not using the <code>isSubfileEncrypted</code> method, which takes the subfile index as parameter.
+</p><p>It is possible to have a multifile where different subfiles have different encryption, but you will not be able to mount it with the VirtualFileSystem or use it with the multify tool. To mount an encrypted file using the VirtualFileSystem, pass the password as parameter to the <code>mount</code> method:
+
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> VirtualFileSystem, Filename<br />vfs = VirtualFileSystem.<span style="color: black;">getGlobalPtr</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />vfs.<span style="color: black;">mount</span><span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;foo.mf&quot;</span><span style="color: black;">&#41;</span>, <span style="color: #483d8b;">&quot;.&quot;</span>, vfs.<span style="color: black;">MFReadOnly</span>, <span style="color: #483d8b;">&quot;foobar&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p><p>To use encryption with the multify tool, run it with the <code>-e</code> option, which will prompt for a password on the command line. Alternatively, if you also specify the <code>-p "password"</code> option, you can specify it in the command instead of typing it at the prompt.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 398/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2210-0!*!*!!en!*!* and timestamp 20171007225847 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Multifiles.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Patching.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

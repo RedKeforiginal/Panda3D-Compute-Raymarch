@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Converting from Maya - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Converting from Maya</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Converting_from_3D_Studio_Max.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Converting_from_Blender.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>This section talks about how to prepare a Maya model for export, and then
+export it.  Since exporting is the very last step, the actual instructions
+for the export process are last.
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Converting_from_Maya.html#Material_Preparation"><span class="tocnumber">1</span> <span class="toctext">Material Preparation</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="Converting_from_Maya.html#Basic_Texturing"><span class="tocnumber">1.1</span> <span class="toctext">Basic Texturing</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="Converting_from_Maya.html#Advanced_Texturing"><span class="tocnumber">1.2</span> <span class="toctext">Advanced Texturing</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="Converting_from_Maya.html#Merging_Textures"><span class="tocnumber">1.3</span> <span class="toctext">Merging Textures</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-5"><a href="Converting_from_Maya.html#Flagging_Objects_From_Maya"><span class="tocnumber">2</span> <span class="toctext">Flagging Objects From Maya</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="Converting_from_Maya.html#Running_the_Exporter"><span class="tocnumber">3</span> <span class="toctext">Running the Exporter</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="Converting_from_Maya.html#Using_the_New_Maya2EGG_GUI.28To_be_available_for_Panda3D_1.7.1_or_later.29"><span class="tocnumber">4</span> <span class="toctext">Using the New Maya2EGG GUI(To be available for Panda3D 1.7.1 or later)</span></a>
+<ul>
+<li class="toclevel-2 tocsection-8"><a href="Converting_from_Maya.html#Using_the_Egg-Palletize_Tool"><span class="tocnumber">4.1</span> <span class="toctext">Using the Egg-Palletize Tool</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-9"><a href="Converting_from_Maya.html#Using_the_Graphical_Front-End.28Old.29"><span class="tocnumber">5</span> <span class="toctext">Using the Graphical Front-End(Old)</span></a></li>
+</ul>
+</td></tr></table>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Material_Preparation">Material Preparation</span></h2>
+<p>Note: the information in this section is for Panda3D 1.5.0 and beyond.  It does not apply to older versions of Panda3D.
+</p>
+<h3> <span class="mw-headline" id="Basic_Texturing">Basic Texturing</span></h3>
+<p>In order for the Panda3D to correctly export your textures, you must texture
+your model in a manner that Panda3D understands.  In fact, you have to follow
+a fairly strict formula in order for Panda3D to be able to make sense of your
+scene.
+</p><p>Teaching how to use Maya is beyond the scope of this manual.  We assume that
+you already know how to use maya, and especially the hypershade.  The only
+purpose of this section is to show you what configurations are understood by
+Panda3D.
+</p><p>The first step in texturing your model is to apply a <code>Phong</code> shader.
+This is the only kind of shader that Panda3D understands. You can apply a
+phong shader using the Maya menus:
+</p>
+<br /><br /><center><a href="File%253AMaya-tex-1.jpg.html" class="image"><img alt="Maya-tex-1.jpg" src="Maya-tex-1.jpg" width="600" height="428" /></a></center><br /><br />
+<p>Next, tell maya that you want to control the color of the surface by clicking the color button:
+</p>
+<br /><br /><center><a href="File%253AMaya-tex-2.jpg.html" class="image"><img alt="Maya-tex-2.jpg" src="Maya-tex-2.jpg" width="600" height="349" /></a></center><br /><br />
+<p>Now create a file texture - this will control the color of the surface:
+</p>
+<br /><br /><center><a href="File%253AMaya-tex-3.jpg.html" class="image"><img alt="Maya-tex-3.jpg" src="Maya-tex-3.jpg" width="600" height="317" /></a></center><br /><br />
+<p>Set the filename.  Once you do this, you will be able to see your texture in Maya:
+</p>
+<br /><br /><center><a href="File%253AMaya-tex-4.jpg.html" class="image"><img alt="Maya-tex-4.jpg" src="Maya-tex-4.jpg" width="600" height="347" /></a></center><br /><br />
+<p>You now have a straightforward textured model that Panda3D can export.
+</p>
+<h3> <span class="mw-headline" id="Advanced_Texturing">Advanced Texturing</span></h3>
+<p>You may wish to use Panda's advanced texturing abilities: multitexturing,
+normal maps, gloss maps, transparency, or glow maps.  To use these features,
+you will need to access Maya's hypershade editor:
+</p>
+<br /><br /><center><a href="File%253AMaya-hypershade.jpg.html" class="image"><img alt="Maya-hypershade.jpg" src="Maya-hypershade.jpg" width="600" height="195" /></a></center><br /><br />
+<p>A straightforwardly textured model will look like this in the hypershade:
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-1.jpg.html" class="image"><img alt="Maya-hyper-1.jpg" src="Maya-hyper-1.jpg" width="600" height="216" /></a></center><br /><br />
+<p>To apply a normal map, create another file texture and connect the "out color"
+of the normal map to the "normal camera" input of the phong shader.
+The normal map must be a true normal map (you can recognize them by their
+light blue color), not a bump map (which are black-and-white.)
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-2.jpg.html" class="image"><img alt="Maya-hyper-2.jpg" src="Maya-hyper-2.jpg" width="600" height="326" /></a></center><br /><br />
+<p>Unfortunately, there is a maya button to help you set up a bump map, but
+what it creates is not correct for Panda3D.  If you use the button, you
+end up with the following incorrect configuration.  So far as I know, the
+only way to get the correct configuration (shown above) is to set it up
+manually in the hypershade.  The incorrect configuration is:
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-3.jpg.html" class="image"><img alt="Maya-hyper-3.jpg" src="Maya-hyper-3.jpg" width="600" height="333" /></a></center><br /><br />
+<p>You may wish for parts of your model to be transparent.  This is a little
+tricky, because Panda3D understands "opacity maps," and maya understands
+"transparency maps," which are opposites of each other.  (In an opacity map,
+white is opaque, in a transparency map, black is opaque.)  To set it up,
+you will need to create a reverser-object:
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-4.jpg.html" class="image"><img alt="Maya-hyper-4.jpg" src="Maya-hyper-4.jpg" width="600" height="338" /></a></center><br /><br />
+<p>You may also wish to control which areas of the model are glossy, and
+which are not.  Panda3D calls this a "gloss map."  To do this, create a black-and-white image and connect it to the "specularColor" input of the
+phong shader.  Note that it must be black-and-white, or Panda3D won't
+understand it.
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-5.jpg.html" class="image"><img alt="Maya-hyper-5.jpg" src="Maya-hyper-5.jpg" width="600" height="345" /></a></center><br /><br />
+<p>You may also want to create glowing areas on your model.  Panda3D calls
+this a "glow map."  I have also heard it called a "self-illumination map"
+or an "incandescence map."  Create a black-and-white image and connect
+it to the "incandescence" input of the phong shader:
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-6.jpg.html" class="image"><img alt="Maya-hyper-6.jpg" src="Maya-hyper-6.jpg" width="599" height="340" /></a></center><br /><br />
+<p>Creating a glow map will cause those parts of the model
+which are glowing to be bright even when the light is dark.  However,
+it will not by itself create a full-featured bloom effect.  To get that,
+you need to use a bloom filter in your Panda3D program in conjunction
+with the glow map.  There is a <a href="Sample_Programs%253A_Glow_Filter.html" title="Sample Programs: Glow Filter">sample program</a>
+that demonstrates this process.
+</p><p>Finally, there is plain old multitexturing.  Create this structure in the hypershade, using a "Layered Texture" (NOT a "Layered Shader!"):
+</p>
+<br /><br /><center><a href="File%253AMaya-hyper-8.jpg.html" class="image"><img alt="Maya-hyper-8.jpg" src="Maya-hyper-8.jpg" width="600" height="340" /></a></center><br /><br />
+<p>This will cause the two textures to be multiplied, which is the simplest
+form of multitexturing.  You can also obtain certain other effects by 
+changing the settings of the Layered Texture, however, this functionality
+is very incomplete at this time.  For the most part, you can only multiply.
+</p>
+<h3> <span class="mw-headline" id="Merging_Textures">Merging Textures</span></h3>
+<p>The Maya exporter may will try to merge textures.  For example,
+if your model has an RGB color map, and a black-and-white opacity map,
+then the exporter will consider loading them together as a single RGBA
+texture.
+</p><p>In order to merge two textures, the following rules must be satisfied:
+</p><p>1. Their UV mappings must be identical.
+2. Their filenames must have a common prefix.
+</p><p>By "common prefix," I mean that the files "house-color.jpg" and "house-opacity.jpg" can be merged, because they both start with the common prefix "house-".  A common prefix consists of a series of alphanumeric
+characters followed by a dash.  If you do not want two files merged, 
+use a different file naming convention.
+</p>
+<h2> <span class="mw-headline" id="Flagging_Objects_From_Maya">Flagging Objects From Maya</span></h2>
+<p>The Maya exporter is able to automatically flag objects for collisions if the objects are flagged properly in Maya. There is a <a rel="nofollow" class="external text" href="https://raw.githubusercontent.com/panda3d/panda3d/master/pandatool/src/mayaprogs/eggImportOptions.mel">MELscript</a> in the available in the source code that helps flag objects in Maya.
+</p><p>Installation
+</p>
+<ol><li>Open up maya's script editor (Window&gt;General Editors&gt;Script Editor)
+</li><li>Open the script in the editor and execute it (Ctrl+Enter or Script&gt;Execute)
+</li><li>Type "eggObjectFlags()" at the script editor and select the text.
+</li><li>Middle mouse drag the selection into your custom shelf.
+</li><li>Optional: go to the shelf editor and give it a custom icon/name
+</li></ol>
+<p>Usage
+</p>
+<ol><li>Select the objects that you want to tag and press the shelf script.
+</li><li>Set the object type by going to the channel box of the object, there should be a new attribute called Egg Object TypesN.
+</li><li>Set the object type to the desired value.
+</li></ol>
+<table border="1" cellpadding="5">
+<tr>
+<td>Object Type</td>
+<td>Meaning
+</td></tr>
+<tr>
+<td>barrier </td>
+<td> The geometry defined at this root and below defines an invisible
+<p>collision solid.
+</p>
+</td></tr>
+<tr>
+<td>trigger </td>
+<td> The geometry defined at this root and below defines an invisible trigger surface.
+</td></tr>
+<tr>
+<td>sphere </td>
+<td> The geometry is replaced with the smallest collision sphere that will enclose it. Typically you model a sphere in polygons and put this flag on it to create a collision sphere of the same size.
+</td></tr>
+<tr>
+<td>tube </td>
+<td> As in sphere, above, but the geometry is replaced with a collision tube (a capsule). Typically you will model a capsule or a cylinder in polygons.
+</td></tr>
+<tr>
+<td>bubble </td>
+<td> A collision bubble is placed around the geometry, which is otherwise unchanged.
+</td></tr>
+<tr>
+<td>ghost </td>
+<td> It means that the geometry beginning at this node and below should never be collided with--characters will pass through it.
+</td></tr>
+<tr>
+<td>backstage </td>
+<td> It means that the geometry at this node and below should not be translated. This will normally be used on scale references and other modeling tools.
+</td></tr></table>
+<h2> <span class="mw-headline" id="Running_the_Exporter">Running the Exporter</span></h2>
+<p>Maya's exporter can be run from the command prompt or via a graphical panel.  The command line utility is called <i>maya2egg</i>.  There are multiple versions of it corresponding to different versions of maya.  For instance, the version to use for Maya 5.0 is <i>maya2egg5</i>, for 6.0 its <i>maya2egg6</i> and for 6.5 its <i>maya2egg65</i>.
+</p><p>The following is an example of how to convert a file(maya binary .mb) if using Maya 6.0 through the command line.
+</p>
+<p style="text-align: center;"><a href="File%253AMayaCommandLineExport.png.html" class="image"><img alt="MayaCommandLineExport.png" src="MayaCommandLineExport.png" width="548" height="203" /></a></p>
+<p>The egg file will contain the filenames of the textures.  These texture pathnames will be stored as <i>relative</i> paths, relative to the location of the egg file.  For example, let's say that the files are laid out like this:
+</p>
+<pre class="codeblock">
+c:\My Models\Maya Files\Character.mb
+c:\My Models\Egg Files\Character.egg
+c:\My Models\Textures\Character.png
+</pre>
+<p>In that case, the command to export the model is:
+</p>
+<pre class="codeblock">
+c:\
+cd c:\My Models\
+maya2egg -o &quot;Egg Files/Character.egg&quot; &quot;Maya Files/Character.mb&quot; 
+</pre>
+<p>Note that <a href="Panda_Filename_Syntax.html" title="Panda Filename Syntax" class="mw-redirect">Panda Filename Syntax</a> uses forward slashes, even under Windows, and this applies to the exporter as well. After doing this export, the character egg will contain the following texture reference:
+</p>
+<pre class="codeblock">
+&quot;../Textures/Character.png&quot;
+</pre>
+<p>Again, notice that this pathname is relative to the egg file itself.  Many artists find it convenient to keep everything in the same directory, to avoid having to think about this.  This approach works fine.
+</p><p>The above conversion process will turn the character into a <i>static</i> model. Models which are rigged (they have bones to help them animate), skinned (polygons attached to the bones/skeleton), and are animated need to use one of the following options:
+</p>
+<pre class="codeblock">
+maya2egg -a model -o eggFileName.egg mayaFileName.mb 
+maya2egg -a chan -o eggFileName.egg mayaFileName.mb 
+maya2egg -a pose -o eggFileName.egg mayaFileName.mb 
+maya2egg -a both -o eggFileName.egg mayaFileName.mb 
+</pre>
+<p>The meanings of these options are:</p>
+<table>
+<tr><td style="width: 80px;">-a model</td><td>Save only the skinned and boned model, ready for animation but with no animation attached. This is ideal for models with several event- or interaction-based animations.</td></tr>
+<tr><td>-a chan</td><td>Save only the animation data on the current model, but not the model itself. This is ideal applying animations to an already-existing model egg file that is ready to receive animation. A model may have several animation channels applied to it.</td></tr>
+<tr><td>-a pose</td><td>Save the model in the current key position of the animation applied to it. This position must be selected before choosing to export the file. This format does not save the animation.</td></tr>
+<tr><td>-a both</td><td>This will export the model and animation out as one file.</td></tr>
+</table>
+<p><br />
+There are many options to maya2egg.  For a complete list, run maya2egg with the <i>-h</i> argument.
+</p>
+<table class="code"><tr><td>
+<p>maya2egg -h
+</p>
+</td></tr></table>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Using_the_New_Maya2EGG_GUI.28To_be_available_for_Panda3D_1.7.1_or_later.29">Using the New Maya2EGG GUI(To be available for Panda3D 1.7.1 or later) </span></h2>
+<p>Although the command line version of maya2egg (and the additional  optimization utilities such as egg2bam, egg-optchar, work well when used correctly, typically problems arise from a poor understanding of the command line options and requirements. This standalone tools application attempts to demystify some of those options and present them in a way an artist (rather than a programmer) can better understand. However, the application still requires the command line programs to be present in order to actually export or process any eggs or Maya files. Simply put, the application builds the command line arguments for you and can process multiple files in a sequence (better known as batch processing). After all, in most game pipelines models and animations have to be exported multiple times with no changes to their settings after minor tweaks within the 3D package. It should also be noted this tool currently only supports the maya2egg exporter, but since the other optimization tools operate on egg files they can be used with any egg file that has been correctly exported from any 3D package.
+</p><p>NOTE: The application was developed to work on Windows, Linux, and Mac OS. There are certain differences between how each operating system installs Panda , and how directory paths are represented. For the rest of this document Windows conventions are going to be used, because it is the operating system that the is most familiar. However, if there are significant differences between how you need to use the app in Linux of OSX the necessary steps can be provided to ensure the application working correctly.
+</p><p><br />
+<b>SIMPLE MODE</b>
+</p>
+<p style="text-align: center;"><a href="File%253AEgg_Gui_simple.jpg.html" class="image"><img alt="Egg Gui simple.jpg" src="Egg_Gui_simple.jpg" width="692" height="824" /></a></p>
+<p>For viewing the video tutorial click <a rel="nofollow" class="external text" href="http://vimeo.com/11445320">here</a>
+</p><p>This application presents two modes for exporting a model or animation from Maya. Upon opening the application the simple mode is presented show above. The simple mode tab is intended to do “one-off” or single file exports. It would be the same thing as typing the exporter command and options each time you wanted to export a model. To use simple mode follow these few steps:
+</p>
+<dl><dd>-Click the Save button next to the first text box labeled “Egg file to be written” and navigate to your intended export directory and name you r file. When you’ve finished this click OK.
+</dd></dl>
+<dl><dd>-Click the Choose button next to the text box labeled “Maya file to be exported” and select the .mb file that you would like to export.
+</dd></dl>
+<dl><dd>-Select the version of Maya you currently have on your system from the Maya Version drop-down box.
+</dd></dl>
+<p>Now, before you click Run Export, you must decide if you want to export any animation from the file and if so what type. If you simply want a static model (usually used for props and game levels) select “none” in the Animation box. This will export only the geometry from your scene, excluding any joints or key frames. It should be noted that this type of model will not export any skinning data from Maya. However, it will still have a transform included which will allow it to be placed in a Panda3D world.
+</p><p>If you want to export a scene with joints and skinning data so that it can later accept any exported animation select “model “ from Animation box. This term can be slightly confusing initially, but once you realize we’re talking about what type of animation (if any) to export the distinction between “none” and “model” is slightly more clear. Remember, model doesn’t just mean polygon geometry, it implies that the model has joints and possibly a skin cluster in the scene file. It is meant to accept animation data from a separate file or to be animated by the programmer through code.
+</p><p>If you only want to export the animation data from a scene select “chan”. This will simply write out the key frames of your scene and what joints those key frames apply to into the egg file. This file is almost always used with a separate egg file that was egged out with the “model” option.
+</p><p>Lastly, if you want all the geometry, joints, and skinning data exported to your egg in one file select “both” from the Animation box. This file type is rarely used, but special cases exist. Most of the time you would want to keep the animation and geometry data in separate files. This allows you to load animations on the fly inside the engine without having to load the geometry data twice. Thus making your game load (and possibly run) faster.
+</p><p>Once you’ve figured out which type of animation you need to export in your egg file. Click Run Export. A pop-up window will show up and it will start writing the output from the command line tool that the application launched in the background. If your scene file does not export correctly, this text will let you know in most cases. It can be helpful in tracking down problems and be sure to copy and paste it to text file if things don’t work out so you can show your programmer or a member of the Panda community where things are going haywire. Also, since computers in general have not learned to interpret the intentions of a human without explicit instructions the egg file may not show up in the game correctly. In short the exporter may write a perfectly good egg file, but since something wasn’t quite right in your scene file in Maya, things may not turn out correctly when you Pview or import the egg into your game. This almost always has to do with the Maya file itself, NOT the exporter, so be sure to try and diagnose problems inside Maya first. A good place to start is the Common Problems section of this document. If there’s no answer there, post on the Panda3D forums. There are a number of experts and seasoned artists who have probably come across the same problems you have and can quickly get you back on track.
+</p><p><br />
+<b>ADVANCED MODE</b>
+</p>
+<p style="text-align: center;"><a href="File%253AEgg_Gui_advanced.jpg.html" class="image"><img alt="Egg Gui advanced.jpg" src="Egg_Gui_advanced.jpg" width="692" height="824" /></a></p>
+<p>For viewing the video tutorial click <a rel="nofollow" class="external text" href="http://vimeo.com/11445391">here</a>
+</p><p>In the beginning Simple Mode should cover the basics of single file exporting. However, once you’ve had to load the application a few times and enter the same settings over and over again, it’s probably time to move on to using the Advanced Mode Tab.
+</p><p>Aside from allowing you to have greater control over what specifically gets exported out of a particular Maya scene, this tab allows you to save these options and settings for later use. Also, since everyone has a different set of default exporter options and locations the application allows you to save and load a preferences XML file to load each time the application is launched.
+</p><p>The process for exporting from the Advanced Mode tab is largely the same as Simple Mode, but with a few wrinkles. First you should choose your Panda installation directory and Maya version from the Environment Options section. This location is the directory where you told Panda3D to install when running the installer. It is NOT the \bin directory where the maya2egg executable resides. This little wrinkle was necessary to allow multiple operating systems to use the application.
+</p><p>The last difference between Simple and Advanced mode for exporting a single file, is that it must be put into the batch list before it can be exported. The Batch List represents the order of the files that are about to be exported. To Add a Maya scene file with its export options to this list simply click Add To Batch (The other utilities in the Extra Utilities section have this same button for simplicity’s sake, but the main Add To Batch button deals solely with the maya2egg tool). After you’ve added any number of scene files with any of the available options to the Batch List you can then click Run Batch and the application will launch the exporter or utility command one by one until it has finished the entire list of items.
+</p><p>Another useful feature of the application is that it checks the modified date of every file used as an input for the given utility (ie the .mb file for an exporter batch command, and an egg file for egg2bam). This is handy if you have saved out an entire batch list of 20 files but only need to export the three files you actually changed. The exporter skips any unchanged files by default, but this behavior can be overridden by checking the “Override export changed files” checkbox next to the Run Batch button.
+</p>
+<h3> <span class="mw-headline" id="Using_the_Egg-Palletize_Tool">Using the Egg-Palletize Tool</span></h3>
+<p>For viewing the video tutorial click <a rel="nofollow" class="external text" href="http://vimeo.com/11445357">here</a>
+</p><p>Egg-palettize is an optimization tool in Panda for you to group your textures. You can have your textures placed in a single palette. In the advance mode of the GUI, choose the egg-palettize panel. This is the egg-palettize Tool.
+</p>
+<p style="text-align: center;"><a href="File%253APallettize_1.jpg.html" class="image"><img alt="Pallettize 1.jpg" src="Pallettize_1.jpg" width="312" height="104" /></a></p>
+<p>For using Egg pallettize for a single egg file select that option in the drop down list 
+</p>
+<p style="text-align: center;"><a href="File%253APallettize_2.jpg.html" class="image"><img alt="Pallettize 2.jpg" src="Pallettize_2.jpg" width="351" height="384" /></a></p>
+<p>First, specify the input egg file, the output texture file and the output egg file. The output texture file is where the palette will be put in. And the output egg file is the new egg with the new palette as the texture.
+Before generating the egg palette, a .txa file should be generated with some attributes listed in the attribute panel.
+Set palette size: Specify the size of the palette.
+Imagetype: Image type of the palette.
+Powertwo flag:   Specifies whether textures should be forced to a power of two  size when they are not placed within a palette. The default is false.
+</p><p>Set background color:  Specifies the background color of the generated palette images. The background color is the color of the palette images where nothing is used. The number  r, g, b, a channels are range from 0 to 255. The default color is black.
+</p><p>Margin:  This specifies the amount of default margin to apply to all textures that are placed within a palette image.  The margin is a number of additional pixels that are written around the texture image to help prevent color bleeding between neighboring images within the same palette.  The default is 2.
+</p><p>Coverage:  The 'coverage' of a texture refers to the fraction of the area in the texture image that is   actually used, according to the UV's that appear in the various egg files.  If a texture's   coverage is less than 1, only some of the texture image is used (and only this part will be written to the palette).  If the coverage is greater than 1, the texture repeats that number of times.  A repeating texture may still be palettized  by writing the required number of copies into the palette image, according to the coverage area. This attribute specifies the maximum coverage to allow for any texture before rejecting it from the palette.  It may be any floating-point number greater than zero.  Set this to 1 to avoid palettizing repeating textures altogether.
+</p><p>After setting all the attribute, click on Save Attributes button to save all the attributes to a .txa file. Last, add this to batch list, after clicking run batch, the palette will be generated.
+</p><p>Egg-palettize for multiple eggs
+</p>
+<p style="text-align: center;"><a href="File%253APallettize_3.jpg.html" class="image"><img alt="Pallettize 3.jpg" src="Pallettize_3.jpg" width="341" height="416" /></a></p>
+<p>Egg-palettize can also generate a palette image for multiple egg files to share. This palette image has all the textures of multiple egg files to be placed on it.
+This panel is almost the same as the single egg one. Only for the input egg file can have multiple egg files put into it. Select a added egg file and click Remove button can remove that egg file. Click Remove All button can remove all the added egg files  
+The output is a folder to put all the new eggs.
+Attributes Panel is the same as the single egg one.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Using_the_Graphical_Front-End.28Old.29">Using the Graphical Front-End(Old)</span></h2>
+<p>As of Panda3D 1.0.4, there is a graphical front-end to <i>maya2egg</i>. To run the graphical Maya exporter, drag MayaPandaTool.mel from the panda plugins directory into the Maya workspace.
+</p>
+<p style="text-align: center;"><a href="File%253AMayaPandaToolLoad.png.html" class="image"><img alt="MayaPandaToolLoad.png" src="MayaPandaToolLoad.png" width="653" height="471" /></a></p>
+<p>The UI window(below) will appear.
+</p>
+<p style="text-align: center;"><a href="File%253AMaya-exporter.png.html" class="image"><img alt="Maya-exporter.png" src="Maya-exporter.png" width="278" height="573" /></a></p>
+<p>You can alternatively load the .mel file from the script editor.  To save space, the graphical tool does not have access to all of the features of the exporter.  It is designed for rapid verification of assets.  The features you can execute with the graphical tool are identical to the respective ones of the command line exporter listed below.
+</p><p>Or, you can integrate the UI interface to Maya.
+There is a very convenient way to launch the MayaPandaTool, using Maya shelf to store the MEL script&#160;:
+<br />[1] open the Script Editor&#160;:
+<br />Window &gt; General Editors &gt; Script Editor
+<br />[2] In Script Editor, load the MayaPandaTool MEL script&#160;:
+<br />File &gt; Open Script
+<br />[3] select the MEL text (press Ctrl+A)
+<br />[4] using middle mouse button, drag the selected text onto the shelf
+<br />[5] (optional) using Shelf Editor, you can change the image of Panda exporter icon to distinguish it from the others. 
+</p>
+<p style="text-align: center;"><a href="File%253ALaunchMPT.jpg.html" class="image"><img alt="LaunchMPT.jpg" src="LaunchMPT.jpg" width="492" height="481" /></a></p>
+<p>Anytime you need to open the Panda Exporter, just click the icon on the shelf.
+</p><p><br />
+<u>For Windows users&#160;:</u>
+<br />If you want a faster launch, you can put the MEL file on the QuickLaunch.
+Press Ctrl while dragging the MEL file onto QuickLaunch bar. If you don't press Ctrl, the actual file dropped to QuickLaunch is only the shortcut to the MEL file.
+<br />Anytime you need to open the Panda exporter, just drag it from QuickLaunch bar to the 3D window of Maya.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 91/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:966-0!*!0!!en!2!* and timestamp 20171007142555 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Converting_from_3D_Studio_Max.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Converting_from_Blender.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

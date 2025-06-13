@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Creating Windows and Buffers - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Creating Windows and Buffers</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Graphics_Pipe.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Display_Regions.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Although Panda does provide the convenience function <code>base.openWindow()</code> to create a new window, this function does a lot of things automatically for you and therefore takes away a lot of control.  The following discussion will focus instead on creating a window using the low-level interface, in order provide a clearer understanding of the actual class relationships.
+</p><p>In order to create a window, you will first need a <b>GraphicsEngine</b> and a <b>GraphicsPipe</b> object.  Both of these were discussed in more detail in previous pages.  Panda will typically create both of these for you at startup, and store them in <code>base.graphicsEngine</code> and <code>base.pipe</code>, respectively.
+</p><p>You will also need to create a <b>FrameBufferProperties</b> object.  This defines important properties such as the number of bits you wish to allocate for red, green, and blue channels; as well as the number of bits for depth buffer; and whether you require a stencil buffer or special multisampling bits for antialiasing.  Your graphics card may be able to switch itself into one of several different configurations, and you can use the FrameBufferProperties to request certain properties that are more important to you.  Note, however, that there is no guarantee that the graphics card you are running on will be able to provide everything you ask for (but you can later ask what properties you actually got).  You can get a default FrameBufferProperties object using <code>FrameBufferProperties.getDefault()</code>.  The default FrameBufferProperties has its settings already filled according to the Config.prc file variables; it is usually a good choice to use.
+</p><p>You will need to create a <b>WindowProperties</b> object as well.  At a minimum, this defines the X, Y size of the window or buffer you want to create.  For an offscreen buffer, this is all it defines; but if you are creating a window, it also allows you to specify things like the window title, the placement onscreen, whether it should be user-resizable, and so on.  You can get a default WindowProperties object using <code>WindowProperties.getDefault()</code>.  The default WindowProperties object has its settings filled in according to Config.prc file variables.  If you are creating an offscreen buffer, you may wish to use <code>WindowProperties.size(x, y)</code> which creates a simple WindowProperties object that simply requests a buffer of size x y.
+</p><p>Once you have all of these objects, you can create a new window or buffer using the call graphicsEngine.makeOutput().  This is the fundamental method for creating a new GraphicsOutput; all of the other convenience functions like base.makeWindow() or win.makeTextureBuffer() eventually funnel down into this call.  This method accepts several parameters:
+</p>
+<pre class="python">base.<span style="color: black;">graphicsEngine</span>.<span style="color: black;">makeOutput</span><span style="color: black;">&#40;</span>pipe, name, sort, fbProps, winProps, flags, gsg, host<span style="color: black;">&#41;</span></pre>
+<table>
+<tr>
+<td><code>pipe</code>
+</td>
+<td>The GraphicsPipe to use to create this output, usually <code>base.pipe</code>.
+</td></tr>
+<tr>
+<td><code>name</code>
+</td>
+<td>A string name to assign to this output. Each window and buffer should have a name, which makes it easier for you to identify the object in a list. This is an internal name only, and has nothing to do with the window title displayed above the window.
+</td></tr>
+<tr>
+<td><code>sort</code>
+</td>
+<td>The sort order of this output. This determines the order in which the windows will be rendered, which is particularly important for offscreen buffers that are used to render to textures, which are in turn used in other windows or buffers.
+</td></tr>
+<tr>
+<td><code>fbProps</code>
+</td>
+<td>The FrameBufferProperties for this output. If you intend to be sharing GSG’s between multiple windows or buffers, it is usually important that they also share the same FrameBufferProperties.
+</td></tr>
+<tr>
+<td><code>winProps</code>
+</td>
+<td>The WindowProperties for this output.
+</td></tr>
+<tr>
+<td><code>flags</code>
+</td>
+<td>An integer value, a union of several possible bitmask options defined by the GraphicsPipe class. This controls the type of GraphicsOutput we are requesting, for instance whether we want a window or buffer, or other exotic requirements. Set this to GraphicsPipe.BFRequireWindow if you want to create a GraphicsWindow, or to GraphicsPipe.BFRefuseWindow if youw ant to create a GraphicsBuffer. For more options, see the source code.
+</td></tr>
+<tr>
+<td><code>gsg</code>
+</td>
+<td>This parameter is optional, but if provided, it is a GSG to share with other windows or buffers. You can get the GSG from an existing window or buffer with win.getGsg(). If you omit this parameter, a new GSG will be created.
+</td></tr>
+<tr>
+<td><code>host</code>
+</td>
+<td>This parameter is optional, but if provided, it is an already-existing host window or buffer. This is useful when creating an offscreen buffer; it allows the creation of a <b>ParasiteBuffer</b>, if necessary, instead of a true GraphicsBuffer object. If you provide a host window, Panda will be able to return either a ParasiteBuffer or a GraphicsBuffer, according to what the graphics driver is best able to provide.
+</td></tr></table>
+<p>The return value of makeOutput() is either the new GraphicsWindow or GraphicsBuffer object, or None if it failed for some reason.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 49/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2276-0!*!*!*!*!*!* and timestamp 20171008060805 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Graphics_Pipe.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Display_Regions.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

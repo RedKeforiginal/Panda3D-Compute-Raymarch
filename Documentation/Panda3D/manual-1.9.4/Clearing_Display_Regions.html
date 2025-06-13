@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Clearing Display Regions - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Clearing Display Regions</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Creating_New_MouseWatchers_for_Display_Regions.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_2D_Display_Region.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>When you have more than one DisplayRegion in a particular window, it is important to consider which of them, if any, you want to perform an explicit clear operation before drawing.
+</p><p>Clearing means to erase the contents of the window or DisplayRegion, and set it all to the background color.  Normally, you should perform a clear at the beginning of every frame, or you will be drawing the new frame on top of the contents of the previous frame.
+</p><p>The default is for clear to be performed by the GraphicsOutput (the window or buffer), before any DisplayRegions are drawn at all.  This is usually the best way to clear the window, because it is slightly faster to perform one big clear operation that resets the whole window at once, rather than clearing each DisplayRegion individually.  This particularly makes sense when your DisplayRegions don't overlap, and they all want to have the same background color, like this:
+</p><p><a href="File%253AQuadDR.jpg.html" class="image"><img alt="QuadDR.jpg" src="QuadDR.jpg" width="200" height="150" /></a>
+</p><p>However, when your DisplayRegions overlap, or when they each need to have a different background color, you may need to clear the DisplayRegions individually.  Consider the following example:
+</p><p><a href="File%253ADisplayRegion_3.jpg.html" class="image"><img alt="DisplayRegion 3.jpg" src="DisplayRegion_3.jpg" width="214" height="170" /></a>
+</p><p>Panda must draw this scene by first clearing the window to a gray background, then drawing the contents of the larger display region (with the panda), then clearing the smaller, nested display region to a black background, and then finally drawing the contents of the smaller display region.  (<a href="File%253ADisplayRegion_1.jpg.html" title="File:DisplayRegion 1.jpg">Click here</a> to see the sample code that sets all this up.)
+</p><p>You can control the clear operations per DisplayRegion, as well as on the overall GraphicsOutput.  The following methods are defined for both DisplayRegions and GraphicsOutputs:
+</p>
+<pre class="python">win.<span style="color: black;">setClearColorActive</span><span style="color: black;">&#40;</span>flag<span style="color: black;">&#41;</span><br />win.<span style="color: black;">setClearColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span>r, g, b, a<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>In the above, flag is a boolean flag--True or False, indicating whether this window or DisplayRegion should perform a clear to the background color.  If False, no clear will be performed.  If True, the color will be cleared before drawing, and the specific background color used will be specified by r, g, b, a.
+</p><p>In addition to clearing the color, you will also need to clear the depth or Z buffer.  This buffer is used to determine which objects are in front of other objects, and if you fail to clear it, some objects may not draw.  It has a similar interface:
+</p>
+<pre class="python">win.<span style="color: black;">setClearDepthActive</span><span style="color: black;">&#40;</span>flag<span style="color: black;">&#41;</span><br />win.<span style="color: black;">setClearDepth</span><span style="color: black;">&#40;</span>depthValue<span style="color: black;">&#41;</span></pre>
+<p>The depthValue should almost always be 1.0, which is the default.
+</p><p>It is also possible to selectively clear the stencil buffer, and other auxiliary buffers, in a similar way.  See the generated API docs for more information.
+</p>
+<h2> <span class="mw-headline" id="Sorting">Sorting</span></h2>
+<p>Note that when you are overlapping DisplayRegions, it becomes very important to specify the order in which the DisplayRegions should be drawn.  To do this, use setSort():
+</p>
+<pre class="python">dr.<span style="color: black;">setSort</span><span style="color: black;">&#40;</span>sortValue<span style="color: black;">&#41;</span></pre>
+<p>The sortValue can be any integer number; the default is zero.  All DisplayRegions for a particular window will be drawn in order from smallest sort first to largest sort last.  If two DisplayRegions have the same sort value, the order in which they are drawn is undefined.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 24/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2278-0!*!*!*!*!2!* and timestamp 20171008060822 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Creating_New_MouseWatchers_for_Display_Regions.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_2D_Display_Region.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

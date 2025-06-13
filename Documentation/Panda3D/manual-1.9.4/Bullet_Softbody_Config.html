@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Softbody Config - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Softbody Config</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Softbody_Tetrahedron.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Config_Options.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Bullet uses abbreviated properties which describe a soft bodies behaviour.
+Here are explanations for the most important settings, and their mapping to
+Bullet properties:
+</p><p><br />
+</p>
+<h3> <span class="mw-headline" id="btSoftBody::Material_vs._BulletSoftBodyMaterial:">btSoftBody::Material vs. BulletSoftBodyMaterial:</span></h3>
+<center>
+<table border="1" cellpadding="1" cellspacing="0">
+<tr>
+<th>btSoftBody::Material</th>
+<th>BulletSoftBodyMaterial</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td><code>m_kLST</code></td>
+<td><code>get/setLinearStiffness</code></td>
+<td>Linear stiffness<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>m_kAST</code></td>
+<td><code>get/setAngularStiffness</code></td>
+<td>Angular stiffness<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>m_kVST</code></td>
+<td><code>get/setVolumePreservation</code></td>
+<td>Volume preservation<br />Range [0,1]</td>
+</tr>
+
+</table>
+</center>
+<p><br />
+</p><p><br />
+</p>
+<h3> <span class="mw-headline" id="btSoftBody::Config_vs._BulletSoftBodyConfig">btSoftBody::Config vs. BulletSoftBodyConfig</span></h3>
+<center>
+<table border="1" cellpadding="1" cellspacing="0">
+<tr>
+<th>btSoftBody::Config</th>
+<th>BulletSoftBodyConfig</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td><code>kSRHR_CL</code></td>
+<td><code>get/setSoftVsRigidHardness</code></td>
+<td>Soft vs rigid hardness (cluster only)<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kSKHR_CL</code></td>
+<td><code>get/setSoftVsKineticHardness</code></td>
+<td>Soft vs kinetic hardness (cluster only)<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kSSHR_CL</code></td>
+<td><code>get/setSoftVsSoftHardness</code></td>
+<td>Soft vs soft hardness (cluster only)<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kSR_SPLT_CL</code></td>
+<td><code>get/setSoftVsRigidImpulseSplit</code></td>
+<td>Soft vs rigid impulse split (cluster only)<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kSK_SPLT_CL</code></td>
+<td><code>get/setSoftVsKineticImpulseSplit</code></td>
+<td>Soft vs kinetic impulse split (cluster only)<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kSS_SPLT_CL</code></td>
+<td><code>get/setSoftVsSoftImpulseSplit</code></td>
+<td>Soft vs soft impulse split (cluster only)<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kVCF</code></td>
+<td><code>get/setVelocitiesCorrectionFactor</code></td>
+<td>Velocities correction factor (Baumgarte)</td>
+</tr>
+
+<tr>
+<td><code>kDP</code></td>
+<td><code>get/setDampingCoefficient</code></td>
+<td>Damping coefficient<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kDG</code></td>
+<td><code>get/setDragCoefficient</code></td>
+<td>Drag coefficient<br />Range [0,+inf]</td>
+</tr>
+
+<tr>
+<td><code>kLF</code></td>
+<td><code>get/setLiftCoefficient</code></td>
+<td>Lift coefficient<br />Range [0,+inf]</td>
+</tr>
+
+<tr>
+<td><code>kPR</code></td>
+<td><code>get/setPressureCoefficient</code></td>
+<td>Pressure coefficient<br />Range [-inf,+inf]</td>
+</tr>
+
+<tr>
+<td><code>kVC</code></td>
+<td><code>get/setVolumeConversationCoefficient</code></td>
+<td>Volume conversation coefficient<br />Range [0,+inf]</td>
+</tr>
+
+<tr>
+<td><code>kDF</code></td>
+<td><code>get/setDynamicFrictionCoefficient</code></td>
+<td>Dynamic friction coefficient<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kMT</code></td>
+<td><code>get/setPoseMatchingCoefficient</code></td>
+<td>Pose matching coefficient<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kCHR</code></td>
+<td><code>get/setRigidContactsHardness</code></td>
+<td>Rigid contacts hardness<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kKHR</code></td>
+<td><code>get/setKineticContactsHardness</code></td>
+<td>Kinetic contacts hardness<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kSHR</code></td>
+<td><code>get/setSoftContactsHardness</code></td>
+<td>Soft contacts hardness<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>kAHR</code></td>
+<td><code>get/setAnchorsHardness</code></td>
+<td>Anchors hardness<br />Range [0,1]</td>
+</tr>
+
+<tr>
+<td><code>piterations</code></td>
+<td><code>get/setPositionsSolverIterations</code></td>
+<td>Positions solver iterations<br />Positive integer</td>
+</tr>
+
+<tr>
+<td><code>viterations</code></td>
+<td><code>get/setVelocitiesSolverIterations</code></td>
+<td> Velocities solver iterations<br />Positive integer</td>
+</tr>
+
+<tr>
+<td><code>diterations</code></td>
+<td><code>get/setDriftSolverIterations</code></td>
+<td>Drift solver iterations<br />Positive integer</td>
+</tr>
+
+<tr>
+<td><code>citerations</code></td>
+<td><code>get/setClusterSolverIterations</code></td>
+<td>Cluster solver iterations<br />Positive integer</td>
+</tr>
+
+</table>
+</center>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 195/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2612-0!*!*!!*!*!* and timestamp 20171008060408 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Softbody_Tetrahedron.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Config_Options.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

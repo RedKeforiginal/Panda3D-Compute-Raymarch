@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Defining your own GeomVertexFormat - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Defining your own GeomVertexFormat</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Procedurally_Generating_3D_Models.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Pre-defined_vertex_formats.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Before you can create any geometry in Panda3D, you must have a valid
+<a href="GeomVertexFormat.html" title="GeomVertexFormat"><b>GeomVertexFormat</b></a>.  You can decide exactly which columns you want to
+have in your format, by building the format up one column at a time.
+(But you might be able to avoid this effort by taking advantage of one of the <a href="Pre-defined_vertex_formats.html" title="Pre-defined vertex formats">pre-defined formats</a> listed on the next page.)
+</p><p>To build up your custom format, you need to first create an empty <b>GeomVertexArrayFormat</b>,
+and add columns one at a time by calling addColumn():
+
+</p>
+<pre class="python"><span style="color: #dc143c;">array</span> = GeomVertexArrayFormat<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #dc143c;">array</span>.<span style="color: black;">addColumn</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;vertex&quot;</span>, <span style="color: #ff4500;">3</span>, Geom.<span style="color: black;">NTFloat32</span>, Geom.<span style="color: black;">CPoint</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p><p>The parameters to addColumn() are, in order, the column name, the
+number of components, the numeric type, and the contents
+specification.  See <a href="GeomVertexFormat.html" title="GeomVertexFormat">GeomVertexFormat</a> for a detailed description of
+each of these parameters and their appropriate values.  You may also
+supply an optional fifth parameter, which specifies the byte offset
+within the row at which the column's data begins; but normally you
+should omit this to indicate that the column's data immediately
+follows the previous column's data.
+</p><p>Note that the column name should be an <b>InternalName</b> object, as
+returned by a call to InternalName.make().  This is Panda's
+mechanism for tokenizing a string name, to allow for fast name lookups
+during rendering.  Other than this detail, the column name is really just an arbitrary string.
+</p><p>It is your responsibility to ensure that all of the parameters passed
+to addColumn() are appropriate for the column you are defining.  The column data will be stored exactly as you specify.  When
+rendering, Panda will attempt to convert the column data as it is stored to whatever format your graphics API (e.g. OpenGL or DirectX)
+expects to receive.
+</p><p>For instance, to define a vertex format that includes a vertex
+position and a (U, V) texture coordinate:
+</p><p>
+</p>
+<pre class="python"><span style="color: #dc143c;">array</span> = GeomVertexArrayFormat<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #dc143c;">array</span>.<span style="color: black;">addColumn</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;vertex&quot;</span>, <span style="color: #ff4500;">3</span>, Geom.<span style="color: black;">NTFloat32</span>, Geom.<span style="color: black;">CPoint</span><span style="color: black;">&#41;</span><br /><span style="color: #dc143c;">array</span>.<span style="color: black;">addColumn</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;texcoord&quot;</span>, <span style="color: #ff4500;">2</span>, Geom.<span style="color: black;">NTFloat32</span>, Geom.<span style="color: black;">CTexcoord</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+Once you have defined the columns of your array, you should create a
+GeomVertexFormat to hold the array:
+</p>
+<pre class="python">format = GeomVertexFormat<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />format.<span style="color: black;">addArray</span><span style="color: black;">&#40;</span><span style="color: #dc143c;">array</span><span style="color: black;">&#41;</span></pre>
+
+<p>If you want your format to consist of multiple different arrays, you
+can create additional arrays and add them at this point as well.
+</p><p>Finally, before you can use your new format, you must <i>register</i>
+it.  Registering a format builds up the internal tables necessary to
+use the vertex format for rendering.  However, once you have
+registered a format, you can no longer add or remove columns, or
+modify it in any way; if you want to make changes to the format after
+this point, you'll have to start over with a new GeomVertexFormat
+object.
+</p>
+<pre class="python">format = GeomVertexFormat.<span style="color: black;">registerFormat</span><span style="color: black;">&#40;</span>format<span style="color: black;">&#41;</span></pre>
+
+<p>You should always register a format with a syntax similar to the
+above: that is, you should use the return value of registerFormat as
+your new, registered format object, and discard the original format
+object.  (The returned format object may be the same format object you
+started with, or it may be a different object with an equivalent
+meaning.  Either way, the format object you started with should be
+discarded.)
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 25/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1768-0!*!0!*!*!*!* and timestamp 20171007235720 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Procedurally_Generating_3D_Models.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Pre-defined_vertex_formats.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

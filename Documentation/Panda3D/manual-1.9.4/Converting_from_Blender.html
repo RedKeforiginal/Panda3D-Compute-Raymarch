@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Converting from Blender - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Converting from Blender</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Converting_from_Maya.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Converting_from_SoftImage.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Currently, there are two ways to get data from Blender into Panda3D. The most popular is almost certainly the YABEE exporter.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Option_1:_The_Egg_export_Plugins_for_Blender">Option 1: The Egg export Plugins for Blender</span></h2>
+<p>There are several Blender plugins contributed by Panda3D users.
+</p><p>YABEE is an exporter for Blender 2.5, 2.6, 2.7 and should work with most recent versions of blender (2.73a at moment of writing). It's documented and feature complete. YABEE can export:
+</p>
+<pre>   Meshes
+   UV layers
+   Materials and textures (Partially)
+   Armature (skeleton) animation
+   ShapeKeys (morph) animation
+   &lt;Tag&gt; and Collision options export through Blender's "Game logic" -&gt; "properties"
+   Non cyclic NURBS Curves
+</pre>
+<p><a rel="nofollow" class="external free" href="https://github.com/09th/YABEE">https://github.com/09th/YABEE</a>
+</p><p>If you observe any problem, or find a bug, you can report it on official thread that can be found here: <a rel="nofollow" class="external free" href="http://www.panda3d.org/forums/viewtopic.php?f=2&amp;t=11441">http://www.panda3d.org/forums/viewtopic.php?f=2&amp;t=11441</a>
+</p>
+<hr /> 
+<p>Chicken is the old and no longer updated, but documented and feature complete exporter for Blender 2.4. It supports static meshes and armature animation, materials, vertex colors, alpha textures, tags, object types, etc. It also has advanced features such as automatic invocation of Panda tools (egg2bam, egg-optchar and pview) and Motion Extraction.
+You can find it at <a rel="nofollow" class="external free" href="http://sourceforge.net/projects/chicken-export/">http://sourceforge.net/projects/chicken-export/</a>
+</p>
+<hr />
+<p>Another exporter for Blender 2.4 that only supports static meshes can be found at <a rel="nofollow" class="external free" href="http://xoomer.virgilio.it/glabro1/panda.html">http://xoomer.virgilio.it/glabro1/panda.html</a>
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Option_2:_The_.22X.22_File_format">Option 2: The "X" File format</span></h2>
+<p>There exists a free plugin for Blender that can export "X" (DirectX native) file format.  Save the file from blender as an X file, then load it directly into Panda3D, which can read X file format.  Alternately, if you're concerned about long load times (panda has to translate the file at load time), then pre-convert the model from X to Egg to Bam using the conversion programs supplied with Panda3D (x2egg, egg2bam).  
+</p><p>Whenever you save a model in a non-native file format, you need to ask yourself: "does this file format support everything I need?"  For example, when you save out a model in 3DS file format, you automatically lose all bone and animation data, because the 3DS file format doesn't contain bone and animation data.  In the case of the X file format, you're in good shape: it's a fairly powerful file format, supporting vertices and triangles, bones and animation.
+</p><p>Note however, when an animated X file is converted to egg, the resulting egg file only plays the keyframes, but not whats supposed to be in between. For example, an animation could exist that should spawn 200 frames, gets sized down to about 40, and playback looks shakey.  This shakeyness happens because the X file format supports the concept of keyframes, with implicit frames interpolated between them.  The egg file format is explicit. An egg file must give all of the frames of an animation, even the frames that appear between "keyframes". 
+</p><p>Therefore, a run of  x2egg with an X file that omits a lot of frames between keyframes, will product a shapekey animation.  The only solution is to ensure your X files are generated with all frames.  Testing of different X file exporters may be required.
+</p><p>Further, panda's native egg file format supports some esoteric things.  For example, it supports blend targets (morph animations) and motion path curves, which are not supported by the X file format.
+</p><p><i>Caution: it has recently been discovered that there are two bugs in panda's X-file parser.  One, it is case-sensitive and it should not be.  Two, it does not handle hyphens in identifiers correctly.  These two bugs will be fixed in an upcoming version of Panda3D.  For information on temporary workarounds, search the forums.</i>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 2/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1062-0!*!*!!*!*!* and timestamp 20171008004515 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Converting_from_Maya.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Converting_from_SoftImage.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

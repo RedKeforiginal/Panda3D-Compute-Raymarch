@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Softbody Patch - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Softbody Patch</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Softbody_Rope.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Softbody_Triangles.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Soft body patches are two-dimensional rectangular meshes, which can be used to simulate for example a flag, a tapestry, or sheets of paper.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Setup">Setup</span></h2>
+<p>Setting up a soft body patch is similar to soft body ropes, but a few extra settings have to be done. The following code will create rectangular path with 31 by 31 segments, and thus 32 x 32 nodes.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletSoftBodyNode<br />&#160;<br />info = <span style="color: #008000;">self</span>.<span style="color: black;">world</span>.<span style="color: black;">getWorldInfo</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setAirDensity</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1.2</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setWaterDensity</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setWaterOffset</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />info.<span style="color: black;">setWaterNormal</span><span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />resx = <span style="color: #ff4500;">31</span><br />resy = <span style="color: #ff4500;">31</span><br />&#160;<br />p00 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-8</span>, <span style="color: #ff4500;">-8</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />p10 = Point3<span style="color: black;">&#40;</span> <span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">-8</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />p01 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-8</span>,  <span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />p11 = Point3<span style="color: black;">&#40;</span> <span style="color: #ff4500;">8</span>,  <span style="color: #ff4500;">8</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br />fixeds = <span style="color: #ff4500;">1</span><span style="color: #ff4500;">+2</span><span style="color: #ff4500;">+4</span><span style="color: #ff4500;">+8</span><br />gendiags = <span style="color: #008000;">True</span><br />&#160;<br />bodyNode = BulletSoftBodyNode.<span style="color: black;">makePatch</span><span style="color: black;">&#40;</span>info, p00, p10, p01, p11, resx, resy, fixeds, gendiags<span style="color: black;">&#41;</span><br />&#160;<br />material = bodyNode.<span style="color: black;">appendMaterial</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />material.<span style="color: black;">setLinearStiffness</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.4</span><span style="color: black;">&#41;</span><br />bodyNode.<span style="color: black;">generateBendingConstraints</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, material<span style="color: black;">&#41;</span><br />&#160;<br />bodyNode.<span style="color: black;">setTotalMass</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">50.0</span><span style="color: black;">&#41;</span><br />bodyNode.<span style="color: black;">getShape</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>.<span style="color: black;">setMargin</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><br />bodyNP = <span style="color: #008000;">self</span>.<span style="color: black;">worldNP</span>.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>bodyNode<span style="color: black;">&#41;</span><br />world.<span style="color: black;">attachSoftBody</span><span style="color: black;">&#40;</span>bodyNode<span style="color: black;">&#41;</span></pre>
+
+<p>First we have to configure the soft body world properties, like we did for soft body ropes too. Next we define variables for the resolution in x- and y-direction, and for the four corner points of the patch.
+</p><p>The variable fixeds is set to the value 1+2+4+8=15, meaning that the patch should be attached to the world on all four corners. To attach it to the first and third corner (diagonal) we would set the value to 1+8=9, and to not attach it at all we would set it to 0.
+</p><p>Now we can create the soft body node using the factory method <code>makePatch</code>. The following configuration differs from what we have seen for soft body ropes.
+</p>
+<ul><li> First we create an additional material attached to the soft body. Initially a soft body has already one material, but for this example we want a second one.
+</li><li> On the material we set the linear stiffness, and the create bending constraints for this material.
+</li><li> Finally we choose a value of about the grid spacing for the soft bodies margin. Other bodies colliding with the soft body could fall through in between the nodes if the value is too small, and if it is too large they will already collide with the soft body when still noticeably far away. 
+</li></ul>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Visualisation">Visualisation</span></h2>
+<p>In order to have a visual representation of the soft body patch we need a <code>GeomNode</code>. Panda3D's Bullet module has a helper method which will do the work for us. The following code snippet shows how use this helper method.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> GeomVertexFormat<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bulletimport</span> BulletHelper<br />&#160;<br />fmt = GeomVertexFormat.<span style="color: black;">getV3n3t2</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />geom = BulletHelper.<span style="color: black;">makeGeomFromFaces</span><span style="color: black;">&#40;</span>bodyNode, fmt, <span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />bodyNode.<span style="color: black;">linkGeom</span><span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span><br />visNode = GeomNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">''</span><span style="color: black;">&#41;</span><br />visNode.<span style="color: black;">addGeom</span><span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span><br />visNP = bodyNP.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>visNode<span style="color: black;">&#41;</span></pre>
+
+<p>The third parameter to <code>makeGeomFromFaces</code> is set to <code>True</code>, making the created geometry be two-sided. If set to <code>False</code> we would get a one-sided geometry, which might be enough, depending on your requirements.
+</p><p>So far the generated geometry has no texture and no texture coordinates.
+But the texture has already a column for texcoords, so we just need to write texcoords using a <code>GeomVertexRewriter</code>. The following code shows a convenience method which will do this for us.
+</p>
+<pre class="python">tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'models/panda.jpg'</span><span style="color: black;">&#41;</span><br />visNP.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>tex<span style="color: black;">&#41;</span><br />BulletHelper.<span style="color: black;">makeTexcoordsForPatch</span><span style="color: black;">&#40;</span>geom, resx, resy<span style="color: black;">&#41;</span></pre>
+
+<p><b>Note:</b>
+It is also possible to render soft body patches using a <code>NurbsSurfaceEvaluator</code> and <code>SheetNode</code>, but results are usually better when rendering patches directly, that is using linked <code>Geom</code>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 70/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2617-0!*!*!!*!*!* and timestamp 20171007125045 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Softbody_Rope.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Softbody_Triangles.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

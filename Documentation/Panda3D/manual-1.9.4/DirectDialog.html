@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectDialog - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectDialog</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectRadioButton.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectEntry.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>DirectDialog objects are popup windows to alert or interact with the user. It is invoked just like the other DirectGUI objects, but it also has some unique keywords. Integral to DirectDialog are dialogName, buttonTextList, buttonImageList, and buttonValueList. The dialogName should ideally be the name of the NodePath created to hold the object. The button lists contain the various properties of the buttons within the dialog box. No maximum number of buttons needs to be declared.
+</p><p>Panda3D contains a number of shortcuts for common dialog options.  For example, rather than specifying the rather common text list ("Yes","No"), there is a YesNoDialog that functions exactly like a normal dialog but has buttonTextList already defined.  The other similar dialogs are OkCancelDialog, OkDialog, RetryCancelDialog, and YesNoCancelDialog.
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>dialogName
+</td>
+<td>Name of the dialog
+</td>
+<td>String
+</td></tr>
+<tr>
+<td>buttonTextList
+</td>
+<td>List of text to show on each button
+</td>
+<td>[Strings]
+</td></tr>
+<tr>
+<td>buttonGeomList
+</td>
+<td>List of geometry to show on each button
+</td>
+<td>[NodePaths]
+</td></tr>
+<tr>
+<td>buttonImageList
+</td>
+<td>List of images to show on each button
+</td>
+<td>[Image Paths]
+</td></tr>
+<tr>
+<td>buttonValueList
+</td>
+<td>List of values sent to dialog command for each button. If value is [] then the ordinal rank of the button is used as its value
+</td>
+<td>[Numbers]
+</td></tr>
+<tr>
+<td>buttonHotKeyList
+</td>
+<td>Shortcut key for each button (the button must have focus)
+</td>
+<td>[Characters]
+</td></tr>
+<tr>
+<td>buttonSize
+</td>
+<td>4-tuple used to specify custom size for each button (to make bigger then geom/text for example)
+</td>
+<td>(Left,Right,Bottom,Top)
+</td></tr>
+<tr>
+<td>topPad
+</td>
+<td>Extra space added above text/geom/image
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>midPad
+</td>
+<td>Extra space added between text/buttons
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>sidePad
+</td>
+<td>Extra space added to either side of text/buttons
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>buttonPadSF
+</td>
+<td>Scale factor used to expand/contract button horizontal spacing
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>command
+</td>
+<td>Callback command used when a button is pressed. Value supplied to command depends on values in buttonValueList
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>fadeScreen
+</td>
+<td>If 1, fades screen to black when the dialog appears
+</td>
+<td>0 or 1
+</td></tr></table>
+<h2> <span class="mw-headline" id="YesNo_Dialog_Example"> YesNo Dialog Example </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText 
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">task</span> <span style="color: #ff7700;font-weight:bold;">import</span> Task
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">actor</span> <span style="color: #ff7700;font-weight:bold;">import</span> Actor
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">interval</span>.<span style="color: black;">IntervalGlobal</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;DirectDialog- YesNoDialog Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.85</span>,<span style="color: #ff4500;">0.85</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#add some text</span>
+output = <span style="color: #483d8b;">&quot;&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = output, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>,
+ scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#callback function to set  text </span>
+<span style="color: #ff7700;font-weight:bold;">def</span> itemSel<span style="color: black;">&#40;</span>arg<span style="color: black;">&#41;</span>:
+	<span style="color: #ff7700;font-weight:bold;">if</span><span style="color: black;">&#40;</span>arg<span style="color: black;">&#41;</span>:
+		output = <span style="color: #483d8b;">&quot;Button Selected is: Yes&quot;</span>
+	<span style="color: #ff7700;font-weight:bold;">else</span>:
+		output = <span style="color: #483d8b;">&quot;Button Selected is: No&quot;</span>
+	textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>output<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;">#create a frame</span>
+dialog = YesNoDialog<span style="color: black;">&#40;</span>dialogName=<span style="color: #483d8b;">&quot;YesNoCancelDialog&quot;</span>, text=<span style="color: #483d8b;">&quot;Please choose:&quot;</span>, command=itemSel<span style="color: black;">&#41;</span>
+&#160;
+base.<span style="color: black;">camera</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">-20</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+<span style="color: #808080; font-style: italic;">#run the tutorial</span>
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p><b>Note:</b> the OkDialog causes an error if being created a second time after destroying it with <code>myOkDialog.destroy()</code>. To solve this you can use:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myOkDialog.<span style="color: black;">cleanup</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 13/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:969-0!*!*!*!*!*!* and timestamp 20171007194648 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectRadioButton.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectEntry.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

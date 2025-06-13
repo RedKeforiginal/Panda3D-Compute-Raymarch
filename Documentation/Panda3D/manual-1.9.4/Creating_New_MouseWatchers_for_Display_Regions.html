@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Creating New MouseWatchers for Display Regions - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Creating New MouseWatchers for Display Regions</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Display_Regions.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Clearing_Display_Regions.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>When working with multiple display regions in a single window, it can be difficult to get accurate mouse interaction. base.mouseWatcherNode, the default MouseWatcher in Panda3D, reports the mouse coordinates for the entire window. To get mouse coordinates relative to a specific display region the MouseWatcher needs to be restricted to that region with the setDisplayRegion() method.
+</p>
+<pre class="python">myDR = base.<span style="color: black;">win</span>.<span style="color: black;">makeDisplayRegion</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">mouseWatcherNode</span>.<span style="color: black;">setDisplayRegion</span><span style="color: black;">&#40;</span>myDR<span style="color: black;">&#41;</span></pre>
+<p>However, restricting the default MouseWatcher to a display region will prevent the mouse from being used outside of that region. For example, the image below shows two display regions, a 3D view in the top portion, and a menu in the bottom portion.
+<br />
+<a href="File%253ADisplayRegionMouseWatcher.png.html" class="image"><img alt="DisplayRegionMouseWatcher.png" src="DisplayRegionMouseWatcher.png" width="300" height="306" /></a>
+<br />
+If base.mouseWatcherNode is restricted to the 3D view display region, the mouse won't interact with the menu buttons.
+</p><p>One way to get around this problem is to create a new MouseWatcher to handle the 3D view display region. By doing so, the mouse can interact with other display regions, such as the one containing the menu, and the program can still get accurate mouse coordinates for the 3D view display region for things like <a href="Clicking_on_3D_Objects.html" title="Clicking on 3D Objects">Clicking on 3D Objects</a> which is discussed later in the manual.
+</p><p>Creating a new MouseWatcher and tying it to a display region is a three step process. First, the new MouseWatcher has to be created.
+</p>
+<pre class="python">myMouseWatcher = MouseWatcher<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># Creates a new mouse watcher</span></pre>
+<p>In order for the new MouseWatcher to do its job, it needs to receive information about the mouse from the system. This information comes from the MouseAndKeyboard object. To get the information, our new MouseWatcher needs to be a child of MouseAndKeyboard. We know that base.mouseWatcherNode is already a child of MouseAndKeyboard, so we can use that to our advantage to make our new MouseWatcher a child of it as well.
+</p>
+<pre class="python">base.<span style="color: black;">mouseWatcher</span>.<span style="color: black;">getParent</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>myMouseWatcher<span style="color: black;">&#41;</span> <br /><span style="color: #808080; font-style: italic;"># Gets MouseAndKeyboard, the parent of base.mouseWatcherNode</span><br /><span style="color: #808080; font-style: italic;"># that passes mouse data into MouseWatchers, </span><br /><span style="color: #808080; font-style: italic;"># and attaches myMouseWatcher to it.</span></pre>
+<p>Now that our MouseWatcher is getting mouse information from the system, we just need to set it to the display region we want it to monitor.
+</p>
+<pre class="python">myMouseWatcher.<span style="color: black;">setDisplayRegion</span><span style="color: black;">&#40;</span>myDisplayRegion<span style="color: black;">&#41;</span> <br /><span style="color: #808080; font-style: italic;"># Restricts my MouseWatcher to my intended display region.</span></pre>
+<p>With that done, we can get accurate mouse coordinates within the display region from our new MouseWatcher.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">if</span><span style="color: black;">&#40;</span>myMouseWatcher.<span style="color: black;">hasMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>:<br />  mpos = myMouseWatcher.<span style="color: black;">getMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 16/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2603-0!*!0!*!*!2!* and timestamp 20171007152602 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Display_Regions.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Clearing_Display_Regions.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

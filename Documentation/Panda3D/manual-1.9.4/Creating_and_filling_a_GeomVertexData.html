@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Creating and filling a GeomVertexData - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Creating and filling a GeomVertexData</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Pre-defined_vertex_formats.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Creating_the_GeomPrimitive_objects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Once you have a <a href="GeomVertexFormat.html" title="GeomVertexFormat">GeomVertexFormat</a>, registered and ready to use, you can
+use it to create a <a href="GeomVertexData.html" title="GeomVertexData"><b>GeomVertexData</b></a>.
+</p>
+<pre class="python">vdata = GeomVertexData<span style="color: black;">&#40;</span><span style="color: #483d8b;">'name'</span>, format, Geom.<span style="color: black;">UHStatic</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>The first parameter to the GeomVertexData constructor is the name of
+the data, which is any arbitrary name you like.  This name is mainly
+for documentation purposes; it may help you identify this vertex data
+later.  You can leave it empty if you like.
+</p><p>The second parameter is the <a href="GeomVertexFormat.html" title="GeomVertexFormat">GeomVertexFormat</a> to use for this
+GeomVertexData.  The format specifies the number of arrays that will
+be created for the data, the names and formats of the columns in each array, and the
+number of bytes that need to be allocated for each row.
+</p><p>The third parameter is a usage hint, which tells Panda how often (if
+ever) you expect to be modifying these vertices, once you have filled
+them in the first time.  If you will be filling in the vertices once
+(or only once in a while) and using them to render many frames
+without changing them, you should use Geom.UHStatic.  The vast
+majority of vertex datas are of this form.  Even GeomVertexDatas that
+include vertex animation tables should usually be declared
+Geom.UHStatic, since the vertex data itself will not be changing (even
+though the vertices might be animating).
+</p><p>However, occasionally you might create a GeomVertexData whose vertices
+you intend to adjust in-place every frame, or every few frames; in this case, you can specify
+Geom.UHDynamic, to tell Panda not to make too much effort to cache the
+vertex data.  This is just a performance hint; you're not required to
+adhere to the usage you specify, though you may get better render
+performance if you do.
+</p><p>If you are unsure about this third parameter, you should probably use
+Geom.UHStatic.
+</p><p>Next, it is <b>highly recommended</b> that you set the number of rows you're going to write.  This is an optional step; Panda will resize the underlying table appropriately as you are adding new data, but this will cause every <code>add_dataXX()</code> call to be <i>much slower</i> than if you had specified a number of rows.
+</p>
+<pre class="python">vdata.<span style="color: black;">setNumRows</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span></pre>
+
+<p>Now that you have created a GeomVertexData, you should create a number
+of <a href="More_about_GeomVertexReader,_GeomVertexWriter,_and_GeomVertexRewriter.html" title="More about GeomVertexReader, GeomVertexWriter, and GeomVertexRewriter">GeomVertexWriters</a>, one for each column, to fill in the data.
+</p>
+<pre class="python">vertex = GeomVertexWriter<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'vertex'</span><span style="color: black;">&#41;</span><br />normal = GeomVertexWriter<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'normal'</span><span style="color: black;">&#41;</span><br />color = GeomVertexWriter<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'color'</span><span style="color: black;">&#41;</span><br />texcoord = GeomVertexWriter<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'texcoord'</span><span style="color: black;">&#41;</span></pre>
+
+<p>It is your responsibility to know which columns exist in the
+GeomVertexFormat you have used.  It is legal to create a
+GeomVertexWriter for a column that doesn't exist, but it will be an
+error if you later attempt to use it to add data.
+</p><p>To add data, you can now iterate through your vertices and call one of
+the addData methods on each GeomVertexWriter.
+</p>
+<pre class="python">vertex.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />normal.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />color.<span style="color: black;">addData4f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />texcoord.<span style="color: black;">addData2f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br />vertex.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />normal.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />color.<span style="color: black;">addData4f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />texcoord.<span style="color: black;">addData2f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />&#160;<br />vertex.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />normal.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />color.<span style="color: black;">addData4f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />texcoord.<span style="color: black;">addData2f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />&#160;<br />vertex.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />normal.<span style="color: black;">addData3f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />color.<span style="color: black;">addData4f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />texcoord.<span style="color: black;">addData2f</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span></pre>
+
+<p>Each call to addData() adds a new row (vertex) to the vertex data, if
+there is not already one there.  The above sample code creates the
+following data table:
+</p>
+<center><table style="border-collapse: collapse">
+<tr>
+<td></td>
+<td style="text-align: center">vertex</td>
+<td style="text-align: center">normal</td>
+<td style="text-align: center">color</td>
+<td style="text-align: center">texcoord</td>
+</tr>
+<tr><td style="padding-right: 5pt">0</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 0, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 0)</td>
+</tr>
+<tr><td style="padding-right: 5pt">1</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 1, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(1, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">2</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 1, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 1)</td>
+</tr>
+<tr><td style="padding-right: 5pt">3</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 0)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0, 1, 1)</td>
+<td style="border: 1px solid black; background: #c1beea; padding-left: 5pt; padding-right: 5pt">(0, 0)</td>
+</tr>
+</table></center>
+<p>Note that there is no relationship between the different
+GeomVertexWriters, other than the fact that they are operating on the
+same table.  Each GeomVertexWriter maintains its own counter of its
+current row.  This means you must fill in the data for every row of
+each column, even if you don't care about writing the data for some
+particular column on certain rows.  For instance, even if you want to
+allow the default color for vertex 1 and 2, you must still call
+color.addData4f() four times, in order to fill in the color value for
+vertex 3.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 56/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1770-0!*!0!*!*!*!* and timestamp 20171008060608 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Pre-defined_vertex_formats.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Creating_the_GeomPrimitive_objects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

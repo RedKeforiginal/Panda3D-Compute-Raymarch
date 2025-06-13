@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Converting from 3D Studio Max - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Converting from 3D Studio Max</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Model_Export.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Converting_from_Maya.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Converting_from_3D_Studio_Max.html#Using_the_Exporter"><span class="tocnumber">1</span> <span class="toctext">Using the Exporter</span></a></li>
+<li class="toclevel-1"><a href="Converting_from_3D_Studio_Max.html#Materials"><span class="tocnumber">2</span> <span class="toctext">Materials</span></a></li>
+<li class="toclevel-1"><a href="Converting_from_3D_Studio_Max.html#Max_egger_changes_and_additions.28To_be_available_in_Panda3D_1.7.1_or_later.29"><span class="tocnumber">3</span> <span class="toctext">Max egger changes and additions(To be available in Panda3D 1.7.1 or later)</span></a></li>
+<li class="toclevel-1"><a href="Converting_from_3D_Studio_Max.html#Known_Issues"><span class="tocnumber">4</span> <span class="toctext">Known Issues</span></a></li>
+</ul>
+</td></tr></table>
+<p><br />
+</p><p><b>NOTE: </b> In Panda3D version 1.5.3, the max exporter was overhauled.  Versions prior to that were unstable.
+</p><p><br />
+The Max exporter understands only bone-based animation.  In other words, all animation must be done by moving bones around.  If you move anything else, the Max exporter may not notice!  Character studio bipeds work too --- they are indeed collections of bones.
+</p><p>Meshes must be connected to the bones using either the <code>skin</code> or <code>physique</code> modifiers.  Any other way of attaching the mesh to the bones will not work.  In particular, simply linking the mesh to the bone using the link tool will not work correctly.  Do not use the link tool to connect your meshes to your bones.  Use the physique or skin modifiers.
+</p><p>If all you want to do is drag a mesh around, then use the following method.  Create a single bone - it will look like a small diamond.  Put it in the middle of the mesh.  Skin the mesh, and connect it to the one bone.  Now you can drag the one bone around and the mesh will follow.
+</p><p>In Max, it is a little difficult to create a single bone, because the bone creation tool usually creates two.  After clicking to create a bone, look in the object list, and you'll see "Bone01", "Bone02", which proves that there are indeed two.  The easiest thing to do is to create the pair of bones, and then delete the second one by pressing the "delete" button.
+</p>
+<h2> <span class="mw-headline" id="Using_the_Exporter">Using the Exporter</span></h2>
+<p>Before installing any plugins, you must install the visual studio runtime system.  To do so, execute <i>vcredist_x86-sp1.exe</i> as administrator.  Then, to install the plugin, look in the panda3d "plugins" directory.  There, you will find the plugins, such as <code>maxegg5.dlo</code>, <code>maxegg6.dlo</code>, and <code>maxegg7.dlo</code>.  These are for 3D Studio Max versions 5, 6, and 7 respectively.  Copy the correct file from the Panda3D plugins directory into the 3D Studio Max plugins directory, then, restart 3D Studio Max.
+</p><p>The exporter is somewhat unconventional in its design.  Max has a menu item "File/Export".  Panda's egg format does <i>not</i> show up in this menu.  Instead, Panda's exporter is a helper object.  This enables the exporter to save your export settings from one session to the next.
+</p><p>To export a scene, your first step is to create the necessary helper object. Go to the creation panel, select "helper objects," choose "exporters," and then click on the button to create a Panda3D export helper:
+</p>
+<p style="text-align: center;"><a href="File%253AMaxexp1.jpg.html" class="image"><img alt="Maxexp1.jpg" src="Maxexp1.jpg" width="380" height="242" /></a></p>
+<p>Drop an egg exporter into the scene:
+</p>
+<p style="text-align: center;"><a href="File%253AMaxexp2.jpg.html" class="image"><img alt="Maxexp2.jpg" src="Maxexp2.jpg" width="414" height="431" /></a></p>
+<p>Switch to the modify panel.  You will now be able to see the configuration settings that are stored in the export helper.
+</p>
+<p style="text-align: center;"><a href="File%253AMaxexp3.jpg.html" class="image"><img alt="Maxexp3.jpg" src="Maxexp3.jpg" width="171" height="334" /></a></p>
+<p>The exporter can generate several egg files from a single scene.  The exporter therefore contains a list of egg files to generate.  To export this particular scene (the one with the blocky humanoid and the biped skeleton), we will create an egg containing the model and one containing the animation.  Click the "add..." button on the exporter's modify panel.  You will be prompted:
+</p>
+<p style="text-align: center;"><a href="File%253AMaxexp4.jpg.html" class="image"><img alt="Maxexp4.jpg" src="Maxexp4.jpg" width="638" height="348" /></a></p>
+<p>I have filled in the file name, and I have selected the mesh I want to export. When I click "OK," an egg file will be added to the list of eggs to generate. I then click the "add..." button again, and add another egg to the list:
+</p>
+<p style="text-align: center;"><a href="File%253AMaxexp5.jpg.html" class="image"><img alt="Maxexp5.jpg" src="Maxexp5.jpg" width="629" height="338" /></a></p>
+<p>This time, I'm generating an animation egg.  I have listed the bones to export, and the range of animation frames.  Once I click OK, the modify panel for the egg exporter looks like this:
+</p>
+<p style="text-align: center;"><a href="File%253AMaxexp6.jpg.html" class="image"><img alt="Maxexp6.jpg" src="Maxexp6.jpg" width="171" height="334" /></a></p>
+<p>When I click the "export now" button, the two egg files are generated, and I am asked whether or not I would like to pview them.
+</p><p>When you save your MAX file, the export helper will also be saved.  The next time you load it up, it will still remember which meshes go in which egg files.
+</p>
+<h2> <span class="mw-headline" id="Materials">Materials</span></h2>
+<p>The different map types in the 3dsmax Standard material equal Panda ones followingly:
+</p>
+<ul><li> Diffuse Slot = Color
+</li><li> Bump Slot = Normal
+</li><li> Self-Illumination Slot = Glow
+</li><li> Specular Color Slot = Gloss
+</li><li> Opacity Slot = Modulate
+</li></ul>
+<h2> <span class="mw-headline" id="Max_egger_changes_and_additions.28To_be_available_in_Panda3D_1.7.1_or_later.29">Max egger changes and additions(To be available in Panda3D 1.7.1 or later)</span></h2>
+<p>There have been some minor but very noticeable changes to the way the Max egger handles collisions.  Although collision tagging was possible on a global level with the egger prior to now, it had some drawbacks, such as only one object would get tagged if the whole scene was exported.  To remedy this problem, the Panda SE team has implemented a method similar to the way Maya tags collision objects.  Every object in max has a User Defined properties box inside the per-object properties options. (to get it simply right click on any object and select Object Properties, User Defined is the far right tab).  
+</p><p><br />
+</p>
+<p style="text-align: center;"><a href="File%253AOBJ_PROPS.JPG.html" class="image"><img alt="OBJ PROPS.JPG" src="OBJ_PROPS.JPG" width="450" height="415" /></a></p>
+<p style="text-align: center;"><a href="File%253AOBJECT_PROPERTIES.JPG.html" class="image"><img alt="OBJECT PROPERTIES.JPG" src="OBJECT_PROPERTIES.JPG" width="505" height="685" /></a></p>
+<p>Every collision object in Panda has a Collision Solid Type and a Collision Flag.  To tag an object you have to type the "&lt;solid type&gt; = 1". Where &lt;solid type&gt; is polyset, plane, etc.  Next you must specify a collision flag in the same manner (ex. descend = 1).  Be sure to note the all lowercase and spaces between the equals sign and the 1.  To remove any tag simply set the value of one to zero on both properties.  in order to speed up this process we've included a simple Maxscript utility called TagSelectedObjects.ms.  Simply run this either from the main program menu bar, or anywhere else in the program where you can run a Maxscript.  It will allow you to select any number of objects and tag them or remove any tags on the objects.   
+</p>
+<p style="text-align: center;"><a href="File%253AMAX_SCRIPT.JPG.html" class="image"><img alt="MAX SCRIPT.JPG" src="MAX_SCRIPT.JPG" width="226" height="250" /></a></p>
+<p>Also included in this update is the ability to use Point Objects as locators (similar to Maya's locators).  Prior to now, an artist had to egg out a max scene using the model option and using joints as locators.  Now with the addition of point objects, an artist can use the static option and place locators for wherever a position needs to be stored.  NOTE: point objects do not get included in animated models, only in static ones.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Known_Issues">Known Issues</span></h2>
+<p>Currently, you have to use the option 'Export Entire Scene' when having animated models, otherwise the character hierarchy might not be exported correctly.
+</p><p>Also, in version 1.5.3, the 'both' option was broken. Instead, you had to export animations separately with the 'model' and 'anim' options. However, this has been fixed in 1.5.4.
+</p><p>Versions prior to 1.5.3 were unstable and it's not recommended to use them.
+</p><p>User interpretation regarding "Pose" versus the other export types ("Model", "Animation", "Both") was not always correct.  Newer versions of the exporter will have "Static" rather than "Pose" in the interface, as the "Static" (formerly listed as "Pose") type should be chosen for exporting an environment or static geometry, with the "Model" type chosen for exporting an animatable model with joints and vertex membership.  Using "Static" will generate an egg file without a "Dart" tag.  The "Model" export will produce a "Dart" tag in the egg file.  See <a href="Parsing_and_Generating_Egg_Files.html" title="Parsing and Generating Egg Files">Parsing_and_Generating_Egg_Files</a> for more details.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 56/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:965-0!*!0!!en!2!* and timestamp 20171007113442 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Model_Export.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Converting_from_Maya.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

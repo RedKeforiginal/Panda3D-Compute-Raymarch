@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Cg Shader Tutorial - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Cg Shader Tutorial</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Shader_Generator.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Cg_Tutorial_Part_1.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Cg_Shader_Tutorial.html#Cg_Shader_Tutorials"><span class="tocnumber">1</span> <span class="toctext">Cg Shader Tutorials</span></a></li>
+<li class="toclevel-1"><a href="Cg_Shader_Tutorial.html#Pre-requisites"><span class="tocnumber">2</span> <span class="toctext">Pre-requisites</span></a></li>
+<li class="toclevel-1"><a href="Cg_Shader_Tutorial.html#Tutorials"><span class="tocnumber">3</span> <span class="toctext">Tutorials</span></a></li>
+<li class="toclevel-1"><a href="Cg_Shader_Tutorial.html#Incomplete_Section"><span class="tocnumber">4</span> <span class="toctext">Incomplete Section</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Cg_Shader_Tutorials">Cg Shader Tutorials</span></h2>
+<p>Panda has the ability to process shaders written in the Cg shader language. In this tutorial series, you will learn how to write shaders for Panda in Cg. While there are panda specific things in this tutorial you should be able to learn how to write Cg shaders that can be used in other engines.
+</p>
+<h2> <span class="mw-headline" id="Pre-requisites">Pre-requisites</span></h2>
+<p>You should be able to write a simple math program in C. Do not underestimate this. If you start writing your own shaders without any prior knowledge about a C like language it is as hard as starting to write a Panda3D application without knowing anything about Python. Some resources you might want to look at:
+</p>
+<ul><li><a rel="nofollow" class="external text" href="http://en.wikibooks.org/wiki/C_Programming">C Programming Wikibook</a>
+</li></ul>
+<p>You should have a solid grasp of Panda basics. Read <a href="A_Panda_%2522Hello_World%2522_using_Python.html" title="A Panda &quot;Hello World&quot; using Python" class="mw-redirect"> the hello world</a> tutorial and understand the "Solar System" sample that comes with the panda distribution. You should also have a good understanding of how the <a href="The_Scene_Graph.html" title="The Scene Graph"> scene graph</a> works. If you're interested in writing a shadow mapping shader, it helps to have a solid understanding of how the <a href="Depth_Test_and_Depth_Write.html" title="Depth Test and Depth Write"> depth buffer</a> works.
+</p><p>Read the first chapter from <a rel="nofollow" class="external text" href="http://http.developer.nvidia.com/CgTutorial/cg_tutorial_chapter01.html">NVIDIA's Cg Tutorial</a>. You do not have to understand it fully, but at least you know who invented Cg and what it is for. The <a rel="nofollow" class="external text" href="http://developer.nvidia.com">NVIDIA</a> and <a rel="nofollow" class="external text" href="http://developer.amd.com">ATI</a> developer sites also have plenty of useful information about shaders.
+</p><p>You should also have the <a href="List_of_Possible_Shader_Inputs.html" title="List of Possible Shader Inputs" class="mw-redirect">List of Possible Shader Inputs</a> page handy.
+</p>
+<h2> <span class="mw-headline" id="Tutorials">Tutorials</span></h2>
+<ol><li> <a href="Cg_Tutorial_Part_1.html" title="Cg Tutorial Part 1"> Baseline Panda application</a>
+</li><li> <a href="Cg_Tutorial_Part_2.html" title="Cg Tutorial Part 2"> The Simplest Possible Shader</a>. So simple that its useless.
+</li><li> The simplest possible useful shader.
+</li><li> Applying colors to the model as defined in the model file.
+</li><li> Applying colors with the vertex and fragment shaders. Pass information between the vertex and fragment shader.
+</li><li> Passing inputs to the shader and controlling it from Panda
+</li><li> Applying one texture to your models, disregarding colors.
+</li><li> Applying two textures to your models.
+</li><li> Explaining details about diffuse lighting.
+</li><li> Per vertex diffuse lighting with shaders. The concept of spaces is introduced here.
+</li><li> Per pixel lighting with one point light. Normalization problems that may arise are explained here.
+</li><li> Per pixel lighting with multiple point lights and attenuation.
+</li></ol>
+<h2> <span class="mw-headline" id="Incomplete_Section">Incomplete Section</span></h2>
+<p>Note: this section is incomplete.  It will be updated soon.
+</p><p>Although some pages aren't written yet, the sourcecode for all the tutorials is complete. Read this forum topic for more info and links to codes: <a rel="nofollow" class="external free" href="http://www.panda3d.org/forums/viewtopic.php?t=12515&amp;start=0">http://www.panda3d.org/forums/viewtopic.php?t=12515&amp;start=0</a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 2/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2289-0!*!0!!en!*!* and timestamp 20171008032038 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Shader_Generator.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Cg_Tutorial_Part_1.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
