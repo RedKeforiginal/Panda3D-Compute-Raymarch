@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Referencing packages - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Referencing packages</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Using_packp3d.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Running_p3d_files.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>When the Panda3D plugin system runs your p3d file, it must first
+download the correct version of Panda3D, as well as any auxiliary
+packages your p3d file requires in order to run.  Generally, the
+auxiliary packages represent parts of the Panda3D system that are not
+required by all p3d files, and so have been separated to minimize
+unnecessary download.
+</p><p>The current set of auxiliary packages provided by the Panda3D team
+are:
+</p>
+<dl><dt>fmod
+</dt><dd>The FMod audio system, a closed-source library that is cost-free only for non-commercial use.
+</dd><dt>openal
+</dt><dd>The OpenAL audio system, an audio library that is free in both senses of the word, but does not work well on all platforms.
+</dd><dt>audio
+</dt><dd>Including this package implicitly includes either fmod or openal, whichever works best on the current platform.  This is a good choice to enable audio for non-GPL, non-commercial applications.
+</dd><dt>egg
+</dt><dd>The egg loader.  Include this package if you wish to load egg files or use the egg library at runtime.  Since packp3d automatically converts egg files to bam files, most applications don't need to include this package.
+</dd><dt>vision
+</dt><dd>The Panda3D vision libraries, containing webcam, computer vision and augmented reality support.
+</dd><dt>ode
+</dt><dd>The ODE physics engine.
+</dd><dt>physx
+</dt><dd>The PhysX physics engine.  Only functional on 32-bits Linux and Windows.
+</dd><dt>wx
+</dt><dd>The wxPython GUI system.
+</dd><dt>tk
+</dt><dd>The Tk GUI system.
+</dd><dt>ai
+</dt><dd>The PandAI libraries.
+</dd><dt>morepy
+</dt><dd>A collection of the default Python modules.  You may need to mark this as dependency if you find default Python modules missing when running your game.
+</dd><dt>models
+</dt><dd>The collection of standard models and textures that is included in the SDK.  Note that you should not use the "models/" prefix when loading these.
+</dd></dl>
+<p>There are also other packages for Python libraries, such as httplib2, numpy, pil, pycurl, pygame, pyopengl, sqlite, tk and twisted.  More packages can be added if there is need.
+</p><p>To include any of the above packages in your p3d file, use the "-r"
+parameter to packp3d, e.g. "packp3d -o myapp.p3d -r audio -r ode".
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 1/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2393-0!*!*!*!*!*!* and timestamp 20171008113351 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Using_packp3d.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Running_p3d_files.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

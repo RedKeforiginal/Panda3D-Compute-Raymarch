@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Sample Programs: Fireflies - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Sample Programs: Fireflies</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Sample_Programs%253A_Distortion.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Sample_Programs%253A_Fractal_Plants.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><b>The Fireflies Sample Program</b>
+</p><p>To run a sample program, you need to install Panda3D. If you're a Windows user, you'll find the sample programs in your start menu. If you're a Linux user, you'll find the sample programs in /usr/share/panda3d.
+</p><p><b>Screenshots</b>
+</p><p><a href="File%253AScreenshot-Sample-Programs-Fireflies.jpg.html" class="image"><img alt="Screenshot-Sample-Programs-Fireflies.jpg" src="Screenshot-Sample-Programs-Fireflies.jpg" width="500" height="392" /></a>
+</p><p><b>Explanation</b>
+</p><p>A nature scene with 500 fireflies: how do you do a high-polygon scene with 500 lights, without a total performance collapse?
+</p><p>This sample program shows how to do Deferred Shading in Panda. You can have hundreds of lights, and all the lights affect all the models automatically. This is not expensive: the cost is only proportional to the number of actual lit pixels times the number of times each pixel is lit. That's why fireflies make a perfect demonstration --- you could never have 500 lights in a high-polygon scene without deferred shading. But perhaps even more important is the elegance of a rendering algorithm that automatically connects lights to the appropriate objects without the need for LightAttribs.
+</p><p>To understand how deferred shading works, first consider how ordinary shading works in plain OpenGL. In most fairly simple cases, the lighting equation boils down to:
+</p><p>final = diffuse color * dot(light vector, surface normal) * attenuation(surface position, light position and orientation)
+</p><p>Where the attenuation function depends on the type of light. So anyhow, this equation has four inputs:
+</p><p>1. The diffuse color.
+2. The surface normal.
+3. The surface position.
+4. The light parameters.
+</p><p>The idea behind deferred shading is that during the rendering process, you don't compute the final color. Instead, you store the values listed above in the framebuffer itself. Of course, you need a "fat framebuffer" to store all that data. In an image postprocessing step you scan the framebuffer and compute the final color.
+</p><p>Of course, that's a lot of data to store in the framebuffer. The first optimization is not to store the light parameters. It is not necessary to store light parameters because the light parameters don't vary from pixel to pixel --- they're constants.
+</p><p>Our second optimization involves surface position. Surface position can be inferred by calculating backward from the depth buffer. Each pixel on the screen represents a ray from the camera into the scene, and the depth value in the pixel indicates a distance along the ray. Because of this, it is not actually necessary to store surface position explicitly - it is only necessary to store depth values. Of course, OpenGL does that for free.
+</p><p>So the framebuffer now needs to store surface normal, diffuse color, and depth value (to infer surface position). In practice, most ordinary framebuffers can only store color and depth - they don't have any place to store a third value. So we need to use a special offscreen buffer with an "auxiliary" bitplane. The auxiliary bitplane stores the surface normal.
+</p><p>So then, there's the final postprocessing pass. This involves combining the diffuse color texture, the surface normal texture, the depth texture, and the light parameters into a final rendered output. The light parameters are passed into the postprocessing shader as constants, not as textures.
+</p><p>If there are a lot of lights, things get interesting. You use one postprocessing pass per light. Each pass only needs to scan those framebuffer pixels that are actually in range of the light in question. To traverse only the pixels that are affected by the light, just render the illuminated area's convex bounding volume.
+</p><p>The shader to store the diffuse color and surface normal is trivial. But the final postprocessing shader is a little complicated. What makes it tricky is that it needs to regenerate the original surface position from the screen position and depth value. The math for that deserves some explanation.
+</p><p>We need to take a clip-space coordinate and depth-buffer value (ClipX,ClipY,ClipZ,ClipW) and unproject it back to a view-space (ViewX,ViewY,ViewZ) coordinate. Lighting is then done in view-space.
+</p><p>Okay, so here's the math. Panda uses the projection matrix to transform view-space into clip-space. But in practice, the projection matrix for a perspective camera always contains four nonzero constants, and they're always in the same place:
+</p>
+<pre class="codeblock">
+A	0	0	0
+0	0	B	1
+0	C	0	0
+0	0	D	0
+</pre>
+<p>The result is that the panda projection matrix boils down to these simple equations:
+</p>
+<pre class="codeblock">
+clipx = viewx * A
+clipy = viewz * C
+clipz = viewy * B + D
+clipw = viewy
+</pre>
+<p>Look out, there has been a coordinate system change! In the scene graph, Z corresponds to "up", but in clip-space, Z is the depth value (and X,Y address a pixel).
+</p><p>After panda calculates clip-space coordinates, it divides by W. Finally, it rescales the depth-value:
+</p>
+<pre class="codeblock">
+screenx = clipx / clipw
+screeny = clipy / clipw
+screenz = clipz / clipw
+depth = screenz * 0.5 + 0.5
+</pre>
+<p><br />
+So now we have some equations defining (clipx,clipy,clipz,clipw) in terms of (viewx,viewy,viewz), and (screenx,screeny,screenz) in terms of (clipx,clipy,clipz,clipw). It's basic algebra to solve these equations for (viewx, viewy, viewz) in terms of (screenx, screeny, screenz). Here, I have shown all my algebraic steps:
+</p>
+<pre class="codeblock">
+depth = screenz * 0.5 + 0.5
+depth = (clipz / clipw) * 0.5 + 0.5
+depth = ((viewy * B + D) / viewy) * 0.5 + 0.5
+depth - 0.5 = ((viewy * B + D) / viewy) * 0.5
+(2*depth - 1.0) = ((viewy * B + D) / viewy)
+(2*depth - 1.0) * viewy = viewy * B + D
+(2*depth - 1.0) * viewy + viewy * -B = D
+(2*depth - 1.0 - B) * viewy = D
+viewy = 0.5D / (depth - 0.5 - 0.5B)
+
+screenx = clipx / clipw
+screenx = (viewx * A) / viewy
+screenx * viewy = viewx * A
+screenx * (0.5D / (depth - 0.5 - 0.5B)) = viewx * A
+(screenx * 0.5D) / (depth - 0.5 - 0.5B) = viewx * A
+(screenx * 0.5D/A) / (depth - 0.5 - 0.5B) = viewx
+viewx = (screenx * 0.5D/A) / (depth - 0.5 - 0.5B)
+
+screeny = clipy / clipw
+screeny = (viewz * C) / viewy
+screeny * viewy = viewz * C
+screeny * (0.5D / (depth - 0.5 - 0.5B)) = viewz * C
+(screeny * 0.5D) / (depth - 0.5 - 0.5B) = viewz * C
+(screeny * 0.5D/C) / (depth - 0.5 - 0.5B) = viewz
+viewz = (screeny * 0.5D/C) / (depth - 0.5 - 0.5B)
+</pre>
+<p>To save our vertex and pixel shaders a little work, we can precompute these constants:
+</p>
+<pre class="codeblock">
+projx = 0.5D/A
+projy = 0.5D
+projz = 0.5D/C
+projw = -0.5-0.5B
+</pre>
+<p>So, here are the equations in their final form:
+</p>
+<pre class="codeblock">
+viewx = (screenx * projx) / (depth + projw)
+viewy = (1 * projy) / (depth + projw)
+viewz = (screeny * projz) / (depth + projw) 
+</pre>
+<p><b>Back to the List of Sample Programs:</b>
+</p><p><a href="Sample_Programs_in_the_Distribution.html" title="Sample Programs in the Distribution">Sample Programs in the Distribution</a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2110-0!*!0!*!*!2!* and timestamp 20171007143426 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Sample_Programs%253A_Distortion.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Sample_Programs%253A_Fractal_Plants.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

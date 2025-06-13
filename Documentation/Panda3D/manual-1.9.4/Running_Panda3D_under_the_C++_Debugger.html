@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Running Panda3D under the C++ Debugger - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Running Panda3D under the C++ Debugger</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Python_Debugger.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Tuning.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>These instructions show how to compile and run panda from inside the Microsoft Visual Studio debugger.
+</p>
+<h2> <span class="mw-headline" id="Before_you_Begin">Before you Begin</span></h2>
+<p>The first step is to download the panda source code and compile it.  The instructions can be found in the section <a href="Building_Panda_from_Source.html" title="Building Panda from Source" class="mw-redirect">Building Panda from Source</a>.  Be sure to compile with the Optimize setting of 1, otherwise, Visual Studio will not be able to debug properly.  Once you have compiled panda, start up visual studio, and ask it to create a new project:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda1.jpg.html" class="image"><img alt="Debugpanda1.jpg" src="Debugpanda1.jpg" width="650" height="300" /></a></p><br />
+<p>There are four pieces of information you need to enter into the new project dialog:
+</p>
+<ul><li> Tell it to make a "C++ project"
+</li><li> Tell it to use a "Makefile"
+</li><li> Tell it the name of the project, "debugpanda"
+</li><li> Tell it where the panda source tree is (ie, "c:\panda3d-b")
+</li></ul>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda2.jpg.html" class="image"><img alt="Debugpanda2.jpg" src="Debugpanda2.jpg" width="558" height="391" /></a></p><br />
+<p>Click ok, and confirm.  You have now created the project, and the project is open for editing.  You now need to access the "solution explorer:"
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda3.jpg.html" class="image"><img alt="Debugpanda3.jpg" src="Debugpanda3.jpg" width="650" height="300" /></a></p><br />
+<p>Normally, you can see the solution explorer in the upper-right corner of visual studio.  It should show your project name (debugpanda).  The word "debugpanda" needs to be highlighted - if it is not, click on it:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda4.jpg.html" class="image"><img alt="Debugpanda4.jpg" src="Debugpanda4.jpg" width="650" height="300" /></a></p><br />
+<p>Now that your project is selected, you can edit its project properties:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda5.jpg.html" class="image"><img alt="Debugpanda5.jpg" src="Debugpanda5.jpg" width="650" height="300" /></a></p><br />
+<p>The project property dialog initially looks like this.  It contains three subpanels, the "General" panel, the "Debugging" panel, and the "NMake" subpanel.  You can see these three subheadings in the left pane:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda6.jpg.html" class="image"><img alt="Debugpanda6.jpg" src="Debugpanda6.jpg" width="652" height="448" /></a></p><br />
+<p>There is nothing to fill in on the general panel, so switch to the debugging panel.  You need to fill in the command name, the command arguments, and the working directory.  For now, we will ask it to debug the Actors/Robots sample program.  Since visual studio puts the project file in a subdirectory, the paths need to be preceded by ".." to get to the root of the panda source tree: 
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda7.jpg.html" class="image"><img alt="Debugpanda7.jpg" src="Debugpanda7.jpg" width="677" height="454" /></a></p><br />
+<p>Finally, switch to the "NMake" panel.  Here, you can tell it what the command is to recompile panda.  I use a bat file "mkp.bat" to compile panda.  Since the project file is in a subdirectory, the command needs to be preceded by "cd .." in order to get back to the root of the panda source tree:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda8.jpg.html" class="image"><img alt="Debugpanda8.jpg" src="Debugpanda8.jpg" width="651" height="445" /></a></p><br />
+<p>Visual studio now knows how to run panda, and how to compile it.  You can run your program (in this case, the "Actors/Robots" tutorial) by clicking on the Debug menu:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda9.jpg.html" class="image"><img alt="Debugpanda9.jpg" src="Debugpanda9.jpg" width="600" height="300" /></a></p><br />
+<p>You can rebuild panda at any time by clicking on the "Build" menu:
+</p>
+<br /><p style="text-align: center;"><a href="File%253ADebugpanda10.jpg.html" class="image"><img alt="Debugpanda10.jpg" src="Debugpanda10.jpg" width="600" height="300" /></a></p><br />
+<p>Now that you are running in the debugger, you can open any panda source file and set a breakpoint, or examine data.  Of course, it may be advantageous to learn how to use the python debugger as well as the C++ debugger.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 13/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1075-0!*!0!*!*!2!* and timestamp 20171008062422 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Python_Debugger.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Tuning.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

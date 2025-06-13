@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Plugin notify callbacks - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Plugin notify callbacks</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Splash_window_tags.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="AppRunner.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>At key points during application launch, the plugin will make optional callbacks into JavaScript code, so your page can respond to what the application is doing.  This is done using the &lt;object&gt; token system, as described in <a href="Advanced_object_tags.html" title="Advanced object tags">Advanced object tags</a>.
+</p><p>The following events may be sent:
+</p>
+<table border="1">
+<tr>
+<th> Token </th>
+<th> Meaning
+</th></tr>
+<tr>
+<td> onPluginFail </td>
+<td> The plugin cannot load for some reason, for instance because the browser is an incompatible version, or because the plugin is critically out-of-date with its associated Core API, and needs to be updated.  If you get this event, you will not receive any of the following.  Note that certain kinds of browser incompatibilities result in the plugin never running in the first place, so there exist incompatibility cases in which you will not receive any event at all.
+</td></tr>
+<tr>
+<td> onPluginLoad </td>
+<td> The browser has activated the object tag, and initialized the plugin.  This usually happens after the standard JavaScript page load notification.  See below.
+</td></tr>
+<tr>
+<td> onUnath </td>
+<td> The p3d file has been scanned and needs to be approved by the user.  There will be a red play button drawn in the plugin window (if it is visible); when the user clicks this button, it will pop up the certificate-approval dialog.  You can simulate the user clicking the button by calling plugin.main.play().
+</td></tr>
+<tr>
+<td> onAuth </td>
+<td> The p3d file has been approved by the user as a result of going through the above dialog; or the p3d file was recognized as being already approved at startup.
+</td></tr>
+<tr>
+<td> onDownloadBegin </td>
+<td> The packages referenced by the p3d file are beginning to download.  See below.
+</td></tr>
+<tr>
+<td> onDownloadNext </td>
+<td> This event will be generated as each required package finishes downloading and the next one begins.  See below.
+</td></tr>
+<tr>
+<td> onDownloadComplete </td>
+<td> Generated when the download finishes, or when it is determined at startup time that all packages are already downloaded.
+</td></tr>
+<tr>
+<td> onReady </td>
+<td> The application is ready to begin.  If you have auto_start="1", then it will launch immediately; otherwise, there will be a green play button drawn in the plugin window (if it is visible).  You can simulate the user clicking the button by calling plugin.main.play().
+</td></tr>
+<tr>
+<td> onPythonLoad </td>
+<td> The Python part of the application has begun.  This is part of application startup.  At the time you receive this event, your application has only just begun to execute; there is no guarantee that it has assigned anything to appRunner.main at this point.
+</td></tr>
+<tr>
+<td> onWindowOpen </td>
+<td> The application has successfully created a graphics window, and is now considered fully launched.  From the Python side, it means that your application has imported DirectStart by this point.
+</td></tr>
+<tr>
+<td> onWindowAttach </td>
+<td> The application has attached its graphics window to the plugin frame, and the window is now embedded in the web page.  This may be called at initial startup (possibly before onWindowOpen), and also after a subsequent call to onWindowDetach.
+</td></tr>
+<tr>
+<td> onWindowDetach </td>
+<td> The application has removed its game window from the plugin frame.  This may be called at application exit, or whenever the application itself removes the window from the frame (for instance, to go to a fullscreen or toplevel window instead).  The Panda plugin will display active_img in the plugin frame whenever it is not occupied by the graphics window.
+</td></tr>
+<tr>
+<td> onPythonStop </td>
+<td> The application has exited, either normally or due to an error.
+</td></tr></table>
+<p>In addition to the above list, a particular application may define its own custom callbacks, by calling base.appRunner.notify('token'), e.g. base.appRunner.notify('onLevelStart').
+</p><p>To use any of the above, assign the token to a JavaScript expression which should be evaluated when the event occurs.  Usually this is a call to one of your own JavaScript functions, e.g.:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-html4strict" style="font-family: monospace;"><pre><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;object</span> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span>
+  <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;application/x-panda3d&quot;</span> <span style="color: #000066;">data</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span>
+  onWindowOpen<span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;MyWindowFunction()&quot;</span>
+<span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre></div></div>
+<p>You should use the appropriate embedding syntax as described in <a href="Advanced_object_tags.html" title="Advanced object tags">Advanced object tags</a>.
+</p>
+<h2> <span class="mw-headline" id="Additional_notes">Additional notes</span></h2>
+<p>At each of the above events, certain properties of the plugin object become defined and available for access by JavaScript.  In the following, "plugin" is assumed to be the DOM object that refers to the embedding &lt;object&gt; element.
+</p><p>After onPluginLoad, you can query certain built-in properties on the plugin:
+</p>
+<table>
+
+<tr>
+<td> plugin.main.status
+</td></tr>
+<tr>
+<td> plugin.main.pluginVersionString
+</td></tr>
+<tr>
+<td> plugin.main.pluginMajorVersion
+</td></tr>
+<tr>
+<td> plugin.main.pluginMinorVersion
+</td></tr>
+<tr>
+<td> plugin.main.pluginSequenceVersion
+</td></tr>
+<tr>
+<td> plugin.main.pluginNumericVersion
+</td></tr>
+<tr>
+<td> plugin.main.pluginDistributor
+</td></tr>
+<tr>
+<td> plugin.main.coreapiHostUrl
+</td></tr>
+<tr>
+<td> plugin.main.coreapiTimestamp
+</td></tr>
+<tr>
+<td> plugin.main.coreapiTimestampString
+</td></tr></table>
+<p>You can also call plugin.main.get_system_log() at any point after this to query the current system log.  This is the log file generated by the plugin system.  You can specify an optional numeric parameter; this limits the return value to only the specified number of bytes at the end of the log.
+</p><p>Note that there appears to be a Firefox bug that sometimes causes the first reference to plugin.main to return undefined, even though it has actually been defined by this point.  This is especially likely after a page reload (F5) operation.  If this causes you trouble, you may need to work around this with a JavaScript timeout callback.
+</p><p>After onDownloadBegin, you can query the following properties to monitor the download:
+</p>
+<table>
+<tr>
+<td> plugin.main.numDownloadingPackages
+</td></tr>
+<tr>
+<td> plugin.main.totalDownloadSize
+</td></tr>
+<tr>
+<td> plugin.main.downloadProgress
+</td></tr>
+<tr>
+<td> plugin.main.downloadElapsedSeconds
+</td></tr>
+<tr>
+<td> plugin.main.downloadElapsedFormatted
+</td></tr>
+<tr>
+<td> plugin.main.downloadRemainingSeconds
+</td></tr>
+<tr>
+<td> plugin.main.downloadRemainingFormatted
+</td></tr>
+<tr>
+<td> plugin.main.downloadPackageName
+</td></tr>
+<tr>
+<td> plugin.main.downloadPackageDisplayName
+</td></tr>
+<tr>
+<td> plugin.main.downloadComplete
+</td></tr></table>
+<p>After onDownloadNext, downloadPackageName and downloadPackageDisplayName will be updated with the currently-downloading package.  Note that plugin.main.downloadProgress tracks from 0 .. 1 throughout the entire download; it doesn't reset for each package.
+</p><p>After onPythonLoad, you can call plugin.main.get_game_log() to query the game log.  This is the output from the application itself.  Like get_system_log(), you can specify an optional numeric parameter to limit the return value to only the specified number of bytes at the end of the log.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 12/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2420-0!*!0!*!*!*!* and timestamp 20171007194812 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Splash_window_tags.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="AppRunner.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

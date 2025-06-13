@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Performance Issue: Too Many Polygons - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Performance Issue: Too Many Polygons</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Performance_Issue%253A_Motherboard_Integrated_Video.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Issue%253A_Miscellaneous.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Performance_Issue:_Too_Many_Polygons">Performance Issue: Too Many Polygons</span></h2>
+<p>Even though modern GPUs can handle millions of polygons and vertex data takes little space in RAM, there is still a limit and it's not very difficult to reach it.</p>
+<p>First thing you should make sure is that your performance issue is indeed caused by too many polygons. Even though modern GPUs can render millions of polygons in realtime, they still can't render more than few hundred meshes (Geoms) at the same speed. So you won't have problem rendering 300 polygons as 1 Geom in realtime, but you will torture your GPU if you'll try to render 300 Geoms, even if each has a single polygon. There are few ways to find out the Geom count and many solutions for lowering it which are discussed in the <a href="Performance_Issue%253A_Too_Many_Meshes.html" title="Performance Issue: Too Many Meshes">appropriate page</a>.
+</p>
+<p>Another issue might be using too many polygons on animated meshes (Actors). When you play an animation, Panda or your GPU need to calculate the new position of each vertex associated with a joint, even though the GPU will render the mesh at the same speed, the calculations done for the animation can get expensive themselves. You can easily find out the time spent on skinning with PStats:</p>
+<p><br /><br />
+<a href="File%253APstats-skinning-time.png.html" class="image"><img alt="Pstats-skinning-time.png" src="Pstats-skinning-time.png" width="500" height="748" /></a>
+<br /><br />
+</p>
+<p>Other factors might affect the performance which are not solely based on the polygon count. Is your mesh textured? is it shaded? Does it have the ShaderGenerator enabled on it or does it use custom shaders? Does it have normal/gloss/glow maps? Is backface culling enabled? These all can affect the performance.</p>
+<p>If you are sure that your performance issue is caused by too many polygons, there are few optimizations you can do.</p>
+<ul><li>The first obvious solution is to just make your models lowpoly or not use two polygons where you can use one. However, you should also note that per-vertex lightning uses vertices to shade the mesh, so a wall consisting of one single quad won't shade the same way as a wall consisting of multiple quads. You'll need to find a balance or use per-pixel lightning.
+</li></ul>
+<ul><li>You can have <a href="Level_of_Detail.html" title="Level of Detail">multiple levels of detail</a> for your mesh.
+</li></ul>
+<ul><li>If you have a highpoly model, you can create a lowpoly version of it and generate a normal map from the highpoly model which you can assign to your lowpoly version in Panda. Normal mapping requires lightning and the ShaderGenerator or a custom shader.
+</li></ul>
+<ul><li>Sometimes it's possible to represent a mesh as a textured plane <a href="Billboard_Effects.html" title="Billboard Effects">billboard</a>.
+</li></ul>
+<ul><li>See if you can lower the <a href="Lenses_and_Field_of_View.html" title="Lenses and Field of View">far distance or far plane</a> of the camera lens. Anything farther than the far plane of the camera lens won't be rendered. You can use <a href="Fog.html" title="Fog">fog</a> to hide the clipping.
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 2/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2206-0!*!0!*!*!2!* and timestamp 20171007155200 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Performance_Issue%253A_Motherboard_Integrated_Video.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Issue%253A_Miscellaneous.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

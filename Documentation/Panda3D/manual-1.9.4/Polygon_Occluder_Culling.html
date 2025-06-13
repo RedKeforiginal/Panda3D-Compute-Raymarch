@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Polygon Occluder Culling - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Polygon Occluder Culling</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Occlusion_Culling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Portal_Culling.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Polygon_Occluder_Culling.html#Polygon_Occluders"><span class="tocnumber">1</span> <span class="toctext">Polygon Occluders</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="Polygon_Occluder_Culling.html#Introduction"><span class="tocnumber">1.1</span> <span class="toctext">Introduction</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="Polygon_Occluder_Culling.html#Creating_an_OccluderNode"><span class="tocnumber">1.2</span> <span class="toctext">Creating an OccluderNode</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="Polygon_Occluder_Culling.html#Occluder_Configuration"><span class="tocnumber">1.3</span> <span class="toctext">Occluder Configuration</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="Polygon_Occluder_Culling.html#General_Occluder_Advice"><span class="tocnumber">1.4</span> <span class="toctext">General Occluder Advice</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></table>
+<h1> <span class="mw-headline" id="Polygon_Occluders"> Polygon Occluders </span></h1>
+<h2> <span class="mw-headline" id="Introduction"> Introduction </span></h2>
+<p>One method of occlusion culling is to explicitly define a shape which will block out objects behind it. This is called a Polygon Occluder and is represented in Panda by the OccluderNode.
+</p>
+<h2> <span class="mw-headline" id="Creating_an_OccluderNode"> Creating an OccluderNode </span></h2>
+<p>An occluder is defined by four vertices. The order of the vertices is important as this defines which way the normal of the polygon is facing.
+</p>
+<pre class="python">occluder = OccluderNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'my occluder'</span>, Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />occluder_nodepath = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>occluder<span style="color: black;">&#41;</span><br />render.<span style="color: black;">setOccluder</span><span style="color: black;">&#40;</span>occluder_nodepath<span style="color: black;">&#41;</span></pre>
+<p>It is hidden by default, but can be shown for debug purposes using the show method on its NodePath. The occluder only needs to be parented into the scene if you want to show it, or if it needs to move with an object in the scene.
+Use the setOccluder method on any NodePath to make the occluder active on that NodePath and its children. It is much more efficient to call setOccluder on a parent node with children as opposed to calling setOccluder on many different nodes.
+</p>
+<h2> <span class="mw-headline" id="Occluder_Configuration"> Occluder Configuration </span></h2>
+<p>Besides the shape of the occluder, there are other settings which affect how the occluder behaves.
+Use the setDoubleSided method on the OccluderNode to enable the occluder to work on both sides. This is desirable for example if the occluder is placed inside of a wall. A double-sided occluder is more efficient than creating two occluders with opposite normals.
+Use the setMinCoverage method to ignore an occluder that doesn't take up at least a certain amount of screen space.
+</p>
+<h2> <span class="mw-headline" id="General_Occluder_Advice"> General Occluder Advice </span></h2>
+<p>More is not always better. Occluders do have a cost, so use them sparingly where they will make the biggest difference.
+If you have a lot of occluders, it might help to evaluate your occluders every once in a while and only use the closest ones.
+The optimal amount and configuration of occluders depends on the makeup of your scene. Test different configurations and compare the frame rates.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 27/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2602-0!*!*!!en!*!* and timestamp 20171008055545 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Occlusion_Culling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Portal_Culling.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Projected Textures - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Projected Textures</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Automatic_Texture_Coordinates.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simple_Environment_Mapping.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In a <a href="Texture_Transforms.html" title="Texture Transforms">previous section</a>, we introduced ways to apply an explicit transformation to a model's texture coordinates, with methods like <code>setTexOffset()</code> and <code>setTexScale()</code>.  In addition to this explicit control, Panda3D offers a simple mechanism to apply an automatic texture transform each frame, as computed from the relative transform between any two nodes.
+</p>
+<pre class="python">nodePath.<span style="color: black;">setTexProjector</span><span style="color: black;">&#40;</span>textureStage, fromNodePath, toNodePath<span style="color: black;">&#41;</span></pre>
+<p>When you have enabled this mode, the relative scene-graph transform
+from <code>fromNodePath</code> to <code>toNodePath</code>--that is,
+the result of <code>fromNodePath.getTransform(toNodePath)</code>--is
+automatically applied as a texture-coordinate transform to the
+indicated textureStage.  The result is more-or-less as if you executed
+the following command every frame:
+</p>
+<pre class="python">nodePath.<span style="color: black;">setTexTransform</span><span style="color: black;">&#40;</span>textureStage, fromNodePath.<span style="color: black;">getTransform</span><span style="color: black;">&#40;</span>toNodePath<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>There is no need for either <code>fromNodePath</code> or
+<code>toNodePath</code> to have any relation to the nodePath that is
+receiving the <code>setTexProjector()</code> call; they can be any two
+arbitrary NodePaths.  If either of them is just
+<code>NodePath()</code>, it stands for the top of the graph.
+</p><p>This has several useful applications.  We have already introduced
+<a href="Automatic_Texture_Coordinates.html" title="Automatic Texture Coordinates">one application</a>, in conjunction 
+with <code>MWorldPosition</code>, to move the generated texture
+coordinates from the root of the graph to the model itself.
+</p>
+<h2> <span class="mw-headline" id="Interval-animated_texture_transforms">Interval-animated texture transforms</span></h2>
+<p>Another handy application for a TexProjector is to enable the use of
+the various <a href="Lerp_Intervals.html" title="Lerp Intervals">LerpIntervals</a> to animate a texture
+transform.  Although there are no LerpIntervals that directly animate
+texture transforms, you can make a LerpInterval animate a
+NodePath--and then set up a TexProjector effect to follow that
+NodePath.  For example:
+</p>
+<pre class="python">smiley = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'smiley.egg'</span><span style="color: black;">&#41;</span><br />lerper = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">'lerper'</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexProjector</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, NodePath<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, lerper<span style="color: black;">&#41;</span><br />i = lerper.<span style="color: black;">posInterval</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">5</span>, VBase3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />i.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Note that you don't even have to parent the animated NodePath into the
+scene graph.  In the above example, we have set up the interval
+<code>i</code> to repeatedly move the standalone NodePath
+<code>lerper</code> from position (0, 0, 0) to (0, 1, 0) over 5
+seconds.  Since <code>smiley</code> is assigned a TexProjector that
+copies the relative transform from <code>NodePath()</code> to
+<code>lerper</code>--that is, the net transform of
+<code>lerper</code>--it means we are really animating the texture
+coordinates on <code>smiley</code> from (0, 0) to (0, 1) (the Z
+coordinate is ignored for an ordinary 2-D texture).
+</p>
+<h2> <span class="mw-headline" id="Projected_Textures">Projected Textures</span></h2>
+<p>Another useful application of the TexProjector is to implement
+<b>projected textures</b>--that is, a texture applied to geometry as
+if it has been projected from a lens somewhere in the world, something
+like a slide projector.  You can use this to implement a flashlight
+effect, for instance, or simple projected shadows.
+</p><p>This works because the TexProjector effect does one additional trick:
+if the second NodePath in the <code>setTexProjector()</code> call
+happens to be a LensNode, then the TexProjector automatically applies
+the lens's projection matrix to the texture coordinates (in addition to applying the relative transform between the nodes).
+</p><p>To implement projected textures, you need to do three steps:
+</p><p>1. Apply the texture you want to the model you want to project it
+onto, usually on its own TextureStage, so that it is <a href="Multitexture_Introduction.html" title="Multitexture Introduction">multitextured</a>.
+</p><p>2. Put the <code>MWorldPosition</code> TexGen mode on the model.  This
+copies the model's vertex positions into its texture coordinates, for
+your texture's TextureStage.
+</p><p>3. Call <code>model.setTexProjector(textureStage, NodePath(),
+projector)</code>, where <code>projector</code> is the NodePath to
+the LensNode you want to project from.
+</p><p>For your convenience, the NodePath class defines the following method
+that performs these three steps at once:
+</p>
+<pre class="python">nodePath.<span style="color: black;">projectTexture</span><span style="color: black;">&#40;</span>textureStage, texture, lensNodePath<span style="color: black;">&#41;</span></pre>
+<p>For instance, we could use it to project the bamboo texture
+("envir-reeds.png") onto the ripple.egg model, like this:
+</p><p><a href="File%253AProjected_bamboo.jpg.html" class="image" title="Bamboo projected onto ripple"><img alt="Bamboo projected onto ripple" src="Projected_bamboo.jpg" width="400" height="300" /></a>
+</p><p>You could move around the projector in the world, or even change the
+lens field of view, and the bamboo image would follow it.  (In the
+above image, the camera model and the projection lines are made
+visible only for illustration purposes; normally you wouldn't see
+them.)
+</p><p>This image was generated with the following code:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">actor</span> <span style="color: #ff7700;font-weight:bold;">import</span> Actor<br /><span style="color: #ff7700;font-weight:bold;">from</span> pandac.<span style="color: black;">PandaModules</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span><br />&#160;<br />base.<span style="color: black;">setBackgroundColor</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />&#160;<br />ripple = Actor.<span style="color: black;">Actor</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'ripple.egg'</span><span style="color: black;">&#41;</span><br />ripple.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />ripple.<span style="color: black;">setScale</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span><span style="color: black;">&#41;</span><br />ripple.<span style="color: black;">pose</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'animation'</span>, <span style="color: #ff4500;">17</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #dc143c;">dl</span> = DirectionalLight<span style="color: black;">&#40;</span><span style="color: #483d8b;">'dl'</span><span style="color: black;">&#41;</span><br />dlnp = camera.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span><span style="color: #dc143c;">dl</span><span style="color: black;">&#41;</span><br />ripple.<span style="color: black;">setLight</span><span style="color: black;">&#40;</span>dlnp<span style="color: black;">&#41;</span><br />&#160;<br />proj = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>LensNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'proj'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />lens = PerspectiveLens<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />proj.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setLens</span><span style="color: black;">&#40;</span>lens<span style="color: black;">&#41;</span><br />proj.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">showFrustum</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />proj.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'frustum'</span><span style="color: black;">&#41;</span>.<span style="color: black;">setColor</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />camModel = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'camera.egg'</span><span style="color: black;">&#41;</span><br />camModel.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>proj<span style="color: black;">&#41;</span><br />proj.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />proj.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1.5</span>, <span style="color: #ff4500;">-7.3</span>, <span style="color: #ff4500;">2.9</span><span style="color: black;">&#41;</span><br />proj.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">22</span>, <span style="color: #ff4500;">-15</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br />tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'maps/envir-reeds.png'</span><span style="color: black;">&#41;</span><br />tex.<span style="color: black;">setWrapU</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WMBorderColor</span><span style="color: black;">&#41;</span><br />tex.<span style="color: black;">setWrapV</span><span style="color: black;">&#40;</span>Texture.<span style="color: black;">WMBorderColor</span><span style="color: black;">&#41;</span><br />tex.<span style="color: black;">setBorderColor</span><span style="color: black;">&#40;</span>VBase4<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setSort</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />ts.<span style="color: black;">setMode</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">MDecal</span><span style="color: black;">&#41;</span><br />ripple.<span style="color: black;">projectTexture</span><span style="color: black;">&#40;</span>ts, tex, proj<span style="color: black;">&#41;</span><br />&#160;<br />base.<span style="color: black;">disableMouse</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />camera.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-7.8</span>, <span style="color: #ff4500;">-22.4</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />camera.<span style="color: black;">setHpr</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-21</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />&#160;<br />base.<span style="color: black;">graphicsEngine</span>.<span style="color: black;">renderFrame</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">screenshot</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'projected_bamboo.jpg'</span>, defaultFilename = <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 235/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1234-0!*!0!!*!2!* and timestamp 20171008095100 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Automatic_Texture_Coordinates.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simple_Environment_Mapping.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

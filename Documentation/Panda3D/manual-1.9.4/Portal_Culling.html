@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Portal Culling - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Portal Culling</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Polygon_Occluder_Culling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Light_Ramps.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Portal_Culling.html#Portal_Culling"><span class="tocnumber">1</span> <span class="toctext">Portal Culling</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="Portal_Culling.html#What_is_Portal_Culling.3F"><span class="tocnumber">1.1</span> <span class="toctext">What is Portal Culling?</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="Portal_Culling.html#How_are_Cells_and_Portals_handled_in_Panda3D.3F"><span class="tocnumber">1.2</span> <span class="toctext">How are Cells and Portals handled in Panda3D?</span></a></li>
+<li class="toclevel-2"><a href="Portal_Culling.html#Incomplete_Section"><span class="tocnumber">1.3</span> <span class="toctext">Incomplete Section</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></table>
+<h1> <span class="mw-headline" id="Portal_Culling"> Portal Culling </span></h1>
+<h2> <span class="mw-headline" id="What_is_Portal_Culling.3F"> What is Portal Culling? </span></h2>
+<p>Portal culling is a method by which the 3D scene can be broken into areas called cells, which are linked together by portals. A portal is a window in 3D space that allows objects in one cell (the "out" cell) to be seen from another cell (the "in" cell). Portal culling works best in scenes where there is limited visibility from one area to another, for example a building or network of caves. It has very limited use in wide open scenes.
+</p><p><a href="File%253APortal_diagram.png.html" class="image"><img alt="Portal diagram.png" src="Portal_diagram.png" width="598" height="384" /></a>
+</p><p>In this diagram the original camera frustum is seen in blue, this is used to cull the current cell. The shaded areas represent areas visible after culling. The camera is looking through a portal into the next cell, and so the frustum is reduced (seen in cyan) so as to render only that which is visible through the portal. This reduced frustum is then used to check visibility of additional portals in other cells, and it will be reduced again as it passed through more portals (seen in red and green). Note that even though more cells are visible to the original camera frustum, there is no direct line of visibility and so they are not even considered.
+</p>
+<h2> <span class="mw-headline" id="How_are_Cells_and_Portals_handled_in_Panda3D.3F"> How are Cells and Portals handled in Panda3D? </span></h2>
+<p>Cells in Panda3D are just NodePaths parented under the top level of the scene graph (usually render). Any object that is physically in that cell should be parented under the cell's NodePath. It is up to you to dynamically re-parent objects as they move from one cell to another, or not put them in a cell at all.
+</p><p>Portals are one-way and for this reason they are usually created in pairs. Portals get parented under the cell from which they are intended to be looked through. For example if this is a portal from cell A looking into cell B, it would get parented under cell A. Which side of the portal is the front or back is determined by winding order of the vertices, the same as with render geometry.
+</p><p>Application-level code is needed to show the cell the camera is currently in and hide the rest. During the culling stage any portal visible to the camera will be enabled, and render the objects that can be seen through the portal into its specified "out" cell. If another portal is visible through the previous one, the process continues. If multiple cameras are used, for example to do split screen play, hide the cells using the same mask set on the camera using camera.setCameraMask(mask).
+</p>
+<h2> <span class="mw-headline" id="Incomplete_Section">Incomplete Section</span></h2>
+<p>Note: this section is incomplete.  It will be updated soon.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 13/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2498-0!*!*!!en!2!* and timestamp 20171007145630 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Polygon_Occluder_Culling.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Light_Ramps.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

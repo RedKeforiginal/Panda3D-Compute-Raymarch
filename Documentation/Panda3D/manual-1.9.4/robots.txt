@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /forums/cache/
+Disallow: /blog/?p=138

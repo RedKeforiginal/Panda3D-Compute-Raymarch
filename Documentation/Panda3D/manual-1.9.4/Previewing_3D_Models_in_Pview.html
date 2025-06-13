@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Previewing 3D Models in Pview - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Previewing 3D Models in Pview</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Egg_Syntax.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_Panda3D_Executables.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Pview or Panda Viewer is a model and animation viewer for egg and bam files. This allows users to see if their files have converted correctly without having to create a Panda3D program. Pview is accessed through a command prompt.
+</p><p>To view a model that has been converted to an egg or bam file, type the following:
+</p><p><code>
+pview modelFile.egg
+</code>
+</p><p>To view a character model with animations, simply add the name of the file with the animation.
+</p><p><code>
+pview modelFile.egg animationFile.egg
+</code>
+</p><p>Here's an example based on the panda model distributed with panda source.
+</p><p><code>
+pview panda.egg
+</code>
+</p><p>A new window should pop-up and here's what you should see -
+</p><p><a href="File%253APviewsample.jpg.html" class="image"><img alt="Pviewsample.jpg" src="Pviewsample.jpg" width="512" height="397" /></a>
+</p><p>There are some controls and hotkeys available while using pview. To see the whole list press shift-question mark in the pview window. To turn this list off press shift-question mark again. For convenience here is the full list of as the time of writing:
+</p>
+<table>
+<tr>
+<td>Left-click and drag Mouse
+</td>
+<td>Moves the model up, down, left, and right relative to the camera
+</td></tr>
+<tr>
+<td>Middle-click and drag Mouse
+</td>
+<td>Rotates the model around its pivot
+</td></tr>
+<tr>
+<td>Right-click and drag Mouse
+</td>
+<td>Moves the model away and towards the camera
+</td></tr>
+<tr>
+<td>f
+</td>
+<td>Report framerate. The current framerate is output on the console window.
+</td></tr>
+<tr>
+<td>w
+</td>
+<td>Toggle wireframe mode
+</td></tr>
+<tr>
+<td>t
+</td>
+<td>Toggle texturing
+</td></tr>
+<tr>
+<td>b
+</td>
+<td>Toggle back face (double-sided) rendering
+</td></tr>
+<tr>
+<td>i
+</td>
+<td>Invert (reverse) single-sided faces
+</td></tr>
+<tr>
+<td>l
+</td>
+<td>Toggle lighting
+</td></tr>
+<tr>
+<td>p
+</td>
+<td>Toggle per-pixel lighting
+</td></tr>
+<tr>
+<td>c
+</td>
+<td>Recenter view on object
+</td></tr>
+<tr>
+<td>shift-c
+</td>
+<td>Toggle collision surfaces
+</td></tr>
+<tr>
+<td>shift-b
+</td>
+<td>Report bounding volume
+</td></tr>
+<tr>
+<td>shift-l
+</td>
+<td>List hierarchy
+</td></tr>
+<tr>
+<td>shift-a
+</td>
+<td>Analyze hierarchy
+</td></tr>
+<tr>
+<td>h
+</td>
+<td>Highight node
+</td></tr>
+<tr>
+<td>arrow-up
+</td>
+<td>Move highlight to parent
+</td></tr>
+<tr>
+<td>arrown-down
+</td>
+<td>Move highlight to child
+</td></tr>
+<tr>
+<td>arrow-left
+</td>
+<td>Move highlight to sibling
+</td></tr>
+<tr>
+<td>arrow-right
+</td>
+<td>Move highlight to sibling
+</td></tr>
+<tr>
+<td>shift-s
+</td>
+<td>Activate PStats
+</td></tr>
+<tr>
+<td>f9
+</td>
+<td>Take screenshot
+</td></tr>
+<tr>
+<td>,
+</td>
+<td>Cycle through background colors
+</td></tr>
+<tr>
+<td>shift-w
+</td>
+<td>Open new window
+</td></tr>
+<tr>
+<td>alt-enter
+</td>
+<td>Toggle between full-screen and windowed mode
+</td></tr>
+<tr>
+<td>2
+</td>
+<td>Split the window
+</td></tr>
+<tr>
+<td>W
+</td>
+<td>Toggle wireframe
+</td></tr>
+<tr>
+<td>escape
+</td>
+<td>Close Window
+</td></tr>
+<tr>
+<td>q
+</td>
+<td>Close Window
+</td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 10/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1010-0!*!*!*!*!2!* and timestamp 20171007195510 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Egg_Syntax.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="List_of_Panda3D_Executables.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

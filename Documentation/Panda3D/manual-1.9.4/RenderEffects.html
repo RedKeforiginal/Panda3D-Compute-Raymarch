@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Render Effects - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Render Effects</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectScrolledFrame.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Compass_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>There are a number of special render effects that may be set on scene graph nodes to change the way they render.  This includes BillboardEffect, Compass Effect, DecalEffect, PolylightEffect, and ShowBoundsEffect.
+</p>
+<h2> <span class="mw-headline" id="List_of_All_Render_Effects:"> List of All Render Effects: </span></h2>
+<dl><dt><a href="Billboard_Effects.html" title="Billboard Effects">BillboardEffect</a>
+</dt><dd> Dicates that geometry at this node should automatically rotate to face the camera, or any other arbitrary node.
+</dd><dt>CharacterJointEffect
+</dt><dd> The effect binds the node back to the character, so that querying the relative transform of the affected node will automatically force the indicated character to be updated first.
+</dd><dt>PolylightEffect
+</dt><dd> A PolylightEffect can be used on a node to define a LightGroup for that node. A LightGroup contains PolylightNodes which are essentially nodes that add color to the polygons of a model based on distance. PolylightNode is a cheap way to get lighting effects specially for night scenes
+</dd><dt><a href="Compass_Effects.html" title="Compass Effects">CompassEffect</a>
+</dt><dd> In its purest form, a CompassEffect is used to keep the node's rotation fixed relative to the top of the scene graph, despite other transforms that may exist above the node. Hence the name: the node behaves like a magnetic compass, always pointing in the same direction.
+</dd><dt>ShowBoundsEffect
+</dt><dd> Applied to a GeomNode to cause a visible bounding volume to be drawn for this node. This is generally used only during development to help identify bounding volume issues.
+</dd><dt>DecalEffect
+</dt><dd> Applied to a GeomNode to indicate that the children of this GeomNode are coplanar and should be drawn as decals (eliminating Z-fighting).
+</dd><dt>TexProjectorEffect
+</dt><dd> This effect automatically applies a computed texture matrix to the specified texture stage, according to the relative position of two specified nodes.
+</dd></dl>
+<p><br />
+RenderEffect represents render properties that must be applied as soon as they are encountered in the scene graph, rather than propagating down to the leaves.  This is different from RenderAttrib, which represents properties like color and texture that don't do anything until they propagate down to a GeomNode.
+</p><p>You should not attempt to create or modify a RenderEffect directly; instead, use the make() method of the appropriate kind of effect you want.  This
+will allocate and return a new RenderEffect of the appropriate type, and it may share pointers if possible.  Do not modify the new RenderEffect if you wish to change its properties; instead, create a new one.
+</p><p>Once you have created a render Effect, you need to decide what it should affect. If you have an effect that should affect everything in the scene the NodePath in the next line of code is "render". If you only want it to affect specific objects, choose the appropriate place in the scene graph.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>nodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setEffect</span><span style="color: black;">&#40;</span><span style="color: #66cc66;">&lt;</span>Render Effect<span style="color: #66cc66;">&gt;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 9/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1015-0!*!0!*!*!*!* and timestamp 20171007194653 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectScrolledFrame.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Compass_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

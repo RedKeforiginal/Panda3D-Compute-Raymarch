@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Sample Cube Map - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Sample Cube Map</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><br><small><i>This page is not in the table of contents.</i></small><br><p>The following sample code loads up an environment, puts the camera in
+the center of it, and generates the six faces of a cube map from the
+point of view of the camera:
+</p>
+<table class="code"><tr><td><pre>
+scene = loader.loadModel('bvw-f2004--streetscene/street-scene.egg')
+scene.reparentTo(render)
+scene.setZ(-2)
+base.saveCubeMap('streetscene_cube_#.jpg', size = 256)
+</pre></td></tr></table>
+<p>These are the six faces generated:
+</p><p>Right:
+</p><p><a href="File%253AStreetscene_cube_0.jpg.html" class="image"><img alt="Streetscene cube 0.jpg" src="Streetscene_cube_0.jpg" width="256" height="256" /></a>
+</p><p>Left:
+</p><p><a href="File%253AStreetscene_cube_1.jpg.html" class="image"><img alt="Streetscene cube 1.jpg" src="Streetscene_cube_1.jpg" width="256" height="256" /></a>
+</p><p>Front:
+</p><p><a href="File%253AStreetscene_cube_2.jpg.html" class="image"><img alt="Streetscene cube 2.jpg" src="Streetscene_cube_2.jpg" width="256" height="256" /></a>
+</p><p>Back:
+</p><p><a href="File%253AStreetscene_cube_3.jpg.html" class="image"><img alt="Streetscene cube 3.jpg" src="Streetscene_cube_3.jpg" width="256" height="256" /></a>
+</p><p>Top:
+</p><p><a href="File%253AStreetscene_cube_4.jpg.html" class="image"><img alt="Streetscene cube 4.jpg" src="Streetscene_cube_4.jpg" width="256" height="256" /></a>
+</p><p>Bottom:
+</p><p><a href="File%253AStreetscene_cube_5.jpg.html" class="image"><img alt="Streetscene cube 5.jpg" src="Streetscene_cube_5.jpg" width="256" height="256" /></a>
+</p><p>And when they are assembled into a cube map, it looks like this:
+</p><p><a href="File%253AStreetscene_cube.jpg.html" class="image" title="The six faces as a cube"><img alt="The six faces as a cube" src="Streetscene_cube.jpg" width="400" height="300" /></a>
+</p><p>Or, when we apply that cube map to a sphere, you can see there are
+absolutely no seams between the edges:
+</p><p><a href="File%253AStreetscene_sphere.jpg.html" class="image" title="The cube map applied to a sphere"><img alt="The cube map applied to a sphere" src="Streetscene_sphere.jpg" width="400" height="300" /></a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 5/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1225-0!*!*!*!*!2!* and timestamp 20171007195532 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

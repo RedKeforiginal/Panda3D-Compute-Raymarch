@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Patching - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Patching</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Creating_Multifiles.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_resources_from_nonstandard_sources.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Patching is a process of generating the difference between 2 files:
+</p>
+<pre class="python">p = Patchfile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />p.<span style="color: black;">build</span><span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">'version_1.mf'</span><span style="color: black;">&#41;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">'version_2.mf'</span><span style="color: black;">&#41;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">'v1_to_v2.patch'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>This will generate the file v1_to_v2.patch based on the differences between version_1.mf and version_2.mf.  Then when you have version_1.mf and v1_to_v2.patch, you can produce version_2.mf with:
+</p>
+<pre class="python">p = Patchfile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />p.<span style="color: black;">apply</span><span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">'v1_to_v2.patch'</span><span style="color: black;">&#41;</span>, Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">'version_1.mf'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>There are other, more esoteric options, for limiting memory usage during patching, or for patching in increments instead of all at once so you can update a progress bar.
+</p><p>In the example above the files are named *.mf. This example suggests that you might be patching files in Panda's Multifile format (*.mf). The multifiles can store multiple resources like bams, textures, mp3's, and so on, and Panda can load them from directly from the multifiles without having to unpack them first.
+</p><p>The Patchfile object works on any arbitrary binary files; you don't need to limit yourself to just patching multifiles. However, the Patchfile does recognize a multifile and treats it as a special case; it can build patches for large multifiles without running out of memory, while building a patch for a large generic binary file might require so much memory it brings your system to its knees. (Applying patches doesn't require much memory, however.)
+</p><p>Patchfiles are not automatically compressed. You can do that yourself. Also, I recommend patching uncompressed source files for best results. (You can build patches against compressed source files, but the resulting patchfiles will tend to be much larger than the same patchfiles built against the original uncompressed files.)
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2211-0!*!*!*!*!*!* and timestamp 20171008024245 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Creating_Multifiles.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_resources_from_nonstandard_sources.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

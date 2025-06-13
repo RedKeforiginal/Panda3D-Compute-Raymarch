@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Particle Renderers - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Particle Renderers</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Particle_Emitters.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Collision_Detection.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Particle renderers add particles to the visible scene graph according to the information stored in the particle objects and the type of renderer. All particle renderers have the following parameters:</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>alphaMode</td><td>Alpha setting over particle lifetime</td><td>PR_ALPHA_NONE, PR_ALPHA_OUT, PR_ALPHA_IN, PR_ALPHA_USER</td></tr>
+<tr><td>userAlpha</td><td>Alpha value for ALPHA_USER alpha mode</td><td>Boolean</td></tr>
+</table></center>
+<p>The following list contains the different types of renderers and their unique parameters.</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Particle_Renderers.html#PointParticleRenderer"><span class="tocnumber">1</span> <span class="toctext">PointParticleRenderer</span></a></li>
+<li class="toclevel-1"><a href="Particle_Renderers.html#LineParticleRenderer"><span class="tocnumber">2</span> <span class="toctext">LineParticleRenderer</span></a></li>
+<li class="toclevel-1"><a href="Particle_Renderers.html#SparkleParticleRenderer"><span class="tocnumber">3</span> <span class="toctext">SparkleParticleRenderer</span></a></li>
+<li class="toclevel-1"><a href="Particle_Renderers.html#SpriteParticleRenderer"><span class="tocnumber">4</span> <span class="toctext">SpriteParticleRenderer</span></a></li>
+<li class="toclevel-1"><a href="Particle_Renderers.html#GeomParticleRenderer"><span class="tocnumber">5</span> <span class="toctext">GeomParticleRenderer</span></a></li>
+</ul>
+</td></tr></table>
+<h3> <span class="mw-headline" id="PointParticleRenderer">PointParticleRenderer</span></h3>
+<p>Renders particles as pixel points.</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>pointSize</td><td>Width and height of points, in pixels</td><td>[0, infinity)</td></tr>
+<tr><td>startColor</td><td>Starting color</td><td>(r, g, b, a)</td></tr>
+<tr><td>endColor</td><td>Ending color</td><td>(r, g, b, a)</td></tr>
+<tr><td>blendType</td><td>How the particles blend from the start color to the end color</td><td>ONE_COLOR, BLEND_LIFE, BLEND_VEL</td></tr>
+<tr><td>blendMethod</td><td>Interpolation method between colors</td><td>LINEAR, CUBIC</td></tr>
+</table></center>
+<p>ONE_COLOR: point is always the starting color.<br />
+BLEND_LIFE: color is interpolated from start to end according to the age of the point<br />
+BLEND_VEL: color is interpolated between start to end according to the velocity/terminal velocity.</p>
+<h3> <span class="mw-headline" id="LineParticleRenderer">LineParticleRenderer</span></h3>
+<p>Renders particles as lines between their current position and their last position.</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>headColor</td><td>Color of leading end</td><td>(r, g, b, a)</td></tr>
+<tr><td>tailColor</td><td>Color of trailing end</td><td>(r, g, b, a)</td></tr>
+</table></center>
+<h3> <span class="mw-headline" id="SparkleParticleRenderer">SparkleParticleRenderer</span></h3>
+<p>Renders particles star or sparkle objects, three equal-length perpendicular axial lines, much like jacks. Sparkle particles appear to sparkle when viewed as being smaller than a pixel.</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>centerColor</td><td>Color of center</td><td>(r, g, b, a)</td></tr>
+<tr><td>edgeColor</td><td>Color of edge</td><td>(r, g, b, a)</td></tr>
+<tr><td>birthRadius</td><td>Initial sparkle radius</td><td>[0, infinity)</td></tr>
+<tr><td>deathRadius</td><td>Final sparkle radius</td><td>[0, infinity)</td></tr>
+<tr><td>lifeScale</td><td>Whether or not sparkle is always of radius birthRadius</td><td>NO_SCALE, SCALE</td></tr>
+</table></center>
+<h3> <span class="mw-headline" id="SpriteParticleRenderer">SpriteParticleRenderer</span></h3>
+<p>Renders particles as an image, using a Panda3D texture object. The image is always facing the user.</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>texture</td><td>Panda texture object to use as the sprite image</td><td>(r, g, b, a)</td></tr>
+<tr><td>color</td><td>Color</td><td>(r, g, b, a)</td></tr>
+<tr><td>xScaleFlag</td><td>If true, x scale is interpolated over particle’s life</td><td>Boolean</td></tr>
+<tr><td>yScaleFlag</td><td>If true, y scale is interpolated over particle’s life</td><td>Boolean</td></tr>
+<tr><td>animAngleFlag</td><td>If true, particles are set to spin on the Z axis</td><td>Boolean</td></tr>
+<tr><td>initial_X_Scale</td><td>Initial x scaling factor</td><td>[0, infinity)</td></tr>
+<tr><td>final_X_Scale</td><td>Final x scaling factor</td><td>[0, infinity)</td></tr>
+<tr><td>initial_Y_Scale</td><td>Initial y scaling factor</td><td>[0, infinity)</td></tr>
+<tr><td>final_Y_Scale</td><td>Final y scaling factor</td><td>[0, infinity)</td></tr>
+<tr><td>nonAnimatedTheta</td><td>If false, sets the counterclockwise Z rotation of all sprites, in degrees</td><td>Boolean</td></tr>
+<tr><td>alphaBlendMethod</td><td>Sets the interpolation blend method</td><td>LINEAR, CUBIC</td></tr>
+<tr><td>alphaDisable</td><td>If true, alpha blending is disabled</td><td>Boolean</td></tr>
+</table></center>
+<h3> <span class="mw-headline" id="GeomParticleRenderer">GeomParticleRenderer</span></h3>
+<p>Renders particles as full 3D objects. This requires a geometry node.</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>geomNode</td><td>A geometry scene graph node</td><td>&lt;Node&gt;</td></tr>
+</table></center>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 2/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1006-0!*!*!!en!*!* and timestamp 20171008033733 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Particle_Emitters.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Collision_Detection.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

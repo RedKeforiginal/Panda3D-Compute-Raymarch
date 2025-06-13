@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Reading existing geometry data - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Reading existing geometry data</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Other_Vertex_and_Model_Manipulation.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Modifying_existing_geometry_data.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>You can fairly easily extract and examine or operate on the vertices
+for an existing model, although you should be aware that the
+<em>order</em> in which the vertices appear in a model is undefined.
+There is no correlation between the order in which vertices are listed
+in an egg file, and the order in which they will appear in the
+resulting loaded model.  Panda may rearrange the vertices, or even add
+or remove vertices, as needed to optimize the model for rendering
+performance.  Even from one session to the next, the vertices might
+come out in a different order.
+</p><p>This does make certain kinds of vertex operations difficult; if you
+plan to write code that expects to encounter the vertices of a model
+in a particular order, we recommend you build up those vertices
+yourself using a <a href="More_about_GeomVertexReader,_GeomVertexWriter,_and_GeomVertexRewriter.html" title="More about GeomVertexReader, GeomVertexWriter, and GeomVertexRewriter">GeomVertexWriter</a> (as described in <a href="Creating_and_filling_a_GeomVertexData.html" title="Creating and filling a GeomVertexData">Creating and filling a GeomVertexData</a>), so that you have explicit control over the vertex order.
+</p><p>However, if you have no need to operate on the vertices in any
+particular order, or if you just want to casually browse the vertices
+in a model, feel free to use the following instructions to read the
+data.
+</p><p>When you load a model, you have a handle to the root node of
+the model, which is usually a <b>ModelRoot</b> node.  The geometry itself
+will be stored in a series of <a href="GeomNode.html" title="GeomNode"><b>GeomNodes</b></a>, which will be children of the
+root node.  In order to examine the vertex data, you must visit the
+GeomNodes in the model.  One way to do this is to walk through all the
+GeomNodes like this:
+</p>
+<pre class="python">geomNodeCollection = model.<span style="color: black;">findAllMatches</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/+GeomNode'</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">for</span> nodePath <span style="color: #ff7700;font-weight:bold;">in</span> geomNodeCollection.<span style="color: black;">asList</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />  geomNode = nodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  processGeomNode<span style="color: black;">&#40;</span>geomNode<span style="color: black;">&#41;</span></pre>
+
+<p>Once you have a particular GeomNode, you must walk through the list of
+<a href="Geom.html" title="Geom"><b>Geoms</b></a> stored on that node.  Each Geom also has an associated
+RenderState, which controls the visible appearance of that Geom
+(e.g. texture, backfacing, etc.).
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> processGeomNode<span style="color: black;">&#40;</span>geomNode<span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span>geomNode.<span style="color: black;">getNumGeoms</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>:<br />    geom = geomNode.<span style="color: black;">getGeom</span><span style="color: black;">&#40;</span>i<span style="color: black;">&#41;</span><br />    state = geomNode.<span style="color: black;">getGeomState</span><span style="color: black;">&#40;</span>i<span style="color: black;">&#41;</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> geom<br />    <span style="color: #ff7700;font-weight:bold;">print</span> state<br />    processGeom<span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span></pre>
+
+<p>Note that geomNode.getGeom() is only appropriate if you will be
+reading, but not modifying, the data.  If you intend to modify the
+geom data in any way (including any nested data like vertices or
+primitives), you should use geomNode.modifyGeom() instead.
+</p><p>Each Geom has an associated <a href="GeomVertexData.html" title="GeomVertexData"><b>GeomVertexData</b></a>, and one or more
+<a href="GeomPrimitive.html" title="GeomPrimitive"><b>GeomPrimitives</b></a>.  Some GeomVertexData objects may be shared by more
+than one Geom, especially if you have used flattenStrong() to optimize
+a model.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> processGeom<span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span>:<br />  vdata = geom.<span style="color: black;">getVertexData</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">print</span> vdata<br />  processVertexData<span style="color: black;">&#40;</span>vdata<span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span>geom.<span style="color: black;">getNumPrimitives</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>:<br />    prim = geom.<span style="color: black;">getPrimitive</span><span style="color: black;">&#40;</span>i<span style="color: black;">&#41;</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> prim<br />    processPrimitive<span style="color: black;">&#40;</span>prim, vdata<span style="color: black;">&#41;</span></pre>
+
+<p>As above, get_vertex_data() is only appropriate if you will only be
+reading, but not modifying, the vertex data.  Similarly,
+getPrimitive() is appropriate only if you will not be modifying the
+primitive index array.  If you intend to modify either one, use
+modifyVertexData() or modifyPrimitive(), respectively.
+</p><p>You can use the <a href="More_about_GeomVertexReader,_GeomVertexWriter,_and_GeomVertexRewriter.html" title="More about GeomVertexReader, GeomVertexWriter, and GeomVertexRewriter"><b>GeomVertexReader</b></a> class to examine the vertex data.
+You should create a GeomVertexReader for each column of the data you
+intend to read.  It is up to you to ensure that a given column exists
+in the vertex data before you attempt to read it (you can use
+vdata.hasColumn() to test this).
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> processVertexData<span style="color: black;">&#40;</span>vdata<span style="color: black;">&#41;</span>:<br />  vertex = GeomVertexReader<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'vertex'</span><span style="color: black;">&#41;</span><br />  texcoord = GeomVertexReader<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'texcoord'</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">while</span> <span style="color: #ff7700;font-weight:bold;">not</span> vertex.<span style="color: black;">isAtEnd</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />    v = vertex.<span style="color: black;">getData3f</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />    t = texcoord.<span style="color: black;">getData2f</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;v =&#160;%s, t =&#160;%s&quot;</span> <span style="color: #66cc66;">%</span> <span style="color: black;">&#40;</span><span style="color: #008000;">repr</span><span style="color: black;">&#40;</span>v<span style="color: black;">&#41;</span>, <span style="color: #008000;">repr</span><span style="color: black;">&#40;</span>t<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+
+<p>Each GeomPrimitive may be any of a handful of different classes,
+according to the primitive type it is; but all GeomPrimitive classes
+have the same common interface to walk through the list of vertices
+referenced by the primitives stored within the class.
+</p><p>You can use the setRow() method of GeomVertexReader to set the reader
+to a particular vertex.  This affects the next call to getData().  In
+this way, you can extract the vertex data for the vertices in the
+order that the primitive references them (instead of in order from the
+beginning to the end of the vertex table, as above).
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">def</span> processPrimitive<span style="color: black;">&#40;</span>prim, vdata<span style="color: black;">&#41;</span>:<br />  vertex = GeomVertexReader<span style="color: black;">&#40;</span>vdata, <span style="color: #483d8b;">'vertex'</span><span style="color: black;">&#41;</span><br />&#160;<br />  prim = prim.<span style="color: black;">decompose</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />  <span style="color: #ff7700;font-weight:bold;">for</span> p <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span>prim.<span style="color: black;">getNumPrimitives</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>:<br />    s = prim.<span style="color: black;">getPrimitiveStart</span><span style="color: black;">&#40;</span>p<span style="color: black;">&#41;</span><br />    e = prim.<span style="color: black;">getPrimitiveEnd</span><span style="color: black;">&#40;</span>p<span style="color: black;">&#41;</span><br />    <span style="color: #ff7700;font-weight:bold;">for</span> i <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: #008000;">range</span><span style="color: black;">&#40;</span>s, e<span style="color: black;">&#41;</span>:<br />      vi = prim.<span style="color: black;">getVertex</span><span style="color: black;">&#40;</span>i<span style="color: black;">&#41;</span><br />      vertex.<span style="color: black;">setRow</span><span style="color: black;">&#40;</span>vi<span style="color: black;">&#41;</span><br />      v = vertex.<span style="color: black;">getData3f</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />      <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;prim&#160;%s has vertex&#160;%s:&#160;%s&quot;</span> <span style="color: #66cc66;">%</span> <span style="color: black;">&#40;</span>p, vi, <span style="color: #008000;">repr</span><span style="color: black;">&#40;</span>v<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+
+<p>You may find the call to prim.decompose() useful (as shown in the
+above example).  This call automatically decomposes higher-order
+primitive types, like GeomTristrips and GeomTrifans, into the
+equivalent component primitive types, like GeomTriangles; but when called on a GeomTriangles, it returns the GeomTriangles object unchanged.  Similarly,
+GeomLinestrips will be decomposed into GeomLines.  This way you can
+write code that doesn't have to know anything about GeomTristrips and
+GeomTrifans, which are fairly complex; it can assume it will only get
+the much simpler GeomTriangles (or, in the case of lines or points,
+GeomLines and GeomPoints, respectively).
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 31/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1773-0!*!0!*!*!*!* and timestamp 20171007174537 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Other_Vertex_and_Model_Manipulation.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Modifying_existing_geometry_data.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

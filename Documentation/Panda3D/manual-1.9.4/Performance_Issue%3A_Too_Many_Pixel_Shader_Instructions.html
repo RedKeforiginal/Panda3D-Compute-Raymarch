@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Performance Issue: Too Many Shader Instructions - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Performance Issue: Too Many Shader Instructions</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Performance_Issue%253A_Too_Many_Text_Updates.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Issue%253A_Excessive_Fill.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>This only can happen if you have at least one <code>NodePath.setShader</code> or <code>NodePath.setShaderAuto</code> method call in your application, or you are using a post processing filter from CommonManager.
+</p>
+<h2> <span class="mw-headline" id="Too_Many_Vertex_Shader_Instructions">Too Many Vertex Shader Instructions</span></h2>
+<p>Try so simplify your scene. Objects that are far away don't need millions of vertices. Look at LODNode and FadeLODNode.
+</p>
+<h2> <span class="mw-headline" id="Too_Many_Fragment.2FPixel_Shader_Instructions">Too Many Fragment/Pixel Shader Instructions</span></h2>
+<p>An easy way to detect whether this is a bottleneck in your application, try resizing the window. If the framerate heavily varies with the window size or screen resolution, you're most likely dealing with this problem.
+</p><p>If your frame rate strong depends on the window or screen resolution, this may be one hint that your fragment shader has too many instructions. Another problem is if your depth complexity is too high. Try to look at your scene from different angles and positions. If your frame rate varies then the overdraw from one specific view angle is to high.
+</p><p>Try to minimize the objects Panda3D needs to draw. Use <code>lens.setFar</code>, or fallback to a simpler fragment shaders for objects that are far away. If an object is far away from the viewer it doesn't make sense to apply normal mapping. LODNode and FadeLODNode may help.
+</p><p>If your fragment shader is self made, then try to offload some work to your vertex shader.
+</p><p>There is a simple method to test your scene. Replace your whole fragment shader with the following snippet:
+</p>
+<pre class="codeblock">
+o_color = float4(1.0, 0.0, 1.0, 0.0);
+</pre>
+<p>If the frame rate doesn't change, then it is the depth complexity. It if changes it may be the depth complexity or the shader.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 38/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2199-0!*!*!!*!*!* and timestamp 20171008113400 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Performance_Issue%253A_Too_Many_Text_Updates.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Performance_Issue%253A_Excessive_Fill.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

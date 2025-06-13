@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Pipeline Tips - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Pipeline Tips</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Interrogate.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Model_Export.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>This section isn't totally related to Panda3D. However, these are a few good pointers on how to keep the 'art to programmer' pipeline running smoothly.
+</p>
+<h2> <span class="mw-headline" id="How_artists_can_help_programmers_with_the_pipeline"> How artists can help programmers with the pipeline </span></h2>
+<p><b>"Keep renaming to a minimum, preferably with good names to start with, and especially for parts or joints that the programmer will have to manipulate."</b>
+</p><p>Programmers generally deal with objects by their names, not with a graphical tool like artists. Every time a name changes, a programmer has to make the change in his or her code, and often has to hunt through the egg to try and figure out what the name has changed to. In a large model, this can be very time-consuming. If you do have to change a name, make sure to let the programmer know when you give him or her the new model.
+</p><p><b>"Check your model in pview before handing it off."</b>
+</p><p>The biggest delays in the pipeline come from the back and forth iterations between artist and programmer. A quick check with pview will often find missing textures, backward facing polygons, incorrect normals, mis-tagged collision solids, and a host of other problems.
+</p><p><b>"Build models with good hierarchy, and don't change the hierarchy unnecessarily."</b>
+</p><p>A well organized hierarchy can make a model much easier for a programmer to work with, and can also have a significant effect on rendering performance. For rendering purposes, good hierarchies group objects that are close to each other together, and don't have more than a few hundred to a few thousand triangles (depending on the target hardware) in each node.  (Low-end hardware performs better with only a few hundred triangles per node; high-end hardware performs better with several thousand triangles per node.)
+</p><p><b>"Put groups of objects that the programmer will have to deal with in a special way under a single node."</b>
+</p><p>For instance, if there's a section of an environment that will be hidden during some point in the game, put that entire section under a single node. The programmer might also like certain classes of collision solids to be under a single node.
+</p><p><b>"Don't use lossy compression (i.e. jpeg) for textures."</b>
+</p><p>Although jpegs save space on disk, they also degrade your beautiful textures! If textures have to be manipulated later (i.e. downgraded), this degradation will only be compounded. Every time you edit and resave a jpeg, the image quality gets worse. Jpegs may need to be used in the finished product, but it's always best to make this conversion the last step in the process, not the first one. I recommend using the png format, which provides lossless compression and full support for all color depths as well as alpha.
+</p><p><b>"If there's any chance that an object will be broken apart and used as separate pieces, give each piece a separate texture map."</b>
+</p><p>Nothing hurts worse than having to remap an object after its been painted, or wasting huge swaths of texture space.
+</p><p><b>"If parts of an object are semi-transparent, make sure those pieces are separate parts in the hierarchy."</b>
+</p><p>Rendering semi-transparent objects is a little tricky. Each object with transparency needs to be sorted back-to-front each frame by the rendering engine. If things aren't going quite as planned, a programmer might need to get a handle on a transparent part in order to manipulate its render order.
+</p><p><b>"If a semi-transparent object is very large, or you can see through multiple layers (like a glass sphere), break it up into separate pieces."</b>
+</p><p>Objects with multiple layers of transparency won't render correctly depending on which angle they're being view from, because some of the polygons will be drawn before others, and if it's all one object, the rendering engine can't sort them back-to-front.
+</p><p><b>"Use quads, and higher-order polygons, for collision solids when possible, rather than triangles.  But make sure your quads are planar."</b>
+</p><p>In general, dividing a quad into two triangles doubles the time it takes to test a collision with it, so it is better to model collision polygons with quads when possible.  The same goes for five-sided and higher-order polygons as well.  However, there are two important requirements: (1) the collision polygons must be convex, not concave, and (2) they must be perfectly flat (all of the vertices must lie <em>exactly</em> in the same plane).  If either of these is not met, Panda will triangulate the polygon anyway.
+</p>
+<h3> <span class="mw-headline" id="Things_that_don.27t_matter_as_much.2C_but_will_give_programmers_warm-fuzzies"> Things that don't matter as much, but will give programmers warm-fuzzies </span></h3>
+<p><b>"Use a consistent naming scheme."</b>
+</p><p>Programmers live in a world where names and naming conventions are incredibly important. Nothing makes them happier than when the names of art assets fit in well with their code. Common naming conventions are: mixedCaseNames, CapitalizedMixedCaseNames, names_with_underscores, names-with-hyphens. Pick one and stick with it.
+</p><p><b>"Don't misspell things."</b>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1008-0!*!*!!*!*!* and timestamp 20171008113402 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Interrogate.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Model_Export.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
