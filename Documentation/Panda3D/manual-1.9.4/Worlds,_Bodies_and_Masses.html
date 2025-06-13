@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Worlds, Bodies and Masses - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Worlds, Bodies and Masses</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Using_ODE_with_Panda3D.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simulating_the_Physics_World.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Worlds">Worlds</span></h2>
+<p>To use the ODE physics system, you need to have an OdeWorld. A world is an essential component in the physics structure, it holds all your rigid bodies and joints, and controls global parameters, such as gravity, for the scene.
+
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">ode</span> <span style="color: #ff7700;font-weight:bold;">import</span> OdeWorld<br />myWorld = OdeWorld<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myWorld.<span style="color: black;">setGravity</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-9.81</span><span style="color: black;">&#41;</span></pre>
+<p>
+
+As you can see, the gravity is set to a downward vector with length 9.81. This value is the average gravity acceleration on Earth. If you want objects to fall faster or slower, (e.g. if your game plays on the Moon, where the gravity acceleration is 1.62 m/s²) you need to change this value, but in most cases you want to leave it around 9.81 m/s².
+</p>
+<h2> <span class="mw-headline" id="Bodies_and_masses">Bodies and masses</span></h2>
+<p>In physics space, the objects that matter are called <i>bodies</i>. In order to have something affected by physics, you need to create an OdeBody, and set an OdeMass on it.
+</p><p>An OdeMass does not just define how much an object weighs. You roughly have to specify a shape so ODE will know how the mass is divided over the body. Also, ODE will have to know either the density of the object or the mass.
+</p><p>In the following example the geometry is assumed to be a box-shaped object made of lead, and the box has a width, length and height of 1 meter.
+
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">ode</span> <span style="color: #ff7700;font-weight:bold;">import</span> OdeBody, OdeMass<br />myBody = OdeBody<span style="color: black;">&#40;</span>myWorld<span style="color: black;">&#41;</span><br />myBody.<span style="color: black;">setPosition</span><span style="color: black;">&#40;</span>somePandaObject.<span style="color: black;">getPos</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />myBody.<span style="color: black;">setQuaternion</span><span style="color: black;">&#40;</span>somePandaObject.<span style="color: black;">getQuat</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />myMass = OdeMass<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myMass.<span style="color: black;">setBox</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">11340</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />myBody.<span style="color: black;">setMass</span><span style="color: black;">&#40;</span>myMass<span style="color: black;">&#41;</span></pre>
+<p>
+
+First, the position and quaternion are set of the body, this is directly copied from the NodePath's pos and quat; do note that when using getPos and getQuat, you need to get them in global coordinate space, this is done here by specifying <code>render</code> as first argument.
+</p><p>Then, a mass is set for the body. The first argument specified in the setBox call is the <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Density">density</a> of the object, the second is the dimensions (lx, ly, lz) of the box. Each material has it's own density, for example, water has a density of 1000 kg/m³, copper usually between 8920 and 8960 kg/m³. The value shown in the example above is the density for lead.
+</p><p>There are of course cases where you don't know the density (although it is easy to calculate), or when the object is not easy to fit in a box shape. OdeMass provides the following methods:
+</p>
+<ul><li> <code>setZero()</code>: Sets all the mass parameters to 0, meaning it will have no mass at all.
+</li><li> <code>setSphere(density, radius)</code>: This specifies that the object's mass is spherical with the given radius.
+</li><li> <code>setSphereTotal(total_mass, radius)</code>: Use this if you don't know the density but do know the total mass of the object.
+</li><li> <code>setBox(density, lx, ly, lz)</code>: Use this for box-shaped objects.
+</li><li> <code>setBoxTotal(total_mass, lx, ly, lz)</code>: The same as the former, but specifies the total mass instead of the density.
+</li><li> <code>setCylinder(density, direction, radius, length)</code>: To be used for objects shaped like a cylinder.
+</li><li> <code>setCylinderTotal(total_mass, direction, radius, length)</code>: Again the same cylinder, but specifies the mass instead of the density.
+</li><li> <code>setCapsule(density, direction, radius, length)</code>: A capsule is similar to a cylinder, but has capped edges.
+</li><li> <code>setCapsuleTotal(total_mass, direction, radius, length)</code>: Use this if you only have a mass and not the density.
+</li><li> <code>add(other)</code>: Adds an other OdeMass object to this mass.
+</li><li> <code>adjust(total_mass)</code>: Adjusts the mass parameters to have the specified mass.
+</li><li> <code>rotate(matrix)</code>: Rotates the matrix using the specified Mat3 object.
+</li></ul>
+<p>More methods are listed in the <a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=OdeMass">API reference</a>.
+</p><p>For more complex shapes, you might want to decompose the object into several simple ones, and use the <code>add(other)</code> method to add the masses together. If that still isn't enough, you might want to set the individual parameters of the mass using <code>setParameters</code>, which is not explained here because it that goes beyond the scope of this manual page.
+Note that the shape you set is not actually used for collisions: it's just used to roughly determine how the mass is divided in the object.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 173/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2285-0!*!*!!*!*!* and timestamp 20171008103531 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Using_ODE_with_Panda3D.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Simulating_the_Physics_World.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

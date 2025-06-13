@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>VR Helmets and Trackers - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: VR Helmets and Trackers</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Joystick_Support.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Math_Engine.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>This section is especially geared towards Carnegie Mellon University's virtual reality equipment. The tracking setup used consists of a magnetic tracker base that receives signals, a virtual reality headmount, and four small trackers, one of which is attached to the headmount. These magnetic trackers may be held in the hand or implanted in non-metallic objects, and they will relay their position and orientation to the tracker base, which then supplies it to the program.
+</p><p>First, make sure that the VRHandler is in the same folder as your python files. Then, import it as you would any Panda3D module.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> VRHandler <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span></pre>
+<p>Once imported, the VRHandler functions are now available. Make a constant in your code that controls whether or not the tracker is used.
+</p>
+<pre class="python">USE_TRACKER = <span style="color: #008000;">True</span></pre>
+<p>or
+</p>
+<pre class="python">USE_TRACKER = <span style="color: #008000;">False</span></pre>
+<p>Then, activate the tracker if required:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">if</span> USE_TRACKER:<br />  <span style="color: #008000;">self</span>.<span style="color: black;">tracker</span> = Tracker<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  camera.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">tracker</span>.<span style="color: black;">getHMDHelper</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br /><span style="color: #ff7700;font-weight:bold;">else</span>:<br />  <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;Using Mouse and Keyboard Controls&quot;</span><br />  <span style="color: #008000;">self</span>.<span style="color: black;">controls</span> = MouseAndKeyboardControls<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #008000;">self</span>.<span style="color: black;">controls</span>.<span style="color: black;">start</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>If the tracker is not being used, the above code enables first-person-shooter style controls, using WASD to move, R and F for height, and the mouse to look around. You can add the following lines to your code if you want to customize the feel of the controls:
+</p>
+<pre class="python"><span style="color: #66cc66;">&amp;</span><span style="color: #808080; font-style: italic;">#35; Keyboard control constants</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">controls</span>.<span style="color: black;">acceleration</span> = <span style="color: #ff4500;">15</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">controls</span>.<span style="color: black;">maxSpeed</span> = <span style="color: #ff4500;">5</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">controls</span>.<span style="color: black;">friction</span> = <span style="color: #ff4500;">6</span></pre>
+<p>Change those three numbers to whatever feels right for your world.
+</p><p>Typically, the tracker base is 6.5 feet off the ground, and the range of the trackers is from three or so inches from the tracker base to around the knees of an average person. The tracker base is treated as a NodePath, so it may be moved around. If you want the guest to move around the world while his real-life feet stay put, get the tracker base helper and move that around:
+</p>
+<pre class="python"><span style="color: #008000;">self</span>.<span style="color: black;">trackerBaseHelper</span> = <span style="color: #008000;">self</span>.<span style="color: black;">tracker</span>.<span style="color: black;">getTrackerBaseHelper</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">trackerBaseHelper</span>.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">3</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span></pre>
+<p>Finally, objects within the Panda3D application may be reparented to the trackers. The four trackers are HMDHelper, YellowHelper, GreenHelper, and BlueHelper. Also, remember that reparenting may create some strange inheritance issues.
+</p>
+<pre class="python">NodePath.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">tracker</span>.<span style="color: black;">getHMDHelper</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: black;">&#41;</span><br />NodePath.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">tracker</span>.<span style="color: black;">getYellowHelper</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: black;">&#41;</span><br />NodePath.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">tracker</span>.<span style="color: black;">getGreenHelper</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: black;">&#41;</span><br />NodePath.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">tracker</span>.<span style="color: black;">getBlueHelper</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> <span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 22/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1032-0!*!*!*!*!*!* and timestamp 20171008061117 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Joystick_Support.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Math_Engine.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
