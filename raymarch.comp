@@ -36,9 +36,13 @@ uniform float u_R0; // Reflectance at normal incidence (typically ~0.04 for diel
 // Constants
 //------------------------------------------------------------------------------------------------
 const float PI = 3.14159265359;
-const int MAX_STEPS = 128;
+const int   MAX_STEPS = 256;
 const float MAX_DIST = 100.0;
-const float SURF_DIST = 0.001;
+const float SURF_DIST = 0.0005;
+
+float epsilon(float t) {
+    return t * 0.0001 > SURF_DIST ? t * 0.0001 : SURF_DIST;
+}
 
 //================================================================================================
 // Scene Definition (Signed Distance Function)
@@ -91,7 +95,7 @@ vec3 fresnelSchlick(float c, vec3 F0) { return F0+(vec3(1.)-F0)*pow(clamp(1.-c,0
 float calcSoftshadow(vec3 ro, vec3 rd, float mint, float tmax) {
     float res = 1.0;
     float t = mint;
-    for(int i=0; i<24; ++i){
+    for(int i=0; i<48; ++i){
         float h = map(ro + rd * t);
         res = min(res, 8.0*h / t);
         t += clamp(h, 0.02, 0.1);
@@ -114,9 +118,9 @@ float calcAO(vec3 pos, vec3 nor) {
 
 float calculateShadow(vec3 ro, vec3 rd, float max_t) {
     float t = 0.01;
-    for (int i = 0; i < 48; ++i) {
+    for (int i = 0; i < 96; ++i) {
         float h = map(ro + rd * t);
-        if (h < SURF_DIST) return 0.0;
+        if (h < epsilon(t)) return 0.0;
         t += h;
         if (t > max_t) break;
     }
@@ -257,7 +261,7 @@ void main() {
     for (int i = 0; i < MAX_STEPS; ++i) {
         vec3 p = ro + rd * t;
         float d = map(p);
-        if (d < SURF_DIST) {
+        if (d < epsilon(t)) {
             vec3 V = -rd;
             vec3 n = getNormal(p);
             imageStore(outputImage, pixel, calculateColor(p, n, V));

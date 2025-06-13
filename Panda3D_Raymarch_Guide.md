@@ -74,7 +74,8 @@ uniform mat4  camMat;
 uniform vec2  iResolution;
 uniform float iTime;
 
-const float EPSILON = 0.0005;
+const float EPSILON_BASE = 0.0005;
+float epsilon(float t){ return max(EPSILON_BASE, t*0.0001); }
 const int   MAX_STEPS = 256;
 const float MAX_DIST  = 100.0;
 
