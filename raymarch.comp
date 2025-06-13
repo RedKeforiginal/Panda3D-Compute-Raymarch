@@ -37,7 +37,7 @@ uniform float u_R0; // Reflectance at normal incidence (typically ~0.04 for diel
 //------------------------------------------------------------------------------------------------
 const float PI = 3.14159265359;
 const int   MAX_STEPS = 256;
-const float MAX_DIST = 100.0;
+const float MAX_DIST = 1000.0;
 const float SURF_DIST = 0.0005;
 
 float epsilon(float t) {
