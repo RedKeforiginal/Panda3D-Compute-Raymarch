@@ -1,4 +1,4 @@
-Agents must reference Panda3D documentation when working on Python scripts and OpenGL documentation when working on shaders.
+Agents must reference Panda3D documentation (docs.panda3d.org) when working on Python scripts and OpenGL documentation (docs.gl) when working on shaders.
 
 Agents should ensure that any Python scripts that they modify compile with those additions.
 
