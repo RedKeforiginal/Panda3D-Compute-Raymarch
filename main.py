@@ -1,3 +1,5 @@
+# --- START OF FILE main.py ---
+
 from panda3d.core import loadPrcFileData
 
 # Configure window size before loading ShowBase
@@ -5,7 +7,6 @@ from panda3d.core import loadPrcFileData
 # See Panda3D config variable documentation:
 # https://docs.panda3d.org/1.10/python/programming/configuration/prc-globals
 loadPrcFileData("", "coordinate-system yup-right")
-
 loadPrcFileData('', 'win-size 1024 1024')
 
 from direct.showbase.ShowBase import ShowBase
@@ -19,7 +20,6 @@ from panda3d.core import (
     ComputeNode,
     CardMaker,
     Mat4,
-    OrthographicLens,
 )
 
 from procedural_materials import MarbleMaterial
@@ -57,6 +57,8 @@ class FirstPersonController:
             dy = md.getY() - self.center_y
             self.heading -= dx * self.sensitivity
             self.pitch = max(-90, min(90, self.pitch - dy * self.sensitivity))
+            # The controller should manipulate `self.base.camera`, which is the
+            # parent node intended for camera movement.
             self.base.camera.setHpr(self.heading, self.pitch, 0)
             self.base.win.movePointer(0, self.center_x, self.center_y)
 
@@ -83,11 +85,13 @@ class MainMenuApp(ShowBase):
 
     def __init__(self):
         super().__init__()
-        lens = OrthographicLens()
-        lens.setFilmSize(20, 20)
-        lens.setNearFar(0.1, 1000)
-        self.cam.node().setLens(lens)
-        self.camLens = lens
+        
+        # A first-person controller requires a standard perspective camera.
+        # We use the default lens provided by ShowBase and get a handle to it
+        # for passing its projection matrix to the shader later.
+        self.camLens = self.cam.node().getLens()
+        self.camLens.setFov(70)
+
         self.light_spacing = Vec3(4.0, 4.0, 4.0)
         self.light_offset = Vec3(0.0, 0.0, 0.0)
         self.light_color = Vec3(1.0, 0.85, 0.8)
@@ -160,6 +164,7 @@ class MainMenuApp(ShowBase):
         self.lighting_entries = entries
         DirectButton(text="Apply", scale=0.07, pos=(-0.2,-0.75,0), command=self._apply_lighting, parent=self.menu_frame)
         DirectButton(text="Back", scale=0.07, pos=(0.2,-0.75,0), command=self._build_options_menu, parent=self.menu_frame)
+        
     def _apply_lighting(self):
         try:
             self.light_spacing = Vec3(
@@ -185,7 +190,7 @@ class MainMenuApp(ShowBase):
             self.compute_np.set_shader_input("u_light_offset", self.light_offset)
             self.compute_np.set_shader_input("u_light_color", self.light_color)
 
-
+# In main.py, replace the MainMenuApp class's compute methods with these:
 
     def _setup_compute(self):
         width = self.win.getXSize()
@@ -201,20 +206,21 @@ class MainMenuApp(ShowBase):
         self.compute_node.add_dispatch(groups_x, groups_y, 1)
         self.compute_np = self.render.attach_new_node(self.compute_node)
         self.compute_np.set_shader(self.compute_shader)
-        # Provide the texture as a writable image for the compute shader.
-        # Panda3D expects the read/write flags to be passed positionally.
         self.compute_np.set_shader_input("outputImage", self.output_tex, False, True)
 
         material = MarbleMaterial()
         albedo, rough = material.generate()
         self.compute_np.set_shader_input("albedo_tex", albedo)
         self.compute_np.set_shader_input("roughness_tex", rough)
-        self.compute_np.set_shader_input("u_color", Vec3(1, 1, 1))
-        self.compute_np.set_shader_input("u_roughness", 0.5)
         self.compute_np.set_shader_input("u_R0", 0.04)
         self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
         self.compute_np.set_shader_input("u_light_offset", self.light_offset)
         self.compute_np.set_shader_input("u_light_color", self.light_color)
+
+        # Set initial values for the new uniforms
+        self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        self.compute_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
+        self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
 
         cm = CardMaker("fullscreen")
         cm.set_frame_fullscreen_quad()
@@ -225,23 +231,23 @@ class MainMenuApp(ShowBase):
         self.taskMgr.add(self._update_compute, "update-compute")
 
     def _update_compute(self, task):
-        # NodePath.getMat returns the camera-to-world transform. Invert it to
-        # obtain the world-to-camera view matrix. See Panda3D docs:
-        # https://docs.panda3d.org/1.10/python/reference/panda3d.core.NodePath#panda3d.core.NodePath.getMat
-        view = Mat4(self.cam.get_mat(self.render))
-        view.invert_in_place()
-
-        proj = self.camLens.get_projection_mat()
-        view_proj = proj * view
-        inv_view_proj = Mat4(view_proj)
-        inv_view_proj.invert_in_place()
-        self.compute_np.set_shader_input("inv_view_proj", inv_view_proj)
+        # Instead of calculating a complex inverse matrix, we pass the simple,
+        # direct components needed for manual ray construction.
+        
+        # 1. The camera's world position (for the ray origin)
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        
+        # 2. The camera's transformation matrix (for rotating the ray direction)
+        self.compute_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
+        
+        # 3. The projection matrix (to extract the FOV)
+        self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
+
         self.compute_np.set_shader_input("time", task.time)
         return task.cont
+        
     def _on_launch(self):
         if hasattr(self, "menu_frame"):
-
             self.menu_frame.destroy()
         if hasattr(self, "controller"):
             self.taskMgr.remove("fps-update")
