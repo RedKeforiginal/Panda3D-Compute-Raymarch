@@ -13,6 +13,8 @@ Version 0.1 will:
 
 For now, we will import the entire Panda3D library to encourage the use of its built-in functions.
 
+This project uses an `OrthographicLens` for rendering. The Panda3D manual explains how to configure the film size and near/far planes: https://docs.panda3d.org/1.10/python/programming/cameras/orthographic-lenses
+
 ## Procedural Materials
 
 Procedural PBR materials are generated at runtime using simplex noise and
