@@ -22,7 +22,6 @@ from panda3d.core import (
     Mat4,
 )
 
-from procedural_materials import MarbleMaterial
 
 class FirstPersonController:
     """Simple FPS camera controller using Panda3D input."""
@@ -194,6 +193,8 @@ class MainMenuApp(ShowBase):
 
     def _setup_compute(self):
         width = self.win.getXSize()
+        # Create the output texture and dispatch compute shader as shown in the Panda3D manual:
+        # https://docs.panda3d.org/1.10/python/programming/shaders/compute-shaders
         height = self.win.getYSize()
         self.output_tex = Texture()
         self.output_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
@@ -205,13 +206,8 @@ class MainMenuApp(ShowBase):
         self.compute_node = ComputeNode("raymarch")
         self.compute_node.add_dispatch(groups_x, groups_y, 1)
         self.compute_np = self.render.attach_new_node(self.compute_node)
-        self.compute_np.set_shader(self.compute_shader)
         self.compute_np.set_shader_input("outputImage", self.output_tex, False, True)
-
-        material = MarbleMaterial()
-        albedo, rough = material.generate()
-        self.compute_np.set_shader_input("albedo_tex", albedo)
-        self.compute_np.set_shader_input("roughness_tex", rough)
+        self.compute_np.set_shader(self.compute_shader)
         self.compute_np.set_shader_input("u_R0", 0.04)
         self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
         self.compute_np.set_shader_input("u_light_offset", self.light_offset)
