@@ -82,8 +82,12 @@ class MainMenuApp(ShowBase):
     def _build_menu(self):
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
+        if hasattr(self, "controller"):
+            self.taskMgr.remove("fps-update")
+            del self.controller
         props = WindowProperties()
         props.setCursorHidden(False)
+        props.setMouseMode(WindowProperties.M_absolute)
         self.win.requestProperties(props)
         self.menu_frame = DirectFrame(
             frameColor=(0, 0, 0, 1),
@@ -219,8 +223,12 @@ class MainMenuApp(ShowBase):
     def _on_launch(self):
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
+        if hasattr(self, "controller"):
+            self.taskMgr.remove("fps-update")
+            del self.controller
         props = WindowProperties()
         props.setCursorHidden(True)
+        props.setMouseMode(WindowProperties.M_relative)
         self.win.requestProperties(props)
         self.controller = FirstPersonController(self)
         self._setup_compute()
