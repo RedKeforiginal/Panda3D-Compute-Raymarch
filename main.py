@@ -154,13 +154,13 @@ class MainMenuApp(ShowBase):
             self.menu_frame.destroy()
         self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.7,0.7,-0.9,0.9), pos=(0,0,0))
         entries = {}
-        labels = ["X spacing","Y spacing","Z spacing","X offset","Y offset","Z offset","red value","green value","blue value"]
-        defaults = [self.light_spacing.x,self.light_spacing.y,self.light_spacing.z,self.light_offset.x,self.light_offset.y,self.light_offset.z,self.light_color.x,self.light_color.y,self.light_color.z]
-        for i,label in enumerate(labels):
-            y=0.7 - i*0.15
-            DirectLabel(text=label, scale=0.05, pos=(-0.4,y,0), parent=self.menu_frame)
-            entry=DirectEntry(text=str(defaults[i]), scale=0.05, pos=(0.2,y-0.02,0), numLines=1, focus=0, parent=self.menu_frame)
-            entries[label]=entry
+        labels = ["X spacing", "Y spacing", "Z spacing", "X offset", "Y offset", "Z offset", "red value", "green value", "blue value"]
+        defaults = [self.light_spacing.x, self.light_spacing.y, self.light_spacing.z, self.light_offset.x, self.light_offset.y, self.light_offset.z, self.light_color.x, self.light_color.y, self.light_color.z]
+        for i, label in enumerate(labels):
+            y = 0.7 - i * 0.15
+            DirectLabel(text=label, scale=0.05, pos=(-0.4, y, 0), parent=self.menu_frame)
+            entry = DirectEntry(initialText=str(defaults[i]), scale=0.05, pos=(0.2, y - 0.02, 0), numLines=1, focus=0, parent=self.menu_frame)
+            entries[label] = entry
         self.lighting_entries = entries
         DirectButton(text="Apply", scale=0.07, pos=(-0.2,-0.75,0), command=self._apply_lighting, parent=self.menu_frame)
         DirectButton(text="Back", scale=0.07, pos=(0.2,-0.75,0), command=self._build_options_menu, parent=self.menu_frame)
