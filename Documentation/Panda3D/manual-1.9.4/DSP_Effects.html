@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DSP Effects - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DSP Effects</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Audio_Managers.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="3D_Audio.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>DSP, or Digital Signal Processing, allows you to apply effect filters to your ingame audio. As of now, DSP effects are only available in Panda if you use the FMOD audio library. By default, Panda ships using the OpenAL audio library but FMOD can be enabled simply by editing <a href="Configuring_Panda.html" title="Configuring Panda" class="mw-redirect">Config.prc</a>. Please keep in mind that using FMOD in a commercial application will require purchasing a license.
+</p><p>You will need to change this line in your Config.prc: (some versions of Panda might already be set to FMOD)<br />
+<code>
+audio-library-name p3openal_audio
+</code>
+</p><p>To this:<br />
+<code>
+audio-library-name p3fmod_audio
+</code>
+</p>
+<h2> <span class="mw-headline" id="The_FilterProperties_Object">The FilterProperties Object</span></h2>
+<p>Any DSP you add to your sound will require the use of "FilterProperties", which is a list of filters and their coefficients. Start with this import:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> FilterProperties</pre>
+<p>This will allow you to create lists of filters, like this one:
+</p>
+<pre class="python">fp = FilterProperties<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>This just adds a blank filter list. From here we can add whatever filter we'd like. To stay consistent with the example below, we'll add a reverb effect.
+</p>
+<pre class="python">fp.<span style="color: black;">addReverb</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.6</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span></pre>
+<p>All this really does is add this particular reverb to our filter list - sound is not yet affected. To apply these filters to our audio output, use:
+</p>
+<pre class="python">audioMgr.<span style="color: black;">configureFilters</span><span style="color: black;">&#40;</span>fp<span style="color: black;">&#41;</span></pre>
+<p>where <code>audioMgr</code> is an <code>AudioManager</code> object, most likely <code>base.sfxManagerList[0]</code> or <code>base.musicManager</code>.
+</p><p>Depending on the sound you use, reverb may be very or only slightly noticeable; try using a quick sound at first, like a clap.
+</p><p>You can add more than just reverb to your sound. The full list of available filters is here:
+</p><p><a rel="nofollow" class="external free" href="http://www.panda3d.org/apiref.php?page=FilterProperties">http://panda3d.org/apiref.php?page=FilterProperties</a>
+</p><p>Below is a sample program for adding a reverb effect:
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># This is just to ensure that we are using FMOD. In your application,</span><br /><span style="color: #808080; font-style: italic;"># please edit the Config.prc file that you distribute</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> loadPrcFileData<br />loadPrcFileData<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;&quot;</span>, <span style="color: #483d8b;">&quot;audio-library-name p3fmod_audio&quot;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> FilterProperties<br />&#160;<br />mySound = loader.<span style="color: black;">loadSfx</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;models/audio/sfx/GUI_rollover.wav&quot;</span><span style="color: black;">&#41;</span><br />mySound.<span style="color: black;">setLoop</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />mySound.<span style="color: black;">play</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />fp = FilterProperties<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />fp.<span style="color: black;">addReverb</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0.6</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">sfxManagerList</span><span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span>.<span style="color: black;">configureFilters</span><span style="color: black;">&#40;</span>fp<span style="color: black;">&#41;</span><br />&#160;<br />run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 100/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1789-0!*!0!*!*!*!* and timestamp 20171008033520 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Audio_Managers.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="3D_Audio.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

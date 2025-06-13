@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectRadioButton - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectRadioButton</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectCheckButton.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectDialog.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span> 
+<b>Note:</b> This feature is only available in Panda3D versions 1.5.3 and higher
+</p><p>DirectRadioButtons are similar to check buttons, except only one button is selected when it is clicked.  Their usage is almost identical to regular buttons, except that the text area and box area can be modified separately.
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>text_scale
+</td>
+<td>Scale of the displayed text
+</td>
+<td>(sx,sz)
+</td></tr>
+<tr>
+<td>indicatorValue
+</td>
+<td>The initial boolean state of the radiobutton
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>variable
+</td>
+<td>The variable whose value will be set by radiobutton. Since we can not use call by reference for int or string variables in python, I used a list insteads.
+</td>
+<td>define a list and pass it
+</td></tr>
+<tr>
+<td>value
+</td>
+<td>The value to be set to the variable. Since we are using a list, we can define multiple values. But the length of value list must be same as length of variable list.
+</td>
+<td>a list of values
+</td></tr>
+<tr>
+<td>others
+</td>
+<td>The list of radio button instances sharing same variable. This must be set by using setOthers() after all radiobutton is created.
+</td>
+<td>a list of radioButton instances
+</td></tr>
+<tr>
+<td>boxImage
+</td>
+<td>BG Image of the radio button
+</td>
+<td>Image Path
+</td></tr>
+<tr>
+<td>boxImageColor
+</td>
+<td>Color of the BG image
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>boxImageScale
+</td>
+<td>Scale of the BG image
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>boxGeom
+</td>
+<td>FG Image on the radio button
+</td>
+<td>Image Path
+</td></tr>
+<tr>
+<td>boxGeomColor
+</td>
+<td>Color of the FG image
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>boxGeomScale
+</td>
+<td>Scale of the FG image
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>boxPlacement
+</td>
+<td>Position of the box relative to the text area
+</td>
+<td>‘left’,’right’, ‘above’, ‘below’, ‘center’
+</td></tr>
+<tr>
+<td>boxBorder
+</td>
+<td>Size of the border around the box
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>command
+</td>
+<td>Command the button performs when clicked (In version 1.6 and higher, no parameter is passed unless extraArgs are defined. Before, a single argument was passed by default.)
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>commandButtons
+</td>
+<td>Which mouse button must be clicked to do the command
+</td>
+<td>LMB, MMB, or RMB
+</td></tr>
+<tr>
+<td>rolloverSound
+</td>
+<td>The sound made when the cursor rolls over the button
+</td>
+<td>Sound File Path
+</td></tr>
+<tr>
+<td>clickSound
+</td>
+<td>The sound made when the cursor clicks on the button
+</td>
+<td>Sound File Path
+</td></tr>
+<tr>
+<td>pressEffect
+</td>
+<td>Whether or not the button sinks in when clicked
+</td>
+<td>&lt;0 or 1&gt;
+</td></tr></table>
+<h2> <span class="mw-headline" id="Example"> Example </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText 
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+v = <span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span>
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;This is my Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Callback function to set  text </span>
+<span style="color: #ff7700;font-weight:bold;">def</span> setText<span style="color: black;">&#40;</span>status=<span style="color: #008000;">None</span><span style="color: black;">&#41;</span>:
+    bk_text = <span style="color: #483d8b;">&quot;CurrentValue&#160;:&#160;%s&quot;</span><span style="color: #66cc66;">%</span>v
+    textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>bk_text<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add button</span>
+buttons = <span style="color: black;">&#91;</span>
+    DirectRadioButton<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">'RadioButton0'</span>, variable=v, value=<span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span>, scale=<span style="color: #ff4500;">0.05</span>, pos=<span style="color: black;">&#40;</span><span style="color: #ff4500;">-0.4</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=setText<span style="color: black;">&#41;</span>,
+    DirectRadioButton<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">'RadioButton1'</span>, variable=v, value=<span style="color: black;">&#91;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#93;</span>, scale=<span style="color: #ff4500;">0.05</span>, pos=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=setText<span style="color: black;">&#41;</span>,
+    DirectRadioButton<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">'RadioButton2'</span>, variable=v, value=<span style="color: black;">&#91;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#93;</span>, scale=<span style="color: #ff4500;">0.05</span>, pos=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.4</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=setText<span style="color: black;">&#41;</span>
+<span style="color: black;">&#93;</span>
+&#160;
+<span style="color: #ff7700;font-weight:bold;">for</span> button <span style="color: #ff7700;font-weight:bold;">in</span> buttons:
+    button.<span style="color: black;">setOthers</span><span style="color: black;">&#40;</span>buttons<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Run the tutorial</span>
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2261-0!*!*!*!*!*!* and timestamp 20171008113333 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectCheckButton.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectDialog.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

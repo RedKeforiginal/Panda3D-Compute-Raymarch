@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectWaitBar - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectWaitBar</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectScrolledList.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectSlider.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>DirectWaitBars are similar to status bars; use them to indicate a slow process gradually completing (e.g. a loading screen).  It has various options for both the background bar and the loading bar that fills up as the process progresses.  You can call finish() to automatically fill up the bar, or use:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myWaitBar<span style="color: black;">&#91;</span><span style="color: #483d8b;">'value'</span><span style="color: black;">&#93;</span> = number</pre></div></div>
+<p>to set the value (it ranges from 0 to 100 by default).
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>value
+</td>
+<td>Initial value of the loading bar (from 0 to 100)
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>range
+</td>
+<td>The maximum value of the loading bar
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>barColor
+</td>
+<td>The color of the loading bar
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>barTexture
+</td>
+<td>An image to be display on the loading bar
+</td>
+<td>image filename or Texture object
+</td></tr>
+<tr>
+<td>barRelief
+</td>
+<td>The relief appearance of the loading bar
+</td>
+<td>SUNKEN or RAISED
+</td></tr>
+<tr>
+<td>barBorderWidth
+</td>
+<td>If barRelief is SUNKEN, RAISED, GROOVE, or RIDGE, changes the size of the loading bar’s bevel
+</td>
+<td>(Width,Height)
+</td></tr>
+<tr>
+<td>relief
+</td>
+<td>The relief appearance of the background bar
+</td>
+<td>SUNKEN or RAISED
+</td></tr></table>
+<h2> <span class="mw-headline" id="Example"> Example </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText 
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;This is my Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Callback function to set text</span>
+<span style="color: #ff7700;font-weight:bold;">def</span> incBar<span style="color: black;">&#40;</span>arg<span style="color: black;">&#41;</span>:
+	bar<span style="color: black;">&#91;</span><span style="color: #483d8b;">'value'</span><span style="color: black;">&#93;</span> +=	arg
+	text = <span style="color: #483d8b;">&quot;Progress is:&quot;</span>+<span style="color: #008000;">str</span><span style="color: black;">&#40;</span>bar<span style="color: black;">&#91;</span><span style="color: #483d8b;">'value'</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>+<span style="color: #483d8b;">'%'</span>
+	textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>text<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Create a frame</span>
+frame = DirectFrame<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">&quot;main&quot;</span>, scale = <span style="color: #ff4500;">0.001</span><span style="color: black;">&#41;</span>
+<span style="color: #808080; font-style: italic;"># Add button</span>
+bar = DirectWaitBar<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">&quot;&quot;</span>, value = <span style="color: #ff4500;">50</span>, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,.<span style="color: #ff4500;">4</span>,.<span style="color: #ff4500;">4</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Create 4 buttons</span>
+button_1 = DirectButton<span style="color: black;">&#40;</span>text=<span style="color: #483d8b;">&quot;+1&quot;</span>,scale=<span style="color: #ff4500;">0.05</span>,pos=<span style="color: black;">&#40;</span>-.<span style="color: #ff4500;">3</span>,.<span style="color: #ff4500;">6</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=incBar,extraArgs = <span style="color: black;">&#91;</span><span style="color: #ff4500;">1</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+button_10 = DirectButton<span style="color: black;">&#40;</span>text=<span style="color: #483d8b;">&quot;+10&quot;</span>,scale=<span style="color: #ff4500;">0.05</span>,pos=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,.<span style="color: #ff4500;">6</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=incBar,extraArgs = <span style="color: black;">&#91;</span><span style="color: #ff4500;">10</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+button_m1 = DirectButton<span style="color: black;">&#40;</span>text=<span style="color: #483d8b;">&quot;-1&quot;</span>,scale=<span style="color: #ff4500;">0.05</span>,pos=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.3</span>,.<span style="color: #ff4500;">6</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=incBar,extraArgs = <span style="color: black;">&#91;</span><span style="color: #ff4500;">-1</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+button_m10 = DirectButton<span style="color: black;">&#40;</span>text=<span style="color: #483d8b;">&quot;-10&quot;</span>,scale=<span style="color: #ff4500;">0.05</span>,pos=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.6</span>,.<span style="color: #ff4500;">6</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, command=incBar,extraArgs = <span style="color: black;">&#91;</span><span style="color: #ff4500;">-10</span><span style="color: black;">&#93;</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Run the tutorial</span>
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 16/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1142-0!*!*!*!*!*!* and timestamp 20171008060328 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectScrolledList.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectSlider.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

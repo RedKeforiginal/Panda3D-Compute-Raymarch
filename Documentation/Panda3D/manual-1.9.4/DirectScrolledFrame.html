@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectScrolledFrame - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectScrolledFrame</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectScrollBar.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Render_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The DirectScrolledFrame is a special variant of DirectFrame that allows the user to page through a larger frame than would otherwise fit onscreen.  The DirectScrolledFrame consists of a small onscreen frame which is actually a window onto a potentially much larger virtual canvas; the user can scroll through this canvas through the use of one or two <a href="DirectScrollBar.html" title="DirectScrollBar">DirectScrollBars</a> on the right and bottom of the frame.  DirectScrolledFrame is available beginning with Panda3D version 1.1.
+</p><p>The <code>frameSize</code> parameter controls the size and placement of the visible, onscreen frame; use the <code>canvasSize</code> parameter to control the size of the larger virtual canvas.
+</p><p>You can then parent any widgets you like to the NodePath returned by <code>myFrame.getCanvas()</code>.  The DirectGui items you attach to this canvas NodePath will be visible through the small window; you should position them within the virtual canvas using values within the coordinate range you established via the <code>canvasSize</code> parameter.
+</p><p>By default, the scroll bars are automatically created with the DirectScrolledFrame and will be hidden automatically when they are not needed (that is, if the virtual frame size is equal to or smaller than the onscreen frame size).  You can adjust either frame size at runtime and the scroll bars will automatically adjust as needed.  If you would prefer to manage the scroll bars yourself, you can set one or both of <code>manageScrollBars</code> and <code>autoHideScrollBars</code> to False.
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>canvasSize
+</td>
+<td>Extents of the virtual canvas
+</td>
+<td>(Left, right, bottom, top)
+</td></tr>
+<tr>
+<td>frameSize
+</td>
+<td>Extents of the actual visible frame
+</td>
+<td>(Left, right, bottom, top)
+</td></tr>
+<tr>
+<td>manageScrollBars
+</td>
+<td>Whether to automatically position and scale the scroll bars to fit along the right and bottom of the frame
+</td>
+<td>True or False
+</td></tr>
+<tr>
+<td>autoHideScrollBars
+</td>
+<td>Whether to automatically hide one or both scroll bars when not needed
+</td>
+<td>True or False
+</td></tr>
+<tr>
+<td>scrollBarWidth
+</td>
+<td>Specifies the width of both scroll bars at construction time
+</td>
+<td>Default is 0.08
+</td></tr>
+<tr>
+<td>verticalScroll_relief, verticalScroll_frameSize, etc.
+</td>
+<td>Parameters to control the look of the vertical scroll bar
+</td>
+<td>Any parameters appropriate to <a href="DirectScrollBar.html" title="DirectScrollBar">DirectScrollBar</a>
+</td></tr>
+<tr>
+<td>horizontalScroll_relief, horizontalScroll_frameSize, etc.
+</td>
+<td>Parameters to control the look of the horizontal scroll bar
+</td>
+<td>Any parameters appropriate to <a href="DirectScrollBar.html" title="DirectScrollBar">DirectScrollBar</a>
+</td></tr></table>
+<p>As a very small and simple example on how to use this element we have a simple scrolled frame on the middle of the screen:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+&#160;
+myframe = DirectScrolledFrame<span style="color: black;">&#40;</span>canvasSize = <span style="color: black;">&#40;</span><span style="color: #ff4500;">-2</span>,<span style="color: #ff4500;">2</span>,<span style="color: #ff4500;">-2</span>,<span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span>, frameSize = <span style="color: black;">&#40;</span>-.<span style="color: #ff4500;">5</span>,.<span style="color: #ff4500;">5</span>,-.<span style="color: #ff4500;">5</span>,.<span style="color: #ff4500;">5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span> 
+myframe.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+&#160;
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 22/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1167-0!*!0!*!*!*!* and timestamp 20171008113334 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectScrollBar.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Render_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

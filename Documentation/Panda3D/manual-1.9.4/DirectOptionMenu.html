@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectOptionMenu - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectOptionMenu</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectLabel.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectScrolledList.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The DirectOptionMenu class models a popup menu with an arbitrary number of items.  It is composed of the menu bar, the popup marker, and the popup menu itself.  The popup menu appears when the menu is clicked on and disappears when the user clicks again; if the click was inside the popup, the selection changes.  By default, the text on the menu changes to whatever item is currently selected.  The attributes that affect the appearance of the menu bar don't apply to the popup.  Make sure to specify the items option or it may crash.
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>textMayChange
+</td>
+<td>Whether the text on the menu changes with the selection
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>initialitem
+</td>
+<td>The index of the item that appears next to the cursor when the popup appears
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>items
+</td>
+<td>List of items in the popup menu
+</td>
+<td>[Strings]
+</td></tr>
+<tr>
+<td>command
+</td>
+<td>Function called when an item is selected (the item is passed in as a parameter)
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>commandButtons
+</td>
+<td>Which mouse button must be clicked to open the popup
+</td>
+<td>LMB, MMB, or RMB
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>highlightColor
+</td>
+<td>Color of highlighted text
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>highlightScale
+</td>
+<td>Scale of highlighted text
+</td>
+<td>(Width,Height)
+</td></tr>
+<tr>
+<td>rolloverSound
+</td>
+<td>The sound made when the cursor rolls over the button
+</td>
+<td>Sound File Path
+</td></tr>
+<tr>
+<td>clickSound
+</td>
+<td>The sound made when the cursor clicks on the button
+</td>
+<td>Sound File Path
+</td></tr>
+<tr>
+<td>popupMarkerBorder
+</td>
+<td>Use width to change the size of the border around the popup marker
+</td>
+<td>(Width,Height)
+</td></tr>
+<tr>
+<td>popupMarker_image
+</td>
+<td>Set the state images of the popupMarker
+</td>
+<td>(see directButton: image)
+</td></tr>
+<tr>
+<td>popupMarker_scale
+</td>
+<td>Set the scale of the popupMarker
+</td>
+<td>scale=x or scale=(x,y,z)
+</td></tr>
+<tr>
+<td>popupMarker_pos
+</td>
+<td>Set the poition of the popupMarker relative to the parent optionMenu
+</td>
+<td>pos=(x,y,z)
+</td></tr>
+<tr>
+<td>popupMarker_relief
+</td>
+<td>Set the relief value of the popupMarker, the depth of the beveled edge
+</td>
+<td>relief=x (for int value) or relief=None (for no relief)
+</td></tr></table>
+<h2> <span class="mw-headline" id="Example"> Example </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText 
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;DirectOptionMenu Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.85</span>,<span style="color: #ff4500;">0.85</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+output = <span style="color: #483d8b;">&quot;&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = output, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>,
+ scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Callback function to set  text </span>
+<span style="color: #ff7700;font-weight:bold;">def</span> itemSel<span style="color: black;">&#40;</span>arg<span style="color: black;">&#41;</span>:
+	output = <span style="color: #483d8b;">&quot;Item Selected is: &quot;</span>+arg
+	textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>output<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Create a frame</span>
+menu = DirectOptionMenu<span style="color: black;">&#40;</span>text=<span style="color: #483d8b;">&quot;options&quot;</span>, scale=<span style="color: #ff4500;">0.1</span>,items=<span style="color: black;">&#91;</span><span style="color: #483d8b;">&quot;item1&quot;</span>,<span style="color: #483d8b;">&quot;item2&quot;</span>,<span style="color: #483d8b;">&quot;item3&quot;</span><span style="color: black;">&#93;</span>,initialitem=<span style="color: #ff4500;">2</span>,
+highlightColor=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.65</span>,<span style="color: #ff4500;">0.65</span>,<span style="color: #ff4500;">0.65</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,command=itemSel<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Run the tutorial</span>
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>This is a simple demonstration of the DirectOptionMenu.
+</p>
+<h2> <span class="mw-headline" id="Dynamic_Updating_of_a_Menu"> Dynamic Updating of a Menu </span></h2>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText 
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+bk_text = <span style="color: #483d8b;">&quot;DirectOptionMenu Demo&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = bk_text, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.85</span>,<span style="color: #ff4500;">0.85</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Add some text</span>
+output = <span style="color: #483d8b;">&quot;&quot;</span>
+textObject = OnscreenText<span style="color: black;">&#40;</span>text = output, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.95</span>,<span style="color: #ff4500;">-0.95</span><span style="color: black;">&#41;</span>, 
+scale = <span style="color: #ff4500;">0.07</span>,fg=<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">0.5</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,align=TextNode.<span style="color: black;">ACenter</span>,mayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Callback function to set text</span>
+<span style="color: #ff7700;font-weight:bold;">def</span> itemSel<span style="color: black;">&#40;</span>arg<span style="color: black;">&#41;</span>:
+	<span style="color: #ff7700;font-weight:bold;">if</span><span style="color: black;">&#40;</span>arg <span style="color: #66cc66;">!</span>= <span style="color: #483d8b;">&quot;Add&quot;</span><span style="color: black;">&#41;</span>: <span style="color: #808080; font-style: italic;">#no need to add an element</span>
+		output = <span style="color: #483d8b;">&quot;Item Selected is: &quot;</span>+arg
+		textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>output<span style="color: black;">&#41;</span>
+	<span style="color: #ff7700;font-weight:bold;">else</span>: <span style="color: #808080; font-style: italic;">#add an element</span>
+		tmp_menu = menu<span style="color: black;">&#91;</span><span style="color: #483d8b;">'items'</span><span style="color: black;">&#93;</span>
+		new_item = <span style="color: #483d8b;">&quot;item&quot;</span>+<span style="color: #008000;">str</span><span style="color: black;">&#40;</span><span style="color: #008000;">len</span><span style="color: black;">&#40;</span>tmp_menu<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span>
+		tmp_menu.<span style="color: black;">insert</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-1</span>,new_item<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;">#add the element before add</span>
+		menu<span style="color: black;">&#91;</span><span style="color: #483d8b;">'items'</span><span style="color: black;">&#93;</span> = tmp_menu	
+		<span style="color: #808080; font-style: italic;">#set the status message</span>
+		output = <span style="color: #483d8b;">&quot;Item Added is: &quot;</span>+new_item
+		textObject.<span style="color: black;">setText</span><span style="color: black;">&#40;</span>output<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Create a frame</span>
+menu = DirectOptionMenu<span style="color: black;">&#40;</span>text=<span style="color: #483d8b;">&quot;options&quot;</span>, scale=<span style="color: #ff4500;">0.1</span>,items=<span style="color: black;">&#91;</span><span style="color: #483d8b;">&quot;item1&quot;</span>,<span style="color: #483d8b;">&quot;item2&quot;</span>,<span style="color: #483d8b;">&quot;item3&quot;</span>,<span style="color: #483d8b;">&quot;Add&quot;</span><span style="color: black;">&#93;</span>,
+initialitem=<span style="color: #ff4500;">2</span>,highlightColor=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.65</span>,<span style="color: #ff4500;">0.65</span>,<span style="color: #ff4500;">0.65</span>,<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>,command=itemSel,textMayChange=<span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Procedurally select a item</span>
+menu.<span style="color: #008000;">set</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #808080; font-style: italic;"># Run the tutorial</span>
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>In this example we add an item to the menu whenever the Add item is selected.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1137-0!*!*!!*!*!* and timestamp 20171008113334 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectLabel.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectScrolledList.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

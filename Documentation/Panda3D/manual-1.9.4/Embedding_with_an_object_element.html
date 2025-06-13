@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Embedding with an object element - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Embedding with an object element</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Distributing_via_the_web.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Embedding_with_RunPanda3D.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>There are two different syntaxes for embedding a p3d file in a web
+page.  Internet Explorer requires one particular syntax, and every
+other browser in the world requires another syntax, similar but
+slightly different.  Fortunately, it is possible to write a single web
+page that supports both syntaxes at the same time.
+</p><p>This discussion assumes you are comfortable with writing HTML code in
+a web page.  If you are unfamiliar with HTML syntax, we recommend you
+study a brief tutorial on writing web pages using HTML before
+continuing.
+</p><p>For Internet Explorer, you must use the &lt;object&gt; element to embed a
+p3d file, with code like this:
+</p>
+<pre class="html4strict"><span style="color: #009900;"><a href="http://december.com/html/4/element/object.html"><span style="color: #000000; font-weight: bold;">&lt;object</span></a> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span><br />  <span style="color: #000066;">classid</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;CLSID:924B4927-D3BA-41EA-9F7E-8A89194AB3AC&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br />    <span style="color: #009900;"><a href="http://december.com/html/4/element/param.html"><span style="color: #000000; font-weight: bold;">&lt;param</span></a> <span style="color: #000066;">name</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;data&quot;</span> <span style="color: #000066;">value</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre>
+<p>Note that the width and height are specified as attributes to the
+&lt;object&gt; element.  The classid string is literal, and must always be the
+exact string shown above; this is the string that identifies the
+Panda3D plugin.  The URL of the p3d file to be launched should be
+specified as an attribute of the nested &lt;param&gt; element, as shown
+above.
+</p><p>For other browsers, you also use the &lt;object&gt; element, but it looks a
+little bit different:
+</p>
+<pre class="html4strict"><span style="color: #009900;"><a href="http://december.com/html/4/element/object.html"><span style="color: #000000; font-weight: bold;">&lt;object</span></a> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span><br />  <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;application/x-panda3d&quot;</span> <span style="color: #000066;">data</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre>
+<p>In non-Internet Explorer browsers, you identify the Panda3D plugin
+with the string type="application/x-panda3d", instead of with the
+classid string used by Internet Explorer.  Also, the URL of the p3d
+file is specified as an attribute of the &lt;object&gt; element, instead of
+in a nested &lt;param&gt; element.
+</p><p>In order to design a web page that works on any browser--and you
+should always design web pages that do--you can embed one &lt;object&gt;
+element within the other.  This works because if a browser encounters
+an &lt;object&gt; element that it doesn't understand, it is supposed to load
+whatever is within that &lt;object&gt;'s nested scope, which might be
+another &lt;object&gt; element.  So, for instance, the above examples could
+be written like this:
+</p>
+<pre class="html4strict"><span style="color: #009900;"><a href="http://december.com/html/4/element/object.html"><span style="color: #000000; font-weight: bold;">&lt;object</span></a> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span><br />  <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;application/x-panda3d&quot;</span> <span style="color: #000066;">data</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br />    <span style="color: #009900;"><a href="http://december.com/html/4/element/object.html"><span style="color: #000000; font-weight: bold;">&lt;object</span></a> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span><br />      <span style="color: #000066;">classid</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;CLSID:924B4927-D3BA-41EA-9F7E-8A89194AB3AC&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br />        <span style="color: #009900;"><a href="http://december.com/html/4/element/param.html"><span style="color: #000000; font-weight: bold;">&lt;param</span></a> <span style="color: #000066;">name</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;data&quot;</span> <span style="color: #000066;">value</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br />    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span><br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre>
+<p>The outer &lt;object&gt; element is the non-Internet Explorer version, and
+in case that isn't understood (for instance, because the user is
+running Internet Explorer), then it will fall to the inner &lt;object&gt;
+element instead, which is the Internet Explorer version.
+</p><p>We recommend putting the non-Internet Explorer version on the outside,
+because some versions of Safari seem to get confused if they encounter
+the Internet Explorer version first.
+</p><p>Note that there are additional, optional attributes that may be
+provided to either form of the &lt;object&gt; tag.  These are discussed in
+<a href="Advanced_object_tags.html" title="Advanced object tags">Advanced object tags</a>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 10/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2396-0!*!0!*!*!*!* and timestamp 20171008061811 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Distributing_via_the_web.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Embedding_with_RunPanda3D.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

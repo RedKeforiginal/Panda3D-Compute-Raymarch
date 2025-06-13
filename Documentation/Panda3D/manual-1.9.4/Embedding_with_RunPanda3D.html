@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Embedding with RunPanda3D - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Embedding with RunPanda3D</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Embedding_with_an_object_element.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="About_certificates.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Using nested &lt;object&gt; elements is a straightforward way to embed your
+p3d file, but it does have two disadvantages.  Specifically, (1) it
+requires you to specify all of the options twice, which promotes
+errors; and (2) it doesn't work if you need to specify an "id"
+attribute to access your embedded plugin object via JavaScript,
+because you can't specify the same "id" attribute to two different
+&lt;object&gt; elements.
+</p><p>There's another alternative that solves both problems, using
+JavaScript.  Of course, this requires that your end-users will have
+JavaScript enabled, but this is common; and your web page may have
+this requirement anyway if you are planning to control your p3d
+application via JavaScript.
+</p><p>There's a JavaScript file called RunPanda3D.js that is distributed
+with the Panda3D source.  You'll find it in the directory
+direct/src/directscripts.  Simply copy this JavaScript file to your
+web host, and reference it in your web page like this:
+</p>
+<pre class="html4strict"><span style="color: #009900;"><a href="http://december.com/html/4/element/head.html"><span style="color: #000000; font-weight: bold;">&lt;head&gt;</span></a></span><br />... other head content ...<br /><span style="color: #009900;"><a href="http://december.com/html/4/element/script.html"><span style="color: #000000; font-weight: bold;">&lt;script</span></a> <span style="color: #000066;">src</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;RunPanda3D.js&quot;</span> <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;text/javascript&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/script&gt;</span></span><br />... other head content ...<br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head&gt;</span></span><br /><span style="color: #009900;"><a href="http://december.com/html/4/element/body.html"><span style="color: #000000; font-weight: bold;">&lt;body&gt;</span></a></span><br />... other body content ...<br /><span style="color: #009900;"><a href="http://december.com/html/4/element/script.html"><span style="color: #000000; font-weight: bold;">&lt;script</span></a> <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;text/javascript&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br />P3D_RunContent('data', 'myapp.p3d', 'id', 'myapp_id',<br />    'width', '640', 'height', '480')<br />}<br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/script&gt;</span></span><br />... other body content ...<br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body&gt;</span></span></pre>
+<p>That is, you must include a reference to RunPanda3D.js within the
+&lt;head&gt; part of your web page; and you include a call to the function
+P3D_RunContent() within the &lt;body&gt; part of your web page.
+</p><p>P3D_RunContent() will generate the appropriate form of the &lt;object&gt;
+element for whichever browser the user is currently running: either
+the Internet Explorer form, or the non-Internet Explorer form.  The
+object element is generated via document.write(), wherever the call to
+P3D_RunContent() appears within your web page.
+</p><p>The parameters to P3D_RunContent() must be given in pairs: of each two
+parameters, the first parameter is the keyword, and the second
+parameter is the value.  This is equivalent to a keyword="value" pair
+appearing in the &lt;object&gt; element.  For instance, the above call would
+generate an &lt;object&gt; element something like this:
+</p>
+<pre class="html4strict"><span style="color: #009900;"><a href="http://december.com/html/4/element/object.html"><span style="color: #000000; font-weight: bold;">&lt;object</span></a> <span style="color: #000066;">data</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span> <span style="color: #000066;">id</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp_id&quot;</span> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span><br /><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre>
+<p>(though it will also add either classid or type, according to the type
+of browser the user is running.)
+</p><p>Using P3D_RunContent() also adds two additional <a href="Splash_window_tags.html" title="Splash window tags">Splash window tags</a>, noplugin_img and noplugin_href.  These tags are not available if you embed using the &lt;object&gt; syntax directly.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2397-0!*!0!*!*!*!* and timestamp 20171008113352 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Embedding_with_an_object_element.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="About_certificates.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

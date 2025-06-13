@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Enhanced Mouse Navigation - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Enhanced Mouse Navigation</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Scene_Graph_Browser.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Interrogate.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Enhanced mouse navigation is only available when 'Direct Tools' are enabled.  Information on enabling 'Direct Tools' is available in the <a href="Panda_Tools.html" title="Panda Tools" class="mw-redirect">Panda Tools</a> section.
+</p><p>Direct Tools gives more functionality to the middle mouse button. First, clicking the middle mouse button changes the pivot point it uses to rotate around the environment. The middle mouse button will also move the camera depending on where the cursor is on the screen.
+</p>
+<center><a href="File%253ADirecttools2.jpg.html" class="image"><img alt="Directtools2.jpg" src="Directtools2.jpg" width="440" height="345" /></a></center>
+<center><table>
+<tr><td>Middle Mouse Click</td><td>Sets pivot point for rotating around the world</td></tr>
+<tr><td>Middle Mouse + Middle Region</td><td>Move camera parallel to ground</td></tr>
+<tr><td>Shift + Middle Mouse + Middle Region</td><td>Move camera vertically</td></tr>
+<tr><td>Middle Mouse + Edge Region</td><td>Rotate camera around pivot point</td></tr>
+<tr><td>Middle Mouse + Corner Region</td><td>Roll camera around pivot point</td></tr>
+<tr><td>Shift + Middle Mouse + Edge Region</td><td>Changes pitch of the camera</td></tr>
+</table></center>
+<p>The left mouse button is now used to select and manipulate objects in the environment. Once an object is selected, it may be moved and rotated.
+</p>
+<center><table>
+<tr><td>Left Mouse Click</td><td>Select an object</td></tr>
+<tr><td>Left Mouse + Middle Region</td><td>Move object vertically</td></tr>
+<tr><td>Shift + Left Mouse + Middle Region</td><td>Move object parallel to ground</td></tr>
+<tr><td>Left Mouse + Edge Region</td><td>Rotate object around its pivot point</td></tr>
+<tr><td>Left Mouse + Corner Region</td><td>Roll object around its pivot point</td></tr>
+<tr><td>Control + Left Mouse</td><td>Rescale the model</td></tr>
+</table></center>
+<p>Direct Tools uses a large number of hot keys for camera control, rendering styles, and object control. The full list is in the table below.</p>
+<center><table>
+<tr><td><b>Camera Control</b></td><td> </td><td><b>Render Style</b></td><td> </td></tr>
+<tr><td>+</td><td>Zoom in</td><td>Shift + A</td><td>Show all</td></tr>
+<tr><td>-</td><td>Zoom out</td><td>Control + F</td><td>Flash selected</td></tr>
+<tr><td>1</td><td>Front view (relative to render)</td><td>B</td><td>Toggle backface</td></tr>
+<tr><td>2</td><td>Back view (relative to render)</td><td>L</td><td>Toggle lights</td></tr>
+<tr><td>3</td><td>Right view (relative to render)</td><td>T</td><td>Toggle texture</td></tr>
+<tr><td>4</td><td>Left view (relative to render)</td><td>W</td><td>Toggle wireframe</td></tr>
+<tr><td>5</td><td>Top view (relative to render)</td><td> </td><td> </td></tr>
+<tr><td>6</td><td>Bottom view (relative to render)</td><td><b>Direct Controls</b></td><td> </td></tr>
+<tr><td>7</td><td>¾ view (relative to render)</td><td>Delete</td><td>Delete selected object</td></tr>
+<tr><td>8</td><td>Roll view about axis relative to camera’s axis</td><td>Escape</td><td>Delete all</td></tr>
+<tr><td>9</td><td>Rotate around hot point</td><td>Page Down</td><td>Move down selected object’s hierarchy</td></tr>
+<tr><td>0</td><td>Rotate around hot point</td><td>Page Up</td><td>Move up selected object’s hierarchy</td></tr>
+<tr><td>C</td><td>Center on hot point</td><td>Tab</td><td>Toggle widget mode</td></tr>
+<tr><td>F</td><td>Fit on hot point</td><td>Shift + F</td><td>Grow widget to fit current window</td></tr>
+<tr><td>H</td><td>Move to (0,0,0)</td><td>I</td><td>Plant selected object at cursor intersection point</td></tr>
+<tr><td>Shift + L</td><td>Toggle camera pivot point lock</td><td>M</td><td>Move widget in front of camera</td></tr>
+<tr><td>N</td><td>Select next possible camera COA (along last intersection ray)</td><td>P</td><td>Set active parent to selected object</td></tr>
+<tr><td>U</td><td>Orbit upright camera about hot point</td><td>R</td><td>WRT reparent selected to active parent</td></tr>
+<tr><td>Shift + U</td><td>Upright camera</td><td>Shift + R</td><td>Reparent selected to active parent</td></tr>
+<tr><td>`</td><td>Kill camera move task</td><td>S</td><td>Reselect last selected object</td></tr>
+<tr><td> </td><td> </td><td>V</td><td>Toggle widget visibility</td></tr>
+<tr><td><b>Undo/Redo</b></td><td> </td><td>Shift + V</td><td>Toggle COA marker visibility</td></tr>
+<tr><td>[</td><td>Undo</td><td>&lt;</td><td>Shrink widget</td></tr>
+<tr><td>]</td><td>Redo</td><td>&gt;</td><td>Expand widget</td></tr>
+</table></center>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 1/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:974-0!*!0!*!*!2!* and timestamp 20171008062707 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="The_Scene_Graph_Browser.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Interrogate.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

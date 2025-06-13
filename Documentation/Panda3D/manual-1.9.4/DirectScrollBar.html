@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectScrollBar - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectScrollBar</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectSlider.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectScrolledFrame.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+</p><p>
+A DirectScrollBar is similar to the "scroll bar" widget commonly used by the user to page through a large document.  DirectScrollBar is available beginning in Panda3D 1.1.  It consists of a long trough, a thumb that slides along the trough, and a pair of buttons on either side of the trough to scroll one line at a time.  A DirectScrollBar can be oriented either vertically or horizontally.
+</p><p>The DirectScrollBar is similar in function to <a href="DirectSlider.html" title="DirectSlider">DirectSlider</a>, but it is specifically designed for scrolling through a large window.  In fact, a pair of DirectScrollBars is used to implement the <a href="DirectScrolledFrame.html" title="DirectScrolledFrame">DirectScrolledFrame</a>, which manages this scrolling functionality automatically.  (Because DirectScrolledFrame exists, you will probably not need to create a DirectScrollBar directly, unless you have some custom purpose that requires a scroll bar.)
+</p><p>DirectScrollBar has many things in common with <a href="DirectSlider.html" title="DirectSlider">DirectSlider</a>.  Like <a href="DirectSlider.html" title="DirectSlider">DirectSlider</a>, the normal DirectGui parameters such as frameSize, geom, and relief control the look of the trough.  You can control the look of the thumb by prefixing each of these parameters with the prefix "thumb_", e.g. <code>thumb_frameSize</code>; similarly, you can control the look of the two scroll buttons by prefixing these with "incButton_" and "decButton_".  You can retrieve or set the current position of the thumb with <code>myScrollBar['value']</code>.
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>value
+</td>
+<td>Initial position of the thumb
+</td>
+<td>Default is 0
+</td></tr>
+<tr>
+<td>range
+</td>
+<td>The (min, max) range of the thumb
+</td>
+<td>Default is (0, 1)
+</td></tr>
+<tr>
+<td>pageSize
+</td>
+<td>The amount to jump the thumb when the user clicks left or right, (up or down if the scrollbar is vertical), of the thumb; this also controls the width of the thumb when resizeThumb is True
+</td>
+<td>Default is 0.1
+</td></tr>
+<tr>
+<td>scrollSize
+</td>
+<td>The amount to move the thumb when the user clicks once on either scroll button
+</td>
+<td>Default is 0.01
+</td></tr>
+<tr>
+<td>orientation
+</td>
+<td>The orientation of the scroll bar
+</td>
+<td>DGG.HORIZONTAL or DGG.VERTICAL
+</td></tr>
+<tr>
+<td>manageButtons
+</td>
+<td>Whether to automatically adjust the buttons when the scroll bar’s frame is changed
+</td>
+<td>True or False
+</td></tr>
+<tr>
+<td>resizeThumb
+</td>
+<td>Whether to adjust the width of the thumb to reflect the ratio of pageSize to the overall range; requires manageButtons to be True as well
+</td>
+<td>True or False
+</td></tr>
+<tr>
+<td>command
+</td>
+<td>Function called when the position of the thumb changes (takes no arguments)
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>thumb_geom, thumb_relief, thumb_text, thumb_frameSize, etc.
+</td>
+<td>Parameters to control the look of the thumb
+</td>
+<td>Any parameters appropriate to <a href="DirectButton.html" title="DirectButton">DirectButton</a>
+</td></tr>
+<tr>
+<td>incButton_geom, incButton_relief, incButton_text, incButton_frameSize, etc.
+</td>
+<td>Parameters to control the look of the lower or right scroll button
+</td>
+<td>Any parameters appropriate to <a href="DirectButton.html" title="DirectButton">DirectButton</a>
+</td></tr>
+<tr>
+<td>decButton_geom, decButton_relief, decButton_text, decButton_frameSize, etc.
+</td>
+<td>Parameters to control the look of the upper or left scroll button
+</td>
+<td>Any parameters appropriate to <a href="DirectButton.html" title="DirectButton">DirectButton</a>
+</td></tr></table>
+<p>Here is a small example on how to create the scrollbar:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> DirectScrollBar
+&#160;
+mybar = DirectScrollBar<span style="color: black;">&#40;</span><span style="color: #008000;">range</span>=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span>, value=<span style="color: #ff4500;">50</span>, pageSize=<span style="color: #ff4500;">3</span>, orientation= DGG.<span style="color: black;">VERTICAL</span><span style="color: black;">&#41;</span>
+mybar.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>This will give you a scrollbar at the lower left side of the screen. If you want to parent the scrollbar to a determined frame, you add the keyword <b>parent</b> to the set of keyboards like so:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>mybar = DirectScrollBar<span style="color: black;">&#40;</span>parent=myframe, <span style="color: #008000;">range</span>=<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span>, value=<span style="color: #ff4500;">50</span>, pageSize=<span style="color: #ff4500;">3</span>, orientation= DGG.<span style="color: black;">VERTICAL</span><span style="color: black;">&#41;</span>
+mybar.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 14/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1166-0!*!0!*!*!*!* and timestamp 20171007194652 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectSlider.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectScrolledFrame.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

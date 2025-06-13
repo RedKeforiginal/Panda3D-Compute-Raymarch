@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Distributing as a self-contained installer - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Distributing as a self-contained installer</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="P3D_file_config_settings.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_runtime_Panda3D_directory.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>It is possible to distribute your p3d file as a fully
+self-contained application.  You can use your p3d file to generate a
+custom installer, and distribute this installer to your users.  The
+installer will produce a fully-self-contained application that doesn't
+require the user to install the Panda3D plugin separately.  The user
+never needs to know that he/she is running Panda3D at all.
+</p><p>This can be done using the <code>pdeploy</code> utility.  It has the
+ability generate a graphical installer for every known platform, so you
+will never need to boot a different operating system just to generate an
+installer for that platform.  However, note that pdeploy requires an
+internet connection to run.
+</p><p>For information about command-line options, you can invoke:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-bash" style="font-family: monospace;"><pre>pdeploy <span style="color: #660033;">-h</span></pre></div></div>
+<p>This will print the help text for pdeploy, along with information about
+every supported command-line option.
+</p>
+<h2> <span class="mw-headline" id="Generating_an_installer"> Generating an installer </span></h2>
+<p>You can create a graphical installer for your game using a command similar to:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-bash" style="font-family: monospace;"><pre>pdeploy <span style="color: #660033;">-s</span> <span style="color: #660033;">-N</span> <span style="color: #ff0000;">&quot;My Cool Game&quot;</span> <span style="color: #660033;">-v</span> <span style="color: #000000;">1.0</span><span style="color: #000000;">.0</span> myCoolGame.p3d installer</pre></div></div>
+<p>This will create various subdirectories in the current directory, one for every platform, containing graphical installers that install your game.  (You can specify a custom output directory with the <b>-o</b> option.)  The Panda3D libraries are not packed with the installer, but they will be automatically downloaded when the game is ran for the first time.
+</p><p>The <b>-s</b> option ensures a self-contained installer is created that does not require an internet connection to run.  The resulting installers will also contain the Panda3D libraries and will be larger.  In case you want to produce much lighter installers that do not contain the Panda3D libraries themselves, simply omit the <b>-s</b> option.  In this case, the game will automatically download the latest stable version of the Panda3D libraries and install it into the user's cache directory on launch (only the first time, though, or when there are updates available).
+</p><p>By default, pdeploy will generate an installer for every known platform.  You can also specify a custom set of platforms, by adding the <b>-P</b> option followed by the platform name.  You may repeat <b>-P</b> as many times as necessary.
+To generate an installer only for the current platform, use the <b>-c</b> option. If <b>-c</b> is provided, any <b>-P</b> options are ignored.
+</p><p>You can also let pdeploy pass custom tokens to the application, as described in <a href="Advanced_object_tags.html" title="Advanced object tags">Advanced object tags</a> and <a href="Splash_window_tags.html" title="Splash window tags">Splash window tags</a>. You can simply pass tokens to pdeploy using the <b>-t token=value</b> option, and you may repeat the -t option as many times as you need.
+</p><p>In Panda3D versions 1.8 and above, you can let pdeploy generate a custom icon for the installed game.  Use and repeat the <b>-i</b> option to pass several image files of different square sizes, which will be combined into a single icon file by pdeploy.  To support all platforms, it is recommended to supply images of the sizes 16x16, 32x32, 48x48, 128x128, 256x256, and 512x512, but you may omit the latter two or three sizes if you cannot provide images in that resolution.
+It is recommended to use .png images for correct transparency.
+</p><p>When running the resulting game, the window will be placed in the center of the screen, unless explicitly overridden in the application.  You can pass a custom height and width for the window using the 'width' and 'height' tokens.
+</p><p><b>Note:</b> Even though most of the informational command-line arguments are optional, it is highly recommended to specify as many of them as possible, to provide the most accurate description for your application.
+</p>
+<h3> <span class="mw-headline" id="Example"> Example </span></h3>
+<p>This fictional example shows how to use pdeploy and commonly-used options.  (You may want to omit the <b>-P</b> options to generate for every platform.)  This is a single command, line breaks are merely added to avoid this manual page from stretching.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-bash" style="font-family: monospace;"><pre>pdeploy <span style="color: #660033;">-s</span> <span style="color: #660033;">-n</span> coolgame <span style="color: #660033;">-N</span> <span style="color: #ff0000;">&quot;My Cool Game&quot;</span> <span style="color: #660033;">-v</span> <span style="color: #000000;">1.0</span><span style="color: #000000;">.0</span> <span style="color: #660033;">-a</span> com.cool_company <span style="color: #660033;">-A</span> <span style="color: #ff0000;">&quot;Cool Company&quot;</span>
+<span style="color: #660033;">-e</span> packager<span style="color: #000000; font-weight: bold;">@</span>cool_company.com <span style="color: #660033;">-l</span> <span style="color: #ff0000;">&quot;Modified BSD License&quot;</span>
+<span style="color: #660033;">-L</span> bsd.txt <span style="color: #660033;">-t</span> <span style="color: #007800;">width=</span><span style="color: #000000;">800</span> <span style="color: #660033;">-t</span> <span style="color: #007800;">height=</span><span style="color: #000000;">600</span>
+<span style="color: #660033;">-i</span> icon16.png <span style="color: #660033;">-i</span> icon32.png <span style="color: #660033;">-i</span> icon48.png <span style="color: #660033;">-i</span> icon128.png 
+<span style="color: #660033;">-P</span> linux_amd64 <span style="color: #660033;">-P</span> win32 <span style="color: #660033;">-P</span> osx_i386 coolGame.p3d installer</pre></div></div>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Generating_a_launcher_executable"> Generating a launcher executable </span></h2>
+<p>Instead of a graphical installer, pdeploy also has the ability to generate a standalone launcher executable.  It works similar to tools like py2exe, but is designed to embed .p3d games.  This will not require a Panda3D installation to run - instead, when running it, it will automatically download and install the Panda3D libraries.  The pdeploy command-line looks like this:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-bash" style="font-family: monospace;"><pre>pdeploy myCoolGame.p3d standalone</pre></div></div>
+<p>Like when generating an installer, you can use the <b>-c</b> and <b>P</b> options to specify a custom set of platforms to generate for, <b>-o</b> to specify a custom output directory, and <b>-t</b> to pass custom tokens.
+</p><p>Note that the resulting executable will have some dependencies, such as the X11 libraries on Unix, and the Visual C++ 2008 runtime on Windows.  It will not run if those libraries are not present on the system.  You should use the "installer" option, as explained above, for a fully self-contained installer that contains the dependent libraries.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 50/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2404-0!*!0!!*!*!* and timestamp 20171008033320 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="P3D_file_config_settings.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_runtime_Panda3D_directory.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

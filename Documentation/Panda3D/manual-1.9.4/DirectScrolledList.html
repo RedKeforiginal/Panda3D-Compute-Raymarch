@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectScrolledList - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectScrolledList</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectOptionMenu.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectWaitBar.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>DirectScrolledLists create a list of DirectGuiWidgets.  Each object is created individually and can then be added to the list.  Some useful methods are:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>addItem<span style="color: black;">&#40;</span>item, refresh<span style="color: black;">&#41;</span>
+getItemIndexForItemID<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, itemID<span style="color: black;">&#41;</span>
+getSelectedIndex<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span> 
+getSelectedText<span style="color: black;">&#40;</span><span style="color: #008000;">self</span><span style="color: black;">&#41;</span>
+removeItem<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, item, refresh<span style="color: black;">&#41;</span>
+scrollBy<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, delta<span style="color: black;">&#41;</span>  
+scrollTo<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, index, centered<span style="color: black;">&#41;</span> 
+scrollToItemID<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, itemID, centered<span style="color: black;">&#41;</span>  
+selectListItem<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, item<span style="color: black;">&#41;</span></pre></div></div>
+<p>In the above methods, item is a new item, either a string or a DirectGUI element, and itemID is an arbitrary identification number for each item (but not necessarily a zero-based index number). The itemID for a new item is the return value of addItem().  The centered parameter is a boolean; if true, the list scrolls so that the given index is centered, otherwise it scrolls so that the index is on top of the list.
+</p><p>The items option should either be a list of DirectGUI items or of strings.  If strings are used, the itemMakeFunction (and possibly itemMakeExtraArgs) option should be defined to point to a function that will take the supplied string, the index, and the extra args as parameters and return a DirectGUI object to insert into the list.  If items is a list of strings and itemMakeFunction is not specified, it will create a list of DirectLabels.  itemMakeFunction is redundant if a list of DirectGUI objects is passed into items to begin with.  
+</p><p>DirectScrolledLists come with two scroll buttons for navigating through the list.  By default, they both start at (0,0,0) relative to the list with size 0, and their positions and size need to be set explicitly.  You can set any of the values except relief appearance as you initialize the list:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myScrolledList = DirectScrolledList<span style="color: black;">&#40;</span>incButton_propertyName = value,
+decButton_propertyName = value<span style="color: black;">&#41;</span></pre></div></div>
+<p>incButton scrolls forward through the list; decButton backward.  Note that this only works for initialization.  To change a property of the scroll buttons later in the program, you must use:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myScrolledList.<span style="color: black;">incButton</span><span style="color: black;">&#91;</span><span style="color: #483d8b;">'propertyName'</span><span style="color: black;">&#93;</span> = value
+myScrolledList.<span style="color: black;">decButton</span><span style="color: black;">&#91;</span><span style="color: #483d8b;">'propertyName'</span><span style="color: black;">&#93;</span> = value</pre></div></div>
+<p>Unlike the first method, this does not work with NodePath options like position; use setPos(...) for that. 
+</p><p>For example, the following creates a scrolled list and resizes and moves the buttons appropriately.
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myScrolledList = DirectScrolledList<span style="color: black;">&#40;</span>
+   incButton_pos= <span style="color: black;">&#40;</span>.<span style="color: #ff4500;">5</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, incButton_text = <span style="color: #483d8b;">&quot;Inc&quot;</span>,
+   decButton_pos= <span style="color: black;">&#40;</span>-.<span style="color: #ff4500;">5</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, decButton_text = <span style="color: #483d8b;">&quot;Dec&quot;</span><span style="color: black;">&#41;</span>
+myScrolledList.<span style="color: black;">incButton</span><span style="color: black;">&#91;</span><span style="color: #483d8b;">'frameSize'</span><span style="color: black;">&#93;</span> = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span>
+myScrolledList.<span style="color: black;">decButton</span><span style="color: black;">&#91;</span><span style="color: #483d8b;">'frameSize'</span><span style="color: black;">&#93;</span> = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span>
+myScrolledList.<span style="color: black;">incButton</span><span style="color: black;">&#91;</span><span style="color: #483d8b;">'text_scale'</span><span style="color: black;">&#93;</span> = .<span style="color: #ff4500;">2</span>
+myScrolledList.<span style="color: black;">decButton</span><span style="color: black;">&#91;</span><span style="color: #483d8b;">'text_scale'</span><span style="color: black;">&#93;</span> = .<span style="color: #ff4500;">2</span></pre></div></div>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>command
+</td>
+<td>Function called when the list is scrolled
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>extraArgs
+</td>
+<td>Extra arguments to the function specified in command
+</td>
+<td>[Extra Arguments]
+</td></tr>
+<tr>
+<td>text_scale
+</td>
+<td>Scale of the displayed text
+</td>
+<td>(sx,sz)
+</td></tr>
+<tr>
+<td>items
+</td>
+<td>List of the objects to appear in the ScrolledList
+</td>
+<td>[DirectGUI items] or [Strings]
+</td></tr>
+<tr>
+<td>numItemsVisible
+</td>
+<td>Number of items visible at a time
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>forceHeight
+</td>
+<td>Forces the height of the list to be a given number
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>itemMakeFunction
+</td>
+<td>Function that makes DirectGUI items out of strings
+</td>
+<td>Function
+</td></tr>
+<tr>
+<td>itemMakeExtraArgs
+</td>
+<td>Extra arguments to the function in itemMakeFunction
+</td>
+<td>[Extra Arguments]
+</td></tr></table>
+<p><br />
+A small example on how to use it:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">directbase</span> <span style="color: #ff7700;font-weight:bold;">import</span> DirectStart
+<span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+<span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+&#160;
+b1 = DirectButton<span style="color: black;">&#40;</span>text = <span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Button1&quot;</span>, <span style="color: #483d8b;">&quot;click!&quot;</span>, <span style="color: #483d8b;">&quot;roll&quot;</span>, <span style="color: #483d8b;">&quot;disabled&quot;</span><span style="color: black;">&#41;</span>,
+                  text_scale=<span style="color: #ff4500;">0.1</span>, borderWidth = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.01</span>, <span style="color: #ff4500;">0.01</span><span style="color: black;">&#41;</span>,
+                  relief=<span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span>
+&#160;
+b2 = DirectButton<span style="color: black;">&#40;</span>text = <span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Button2&quot;</span>, <span style="color: #483d8b;">&quot;click!&quot;</span>, <span style="color: #483d8b;">&quot;roll&quot;</span>, <span style="color: #483d8b;">&quot;disabled&quot;</span><span style="color: black;">&#41;</span>,
+                  text_scale=<span style="color: #ff4500;">0.1</span>, borderWidth = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.01</span>, <span style="color: #ff4500;">0.01</span><span style="color: black;">&#41;</span>,
+                  relief=<span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span>
+&#160;
+l1 = DirectLabel<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">&quot;Test1&quot;</span>, text_scale=<span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span>
+l2 = DirectLabel<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">&quot;Test2&quot;</span>, text_scale=<span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span>
+l3 = DirectLabel<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">&quot;Test3&quot;</span>, text_scale=<span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span>
+&#160;
+numItemsVisible = <span style="color: #ff4500;">4</span>
+itemHeight = <span style="color: #ff4500;">0.11</span>
+&#160;
+myScrolledList = DirectScrolledList<span style="color: black;">&#40;</span>
+    decButton_pos= <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.35</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.53</span><span style="color: black;">&#41;</span>,
+    decButton_text = <span style="color: #483d8b;">&quot;Dec&quot;</span>,
+    decButton_text_scale = <span style="color: #ff4500;">0.04</span>,
+    decButton_borderWidth = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.005</span>, <span style="color: #ff4500;">0.005</span><span style="color: black;">&#41;</span>,
+&#160;
+    incButton_pos= <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.35</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-0.02</span><span style="color: black;">&#41;</span>,
+    incButton_text = <span style="color: #483d8b;">&quot;Inc&quot;</span>,
+    incButton_text_scale = <span style="color: #ff4500;">0.04</span>,
+    incButton_borderWidth = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.005</span>, <span style="color: #ff4500;">0.005</span><span style="color: black;">&#41;</span>,
+&#160;
+    frameSize = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.0</span>, <span style="color: #ff4500;">0.7</span>, <span style="color: #ff4500;">-0.05</span>, <span style="color: #ff4500;">0.59</span><span style="color: black;">&#41;</span>,
+    frameColor = <span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0</span>,<span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span>,
+    pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>,
+    items = <span style="color: black;">&#91;</span>b1, b2<span style="color: black;">&#93;</span>,
+    numItemsVisible = numItemsVisible,
+    forceHeight = itemHeight,
+    itemFrame_frameSize = <span style="color: black;">&#40;</span><span style="color: #ff4500;">-0.2</span>, <span style="color: #ff4500;">0.2</span>, <span style="color: #ff4500;">-0.37</span>, <span style="color: #ff4500;">0.11</span><span style="color: black;">&#41;</span>,
+    itemFrame_pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0.35</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.4</span><span style="color: black;">&#41;</span>,
+    <span style="color: black;">&#41;</span>
+&#160;
+myScrolledList.<span style="color: black;">addItem</span><span style="color: black;">&#40;</span>l1<span style="color: black;">&#41;</span>
+myScrolledList.<span style="color: black;">addItem</span><span style="color: black;">&#40;</span>l2<span style="color: black;">&#41;</span>
+myScrolledList.<span style="color: black;">addItem</span><span style="color: black;">&#40;</span>l3<span style="color: black;">&#41;</span>
+&#160;
+<span style="color: #ff7700;font-weight:bold;">for</span> fruit <span style="color: #ff7700;font-weight:bold;">in</span> <span style="color: black;">&#91;</span><span style="color: #483d8b;">'apple'</span>, <span style="color: #483d8b;">'pear'</span>, <span style="color: #483d8b;">'banana'</span>, <span style="color: #483d8b;">'orange'</span><span style="color: black;">&#93;</span>:
+    l = DirectLabel<span style="color: black;">&#40;</span>text = fruit, text_scale=<span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span>
+    myScrolledList.<span style="color: black;">addItem</span><span style="color: black;">&#40;</span>l<span style="color: black;">&#41;</span> 
+&#160;
+&#160;
+run<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 16/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1143-0!*!*!*!*!*!* and timestamp 20171007194651 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DirectOptionMenu.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectWaitBar.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

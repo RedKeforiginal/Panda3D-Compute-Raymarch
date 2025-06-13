@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>DirectGUI - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: DirectGUI</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Embedded_Text_Properties.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectButton.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>
+</p><p>
+</p>
+<h2> <span class="mw-headline" id="The_DirectGUI_Python_modules"> The DirectGUI Python modules </span></h2>
+<p>Panda3D comes with a set of tools for the creation of a graphical interface for any program. The DirectGui system is used to create buttons, labels, text entries, and frames within the program. All of these items can be decorated with text, images, and 3D graphics. Commands may be associated with these items as well. Since these objects inherit from the NodePath class, anything done to a NodePath may be done to them, such as show()/hide(), setPos(), posInterval(), and so on. Also, since DirectGui objects are by default parented to the node aspect2d, they will stay on the screen no matter how the user navigates through the world.
+</p><p>You can specify the parent nodepath for any DirectGUI object using the parent= argument. You can use base.aspect2d for center-oriented pacement, and a2dTopLeft or a2dBottomRight respectively. The Y coordinate should be left 0, because it's useless in the 2D space. The Z coordinate goes from -1 to 1, and X depends on the aspect ratio, by the default 4:3 it's from -1.3333 to 1.3333. The other aspect2d variants don't scale the numbers, just offset them.
+</p><p>The direct-gui-edit option in the Config.prc file allows the user to use the middle mouse button to move around widgets, and resize them while holding the control key; this is very useful to lay a screen out during development.  If you need to turn this ability off for an individual object, set its <code>enableEdit</code> keyword parameter to False.
+</p><p>All of the DirectGui objects are constructed in a similar way:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">DirectGui</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span>
+myObject = Directxxxxxx<span style="color: black;">&#40;</span><span style="color: #dc143c;">keyword</span>=value, <span style="color: #dc143c;">keyword</span>=value, ...<span style="color: black;">&#41;</span></pre></div></div>
+<p>Each DirectGui object may contain any of four fundamental pieces that determine its appearance.  There may be an optional <b>text</b>, an optional <b>geom</b>, an optional <b>image</b>, and an optional <b>frame</b>.
+</p><p>A DirectGui's <b>text</b> label may be any arbitrary text string, and whatever text string you supply is automatically created using the <a href="OnscreenText.html" title="OnscreenText">OnscreenText</a> interface and centered on the object.  You can specify the text string using the <code>text</code> keyword.  You can also specify further parameters to control the appearance or placement of the text using the form <code>text_parameter</code>, where <code>parameter</code> is any valid keyword to the <a href="OnscreenText.html" title="OnscreenText">OnscreenText</a> constructor.
+</p><p>A DirectGui's <b>geom</b> can be any NodePath that you design, to represent the appearance of the gui object.  Typically, this will be a model that you created via the program <code>egg-texture-cards</code>. This little program takes a png or other picture and turns it into an egg. See <a href="Automatic_Texture_Animation.html" title="Automatic Texture Animation">Automatic_Texture_Animation</a>, for more details. Using this interface, you can completely customize the look of the DirectGui object to suit your needs.  You can specify the geom object using the <code>geom</code> keyword, and like the text parameter, you can also control the geom's placement using keywords like <code>geom_parameter</code>.
+</p><p>The <b>image</b> is less often used.  It is the filename of a texture image (or an already-loaded Texture object).  It is intended for displaying a simple texture image for which you don't already have a model created via <code>egg-texture-cards</code>.  A default card will be created to display this texture, with a bounding box of (-1, 0, -1) to (1, 0, 1); that is, a square with sides of length 2 units, centered on the origin.  You can position and scale this card with the keywords <code>image_pos</code> and <code>image_scale</code>. See also <a href="OnscreenImage.html" title="OnscreenImage">OnscreenImage</a>
+</p><p>Finally, the DirectGui may have a <b>frame</b> created for it.  This is typically a gray rectangular background with an optional bevel.  There are a handful of different frame styles; you can use the <code>relief</code> keyword to select from one of the available styles; your choices are SUNKEN, RAISED, GROOVE, or RIDGE.  You can also specify <code>relief = None</code> to avoid creating a frame polygon altogether (this is commonly done when you have specified your own geom object with the <code>geom</code> keyword).
+</p><p>The overall size of the DirectGui object is controlled with the <code>frameSize</code> keyword.  This is a four-tuple of floating-point numbers of the form (left, right, bottom, top), which specifies the bounding box region of the DirectGui object.  That is, the lower-left corner will be at position (left, 0, bottom), and the upper-right will be at (right, 0, top).  Note that these values represent coordinates from the origin of the frame.  Setting the frameSize to (-0.1, 0.1, -0.1, 0.1), for instance, will create a box, 0.2 units wide and 0.2 units in height, with 0,0 being the center of the frame located at <code>pos</code> on the screen.
+</p><p>The <code>frameSize</code> keyword is optional.  If you omit it, the default frameSize is computed based on the bounding box of the <b>text</b>, <b>geom</b>, and/or <b>image</b> that you have specified.
+</p><p>The following is a list of keywords that are typically available to DirectGui objects of all kinds.  Individual kinds of DirectGUI objects may add more options to this list, but these keywords are not repeated on each of the following pages, for brevity:
+</p>
+<table>
+<tr>
+<th>Keyword
+</th>
+<th>Definition
+</th>
+<th>Value
+</th></tr>
+<tr>
+<td>text
+</td>
+<td>Text to be displayed on the object
+</td>
+<td>String
+</td></tr>
+<tr>
+<td>text_bg
+</td>
+<td>Background color of the text on the object
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>text_fg
+</td>
+<td>Color of the text
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>text_pos
+</td>
+<td>Position of the displayed text
+</td>
+<td>(x,z)
+</td></tr>
+<tr>
+<td>text_roll
+</td>
+<td>Rotation of the displayed text
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>text_scale
+</td>
+<td>Scale of the displayed text
+</td>
+<td>(sx,sz)
+</td></tr>
+<tr>
+<td>text_*
+</td>
+<td>Parameters to control the appearance of the text
+</td>
+<td>Any keyword parameter appropriate to <a href="OnscreenText.html" title="OnscreenText">OnscreenText</a>.
+</td></tr>
+<tr>
+<td>frameSize
+</td>
+<td>Size of the object
+</td>
+<td>(Left,Right,Bottom,Top)
+</td></tr>
+<tr>
+<td>frameVisibleScale
+</td>
+<td>Relative scale of the visible frame to its clickable bounds. Useful for creating things like the paging region of a slider, which is visibly smaller than the acceptable click region (the height of the thumb).
+</td>
+<td>(hscale, vscale)
+</td></tr>
+<tr>
+<td>frameColor
+</td>
+<td>Color of the object’s <b>frame</b>
+</td>
+<td>(R,G,B,A)
+</td></tr>
+<tr>
+<td>relief
+</td>
+<td>Relief appearance of the <b>frame</b>
+</td>
+<td>SUNKEN, RAISED, GROOVE, RIDGE, FLAT, or None
+</td></tr>
+<tr>
+<td>invertedFrames
+</td>
+<td>If true, switches the meaning of SUNKEN and RAISED
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>borderWidth
+</td>
+<td>If relief is SUNKEN, RAISED, GROOVE, or RIDGE, changes the size of the bevel
+</td>
+<td>(Width,Height)
+</td></tr>
+<tr>
+<td>image
+</td>
+<td>An <b>image</b> to be displayed on the object
+</td>
+<td>image filename or Texture object
+</td></tr>
+<tr>
+<td>image_pos
+</td>
+<td>Position of the displayed image
+</td>
+<td>(x,y,z)
+</td></tr>
+<tr>
+<td>image_hpr
+</td>
+<td>Rotation of the displayed image
+</td>
+<td>(h,p,r)
+</td></tr>
+<tr>
+<td>image_scale
+</td>
+<td>Scale of the displayed image
+</td>
+<td>(sx,sy,sz)
+</td></tr>
+<tr>
+<td>geom
+</td>
+<td>A <b>geom</b> to represent the object’s appearance
+</td>
+<td>NodePath
+</td></tr>
+<tr>
+<td>geom_pos
+</td>
+<td>Position of the displayed geom
+</td>
+<td>(x,y,z)
+</td></tr>
+<tr>
+<td>geom_hpr
+</td>
+<td>Rotation of the displayed geom
+</td>
+<td>(h,p,r)
+</td></tr>
+<tr>
+<td>geom_scale
+</td>
+<td>Scale of the displayed geom
+</td>
+<td>(sx,sy,sz)
+</td></tr>
+<tr>
+<td>parent
+</td>
+<td>Parent to attach to
+</td>
+<td>NodePath
+</td></tr>
+<tr>
+<td>pos
+</td>
+<td>Position of the object
+</td>
+<td>(X,Y,Z)
+</td></tr>
+<tr>
+<td>hpr
+</td>
+<td>Orientation of the object
+</td>
+<td>(H,P,R)
+</td></tr>
+<tr>
+<td>scale
+</td>
+<td>Scale of the object
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>pad
+</td>
+<td>When frameSize is omitted, this determines the extra space around the <b>geom</b> or <b>text</b>’s bounding box by which to expand the default <b>frame</b>
+</td>
+<td>(Width,Height)
+</td></tr>
+<tr>
+<td>state
+</td>
+<td>The initial state of the object
+</td>
+<td>NORMAL or DISABLED
+</td></tr>
+<tr>
+<td>frameTexture
+</td>
+<td>Texture applied directly to the generated <b>frame</b>
+</td>
+<td>image filename or Texture object
+</td></tr>
+<tr>
+<td>enableEdit
+</td>
+<td>Affects direct-gui-edit functionality
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>suppressKeys
+</td>
+<td>If 1, suppresses triggers of global keyboard-related Panda events (not part of the GUI system)
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>suppressMouse
+</td>
+<td>If 1, suppresses triggers of global mouse-related Panda events (e.g. camera controls)
+</td>
+<td>0 or 1
+</td></tr>
+<tr>
+<td>sortOrder
+</td>
+<td>Specifies render order for overlapping objects. Higher numbers are drawn in front of lower numbers.
+</td>
+<td>Number
+</td></tr>
+<tr>
+<td>textMayChange
+</td>
+<td>Whether the text of an object can be changed after creation
+</td>
+<td>0 or 1
+</td></tr></table>
+<p>Remember that the axes for Panda3D use x for left and right, y for in and out of the screen, and z for up and down.  An object's <b>frame</b> is always in the background of the object.  The <b>geom</b>, if any, is shown in front of the frame, and <b>text</b> is shown in front of the geom.
+</p><p>It is possible to change most of these values after object creation, using:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myDirectObject<span style="color: black;">&#91;</span><span style="color: #483d8b;">'keyword'</span><span style="color: black;">&#93;</span> = value</pre></div></div>
+<p>Most properties can be updated in this way, although position and other transform-related values cannot be updated via the keyword parameters--attempts to update them will silently fail.  Instead, use the NodePath methods to change the object's transform.
+</p><p>Some types of updates, such as changing the text or the geom, may also change the size of the object.  If you change any of these properties after the object has been created, it is necessary to tell the object to re-determine its size:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myDirectObject.<span style="color: black;">resetFrameSize</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>If you don't do this, you may find, for example, that a button isn't clickable because it believes it has a zero-width frame.
+</p><p>To permanently remove a DirectGUI object, you should use the method:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-python" style="font-family: monospace;"><pre>myDirectObject.<span style="color: black;">destroy</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre></div></div>
+<p>It is not sufficient to simply call <code>removeNode()</code>, since the DirectGUI system adds a number of messenger hooks that need to be cleaned up.  However, if you have a hierarchy of DirectGUI objects, for instance a number of buttons parented to a frame, it is sufficient to call destroy() only on the topmost object; it will propagate downwards.
+</p><p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 122/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:971-0!*!0!!*!*!* and timestamp 20171007203804 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Embedded_Text_Properties.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DirectButton.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

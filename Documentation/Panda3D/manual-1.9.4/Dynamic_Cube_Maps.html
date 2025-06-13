@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Dynamic Cube Maps - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Dynamic Cube Maps</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Generalized_Image_Filters.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Low-Level_Render_to_Texture.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p><span class="suppress-screenshots"></span>
+
+Since the six faces of a cube map are really just six different views of a scene from the same point, it's possible to generate a cube map automatically by rendering these six different views at runtime.
+</p><p>This is really just a form of offscreen rendering to a texture. Instead of rendering just one 2-D texture image, though, rendering a dynamic cube map means rendering six different 2-D images, one for each face of a cube map texture.
+</p><p>Panda3D makes this easy for you. To start rendering a dynamic cube map, simply call:
+</p>
+<pre class="python">rig = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">'rig'</span><span style="color: black;">&#41;</span><br />buffer = base.<span style="color: black;">win</span>.<span style="color: black;">makeCubeMap</span><span style="color: black;">&#40;</span>name, size, rig<span style="color: black;">&#41;</span></pre>
+<p>This will return an offscreen <code>GraphicsBuffer</code> that will be used to render the cube map. The three required parameters to <code>makeCubeMap()</code> are:
+</p>
+<table>
+<tr>
+<td><code>name</code>
+</td>
+<td>An arbitrary name to assign to the cube map and its associated <code>GraphicsBuffer</code>. This can be any string.
+</td></tr>
+<tr>
+<td><code>size</code>
+</td>
+<td>The size in pixels of one side of the cube. Many graphics cards require this size to be a power of two. Some cards don’t <i>require</i> a power of two, but will perform very slowly if you give anything else.
+</td></tr>
+<tr>
+<td><code>rig</code>
+</td>
+<td>The camera rig node. This should be a new <code>NodePath</code>. It will be filled in with six cameras. See below.
+</td></tr></table>
+<p>There are also additional, optional parameters to <code>makeCubeMap()</code>:
+</p>
+<table>
+<tr>
+<td><code>cameraMask</code>
+</td>
+<td>This specifies the <code>DrawMask</code> that is associated with the cube map’s cameras. This is an advanced Panda3D feature that can be used to hide or show certain objects specifically for the cube map cameras.
+</td></tr>
+<tr>
+<td><code>toRam</code>
+</td>
+<td>This is a boolean flag that, when True, indicates the texture image will be made available in system RAM, instead of leaving it only in texture memory. The default is False. Setting it True is slower, but may be necessary if you want to write out the generated cube map image to disk.
+</td></tr></table>
+<p>Note that we passed a new <code>NodePath</code>, called <code>rig</code> in the above example, to the <code>makeCubeMap()</code> call. This <code>NodePath</code> serves as the "camera rig"; the <code>makeCubeMap()</code> method will create six cameras facing in six different directions, and attach them all to the camera rig. Thus, you can parent this rig into your scene and move it around as if it were a six-eyed camera. Normally, for environment maps, you would parent the rig somewhere within your shiny object so it can look out of the shiny object and see the things that should be reflected in it.
+</p><p>The actual cube map itself be retrieved with the call:
+</p>
+<pre class="python">tex = buffer.<span style="color: black;">getTexture</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>You can apply the texture to geometry as in the <a href="Environment_Mapping_with_Cube_Maps.html" title="Environment Mapping with Cube Maps">previous example</a>. You should use the <code>MWorldCubeMap</code> mode to generate texture coordinates for your geometry since the camera rig will have a <a href="Compass_Effects.html" title="Compass Effects">CompassEffect</a> on it to keep it unrotated with respect to <code>render</code>.
+</p><p>When you are done with the cube map, you should remove its buffer (and stop the cube map from continuing to render) by calling:
+</p>
+<pre class="python">base.<span style="color: black;">graphicsEngine</span>.<span style="color: black;">removeWindow</span><span style="color: black;">&#40;</span>buffer<span style="color: black;">&#41;</span></pre>
+<p>As a complete example, here is how we might load up a dynamic cube map environment on our teapot and move the teapot down the street to show off the dynamic reflections:
+</p>
+<pre class="python">scene = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'bvw-f2004--streetscene/street-scene.egg'</span><span style="color: black;">&#41;</span><br />scene.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />scene.<span style="color: black;">setZ</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">-2</span><span style="color: black;">&#41;</span><br />&#160;<br />teapot = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'teapot.egg'</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />&#160;<br />rig = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">'rig'</span><span style="color: black;">&#41;</span><br />buffer = base.<span style="color: black;">win</span>.<span style="color: black;">makeCubeMap</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'env'</span>, <span style="color: #ff4500;">64</span>, rig<span style="color: black;">&#41;</span><br />rig.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>teapot<span style="color: black;">&#41;</span><br />&#160;<br />teapot.<span style="color: black;">setTexGen</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, TexGenAttrib.<span style="color: black;">MWorldCubeMap</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>buffer.<span style="color: black;">getTexture</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />zoom = teapot.<span style="color: black;">posInterval</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">5</span>, VBase3<span style="color: black;">&#40;</span><span style="color: #ff4500;">20</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>, startPos=VBase3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-20</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />zoom.<span style="color: black;">loop</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="A_word_of_caution"> A word of caution </span></h2>
+<p>When you render a dynamic cube map, don't forget that you are re-rendering your scene <i>six times</i> every frame in addition to the main frame render. If you are not careful, and if you have a complex scene, then you could easily end up reducing your frame rate by a factor of seven.
+</p><p>It is a good idea to limit the amount of geometry that you render in the cube map. One simple way to do this is to ensure that the <a href="Lenses_and_Field_of_View.html" title="Lenses and Field of View">far plane</a> on the cube map cameras is set relatively close in. Since all of the cube map cameras share the same lens, you can adjust the near and far plane of all of the cameras at once like this:
+</p>
+<pre class="python">lens = rig.<span style="color: black;">find</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/+Camera'</span><span style="color: black;">&#41;</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">getLens</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />lens.<span style="color: black;">setNearFar</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">100</span><span style="color: black;">&#41;</span></pre>
+<p>It is especially important when you are using cube maps that you structure your scene graph hierarchically and divide it up spatially so that Panda3D's view-frustum culling can do an effective job of eliminating the parts of the scene that are behind each of the six cameras. (Unfortunately, the street-scene model used in the above example is not at all well-structured, so the example performs very poorly on all but the highest-end hardware.)
+</p><p>It's also usually a good idea to keep the cube map size (the <code>size</code> parameter to <code>makeCubeMap()</code>) no larger than it absolutely has to be to get the look you want.
+</p><p>You can also take advantage of the <code>DrawMask</code> to hide things from the cube cameras that are not likely to be important in the reflections. The documentation for this advanced feature of Panda3D will be found in another section of the manual (which, as of the time of this writing, has yet to be written).
+</p><p>Finally, you can temporarily disable the cube map rendering from time to time if you know the environment won't be changing for a little while. The cube map will retain its last-rendered image. You can do this with <code>buffer.setActive(0)</code>. Use <code>buffer.setActive(1)</code> to re-activate it.
+
+</p><p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 259/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1232-0!*!0!!*!*!* and timestamp 20171008022216 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Generalized_Image_Filters.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Low-Level_Render_to_Texture.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

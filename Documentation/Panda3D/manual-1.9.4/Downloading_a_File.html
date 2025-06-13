@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Downloading a File - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Downloading a File</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Transmitting_Data.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Distributed_Networking.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>To download a file while the game is running without blocking the connections one has to use HTTPClient and HTTPChannel objects. This will allow the file to be downloaded in the background using the downloadTask task.
+</p>
+<pre class="python"><span style="color: #008000;">self</span>.<span style="color: black;">http</span> = HTTPClient<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">channel</span> = <span style="color: #008000;">self</span>.<span style="color: black;">http</span>.<span style="color: black;">makeChannel</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">channel</span>.<span style="color: black;">beginGetDocument</span><span style="color: black;">&#40;</span>DocumentSpec<span style="color: black;">&#40;</span><span style="color: #483d8b;">'http://my.url/'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">rf</span> = Ramfile<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">channel</span>.<span style="color: black;">downloadToRam</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">rf</span><span style="color: black;">&#41;</span><br />taskMgr.<span style="color: black;">add</span><span style="color: black;">&#40;</span><span style="color: #008000;">self</span>.<span style="color: black;">downloadTask</span>, <span style="color: #483d8b;">'download'</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> downloadTask<span style="color: black;">&#40;</span><span style="color: #008000;">self</span>, task<span style="color: black;">&#41;</span>:<br />    <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">self</span>.<span style="color: black;">channel</span>.<span style="color: black;">run</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />        <span style="color: #808080; font-style: italic;"># Still waiting for file to finish downloading.</span><br />        <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">cont</span><br />    <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #ff7700;font-weight:bold;">not</span> <span style="color: #008000;">self</span>.<span style="color: black;">channel</span>.<span style="color: black;">isDownloadComplete</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />        <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;Error downloading file.&quot;</span><br />        <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">done</span><br />    data = <span style="color: #008000;">self</span>.<span style="color: black;">rf</span>.<span style="color: black;">getData</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> <span style="color: #483d8b;">&quot;got data:&quot;</span><br />    <span style="color: #ff7700;font-weight:bold;">print</span> data<br />    <span style="color: #ff7700;font-weight:bold;">return</span> task.<span style="color: black;">done</span></pre>
+<p>You can also download to file 
+</p>
+<pre class="python">channel.<span style="color: black;">downloadToFile</span><span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span>fileName<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>The file channel can be quarried for further information while the game is running to get the current download state.
+</p>
+<pre class="python">mbDownloaded = <span style="color: #008000;">self</span>.<span style="color: black;">channel</span>.<span style="color: black;">getBytesDownloaded</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>/<span style="color: #ff4500;">1024</span>/<span style="color: #ff4500;">1024</span><br />percentDownloaded = <span style="color: #ff4500;">100</span>.<span style="color: #66cc66;">*</span><span style="color: #008000;">self</span>.<span style="color: black;">channel</span>.<span style="color: black;">getBytesDownloaded</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>/channel.<span style="color: black;">getFileSize</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 10/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2258-0!*!*!*!*!*!* and timestamp 20171007194747 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Transmitting_Data.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Distributed_Networking.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
