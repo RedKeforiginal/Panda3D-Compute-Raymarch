@@ -106,7 +106,7 @@ class MainMenuApp(ShowBase):
         DirectButton(
             text="Launch",
             scale=button_scale,
-            pos=(0, 0, spacing),
+            pos=(0, spacing, 0),
             command=self._on_launch,
             parent=self.menu_frame,
         )
@@ -120,7 +120,7 @@ class MainMenuApp(ShowBase):
         DirectButton(
             text="Quit",
             scale=button_scale,
-            pos=(0, 0, -spacing),
+            pos=(0, -spacing, 0),
             command=self.userExit,
             parent=self.menu_frame,
         )
@@ -130,10 +130,10 @@ class MainMenuApp(ShowBase):
         self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.6,0.6,-0.8,0.8), pos=(0,0,0))
         button_scale = 0.09
         spacing = 0.2
-        DirectButton(text="SDF", scale=button_scale, pos=(0,0,spacing), command=self._on_sdf, parent=self.menu_frame)
+        DirectButton(text="SDF", scale=button_scale, pos=(0,spacing,0), command=self._on_sdf, parent=self.menu_frame)
         DirectButton(text="Materials", scale=button_scale, pos=(0,0,0), command=self._on_materials, parent=self.menu_frame)
-        DirectButton(text="Lighting", scale=button_scale, pos=(0,0,-spacing), command=self._build_lighting_menu, parent=self.menu_frame)
-        DirectButton(text="Back", scale=button_scale, pos=(0,0,-spacing*2), command=self._build_menu, parent=self.menu_frame)
+        DirectButton(text="Lighting", scale=button_scale, pos=(0,-spacing,0), command=self._build_lighting_menu, parent=self.menu_frame)
+        DirectButton(text="Back", scale=button_scale, pos=(0,-spacing*2,0), command=self._build_menu, parent=self.menu_frame)
 
     def _build_lighting_menu(self):
         if hasattr(self, "menu_frame"):
@@ -144,12 +144,12 @@ class MainMenuApp(ShowBase):
         defaults = [self.light_spacing.x,self.light_spacing.y,self.light_spacing.z,self.light_offset.x,self.light_offset.y,self.light_offset.z,self.light_color.x,self.light_color.y,self.light_color.z]
         for i,label in enumerate(labels):
             y=0.7 - i*0.15
-            DirectLabel(text=label, scale=0.05, pos=(-0.4,0,y), parent=self.menu_frame)
-            entry=DirectEntry(text=str(defaults[i]), scale=0.05, pos=(0.2,0,y-0.02), numLines=1, focus=0, parent=self.menu_frame)
+            DirectLabel(text=label, scale=0.05, pos=(-0.4,y,0), parent=self.menu_frame)
+            entry=DirectEntry(text=str(defaults[i]), scale=0.05, pos=(0.2,y-0.02,0), numLines=1, focus=0, parent=self.menu_frame)
             entries[label]=entry
         self.lighting_entries = entries
-        DirectButton(text="Apply", scale=0.07, pos=(-0.2,0,-0.75), command=self._apply_lighting, parent=self.menu_frame)
-        DirectButton(text="Back", scale=0.07, pos=(0.2,0,-0.75), command=self._build_options_menu, parent=self.menu_frame)
+        DirectButton(text="Apply", scale=0.07, pos=(-0.2,-0.75,0), command=self._apply_lighting, parent=self.menu_frame)
+        DirectButton(text="Back", scale=0.07, pos=(0.2,-0.75,0), command=self._build_options_menu, parent=self.menu_frame)
     def _apply_lighting(self):
         try:
             self.light_spacing = Vec3(
