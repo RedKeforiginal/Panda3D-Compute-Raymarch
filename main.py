@@ -175,7 +175,7 @@ class MainMenuApp(ShowBase):
         self.output_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
         self.output_tex.clear_image()
 
-        self.compute_shader = Shader.load_compute("raymarch.comp")
+        self.compute_shader = Shader.load_compute(Shader.SL_GLSL, "raymarch.comp")
         groups_x = (width + 7) // 8
         groups_y = (height + 7) // 8
         self.compute_node = ComputeNode("raymarch")
