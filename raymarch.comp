@@ -163,10 +163,10 @@ float fbm3(vec3 p) {
 vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
 
     // Procedural marble based on 3D fBm noise
-    float n = fbm3(p * 0.2);
-    float m = sin(p.y * 0.3 + n * 3.0);
+    float noiseVal = fbm3(p * 0.2);
+    float m = sin(p.y * 0.3 + noiseVal * 3.0);
     vec3 albedo = mix(vec3(0.2, 0.2, 0.25), vec3(0.9, 0.9, 0.95), m);
-    float roughness = 0.3 + 0.2 * n;
+    float roughness = 0.3 + 0.2 * noiseVal;
 
 
     // PBR properties for a non-metallic surface
