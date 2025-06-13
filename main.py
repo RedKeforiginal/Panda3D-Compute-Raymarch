@@ -30,7 +30,7 @@ class FirstPersonController:
     def __init__(self, base):
         self.base = base
         base.disableMouse()  # see Panda3D manual on disabling default mouse controls
-        self.key_map = {"w": False, "a": False, "s": False, "d": False}
+        self.key_map = {"w": False, "a": False, "s": False, "d": False, "space": False, "control": False}
         for key in self.key_map:
             base.accept(key, self._set_key, [key, True])
             base.accept(f"{key}-up", self._set_key, [key, False])
@@ -62,13 +62,17 @@ class FirstPersonController:
 
         move = Vec3(0, 0, 0)
         if self.key_map["w"]:
-            move.y += 1
+            move.z += 1
         if self.key_map["s"]:
-            move.y -= 1
+            move.z -= 1
         if self.key_map["a"]:
             move.x -= 1
         if self.key_map["d"]:
             move.x += 1
+        if self.key_map["space"]:
+            move.y += 1
+        if self.key_map["control"]:
+            move.y -= 1
         if move.lengthSquared() > 0:
             move.normalize()
             self.base.camera.setPos(self.base.camera, move * self.speed * dt)
@@ -81,7 +85,7 @@ class MainMenuApp(ShowBase):
         super().__init__()
         lens = OrthographicLens()
         lens.setFilmSize(20, 20)
-        lens.setNearFar(-1000, 1000)
+        lens.setNearFar(0.1, 1000)
         self.cam.node().setLens(lens)
         self.camLens = lens
         self.light_spacing = Vec3(4.0, 4.0, 4.0)
