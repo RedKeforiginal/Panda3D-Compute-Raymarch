@@ -45,6 +45,18 @@ class FirstPersonController:
         self.speed = 5.0
         self.sensitivity = 0.2
         base.taskMgr.add(self.update, "fps-update")
+    def cleanup(self):
+        """Release event hooks and tasks when the controller is dismissed.
+
+        Panda3D's messenger retains references to objects that accept
+        events until they explicitly call ``ignore``.  See:
+        https://docs.panda3d.org/1.10/python/programming/events/
+        """
+        for key in self.key_map:
+            self.base.ignore(key)
+            self.base.ignore(f"{key}-up")
+        self.base.taskMgr.remove("fps-update")
+
 
     def _set_key(self, key, value):
         self.key_map[key] = value
@@ -102,7 +114,7 @@ class MainMenuApp(ShowBase):
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
         if hasattr(self, "controller"):
-            self.taskMgr.remove("fps-update")
+            self.controller.cleanup()
             del self.controller
         props = WindowProperties()
         props.setCursorHidden(False)
@@ -250,7 +262,7 @@ class MainMenuApp(ShowBase):
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
         if hasattr(self, "controller"):
-            self.taskMgr.remove("fps-update")
+            self.controller.cleanup()
             del self.controller
         props = WindowProperties()
         props.setCursorHidden(True)
