@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Texture smiley.png - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Texture smiley.png</h2>
+<div class='wikicontent' id='wikicontentid'><ul id="filetoc"><li><a href="File%253ATexture_smiley.png.html#file">File</a></li>
+<li><a href="File%253ATexture_smiley.png.html#filehistory">File history</a></li>
+<li><a href="File%253ATexture_smiley.png.html#filelinks">File usage</a></li></ul><div class="fullImageLink" id="file"><a href="Texture_smiley.png"><img alt="File:Texture smiley.png" src="Texture_smiley.png" width="400" height="300" /></a><div class="mw-filepage-resolutioninfo">No higher resolution available.</div></div>
+<div class="fullMedia"><a href="Texture_smiley.png" class="internal" title="Texture smiley.png">Texture_smiley.png</a>‎ <span class="fileInfo">(400 × 300 pixels, file size: 30 KB, MIME type: image/png)</span>
+</div>
+<div id="mw-imagepage-content" lang="en" dir="ltr" class="mw-content-ltr"><p>Illustration of (u, v) assignment to vertices
+</p><p>This image was generated with the following program:
+</p>
+<table class="code"><tr><td><pre>
+from direct.directbase.DirectStart import *
+from pandac.PandaModules import *
+import math
+
+base.setBackgroundColor(1, 1, 1, 1)
+
+smiley = loader.loadModel('smiley.egg')
+smiley.reparentTo(render)
+
+dl = DirectionalLight('dl')
+dlnp = base.camera.attachNewNode(dl)
+smiley.setLight(dlnp)
+
+def drawArrow(fromAngle, toAngle, numSteps = 100):
+    arrow = NodePath('arrowRoot')
+    ls = LineSegs('arc')
+    ls.setColor(0.4, 0.5, 1, 1)
+
+    for i in range(numSteps):
+        t = float(i) / float(numSteps - 1)
+        a = deg2Rad(fromAngle + (toAngle - fromAngle) * t)
+        
+        c = math.cos(a)
+        s = math.sin(a)
+        ls.drawTo(c, s, 0)
+
+    arrow.attachNewNode(ls.create())
+
+    ls = LineSegs('h2')
+    ls.setColor(0.4, 0.5, 1, 1)
+    ls.moveTo(-0.03, 0, -0.07)
+    ls.drawTo(0, 0, 0)
+    ls.drawTo(0.03, 0, -0.07)
+    h1 = arrow.attachNewNode('h1')
+    h2 = h1.attachNewNode(ls.create())
+    h2.setBillboardAxis()
+    h1.setPos(c, s, 0)
+    h1.setHpr(toAngle - 180, 90, 0)
+    
+    return arrow
+
+ua = drawArrow(0, 200)
+ua.reparentTo(render)
+ua.setScale(1.2)
+ua.setHpr(90, 0, 0)
+
+va = drawArrow(0, 180)
+va.reparentTo(render)
+va.setScale(1.2)
+va.setHpr(270, 0, 90)
+
+tn = TextNode('label')
+tn.setTextColor(0.4, 0.5, 1, 1)
+tn.setAlign(TextNode.ACenter)
+tn.setSlant(0.2)
+tn.setText('u')
+tnpU = aspect2d.attachNewNode(tn.generate())
+tnpU.setPos(-0.9, 0, -0.14)
+tnpU.setScale(0.1)
+
+tn.setText('v')
+tnpV = aspect2d.attachNewNode(tn.generate())
+tnpV.setPos(0.9, 0, -0.4)
+tnpV.setScale(0.1)
+
+base.disableMouse()
+camera.setPos(1, -5, 1)
+camera.setHpr(12, -10, 0)
+
+base.graphicsEngine.renderFrame()
+base.screenshot('texture_smiley.png', defaultFilename = 0)
+</pre></td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 5/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1170-0!*!*!*!*!*!* and timestamp 20171007195625 -->
+</div><h2 id="filehistory">File history</h2>
+<div id="mw-imagepage-section-filehistory">
+<p>Click on a date/time to view the file as it appeared at that time.
+</p>
+<table class="wikitable filehistory">
+<tr><td></td><th>Date/Time</th><th>Thumbnail</th><th>Dimensions</th><th>User</th><th>Comment</th></tr>
+<tr><td>current</td><td class='filehistory-selected' style='white-space: nowrap;'><a href="Texture_smiley.png">15:25, 4 October 2005</a></td><td><a href="Texture_smiley.png"><img alt="Thumbnail for version as of 15:25, 4 October 2005" src="120px-Texture_smiley.png" width="120" height="90" /></a></td><td>400 × 300 <span style="white-space: nowrap;">(30 KB)</span></td><td><a href="http://www.panda3d.org/manual/index.php?title=User:Drwr&amp;action=edit&amp;redlink=1" class="new mw-userlink" title="User:Drwr (page does not exist)">Drwr</a> <span style="white-space: nowrap;"> <span class="mw-usertoollinks">(<a href="http://www.panda3d.org/manual/index.php?title=User_talk:Drwr&amp;action=edit&amp;redlink=1" class="new" title="User talk:Drwr (page does not exist)">Talk</a> | <a href="Drwr.html" title="Special:Contributions/Drwr">contribs</a>)</span></span></td><td dir="ltr">Illustration of (u, v) assignment to vertices</td></tr>
+</table>
+
+</div>
+<br /><ul>
+<li id="mw-imagepage-edit-external"><a href="http://www.panda3d.org/manual/index.php?title=File:Texture_smiley.png&amp;action=edit&amp;externaledit=true&amp;mode=file" title="File:Texture smiley.png">Edit this file using an external application</a> <small>(See the <a rel="nofollow" class="external text" href="http://www.mediawiki.org/wiki/Manual:External_editors">setup instructions</a> for more information)</small></li>
+</ul>
+<h2 id="filelinks">File usage</h2>
+<div id='mw-imagepage-section-linkstoimage'>
+<p>The following page links to this file:
+</p><ul class="mw-imagepage-linkstoimage">
+<li id="mw-imagepage-linkstoimage-ns0"><a href="Simple_Texturing.html" title="Simple Texturing">Simple Texturing</a></li>
+</ul>
+</div>
+</div><table width="100%" cellpadding="0" cellspacing="0" border="0" class="manualnav"><tr><td align="left"><a href="Main_Page.html" title="Main Page">Back to the Manual</a>&nbsp;&nbsp;&nbsp;</td></tr></table><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

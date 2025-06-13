@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Text plain.png - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Text plain.png</h2>
+<div class='wikicontent' id='wikicontentid'><ul id="filetoc"><li><a href="File%253AText_plain.png.html#file">File</a></li>
+<li><a href="File%253AText_plain.png.html#filehistory">File history</a></li>
+<li><a href="File%253AText_plain.png.html#filelinks">File usage</a></li></ul><div class="fullImageLink" id="file"><a href="Text_plain.png"><img alt="File:Text plain.png" src="Text_plain.png" width="375" height="37" /></a><div class="mw-filepage-resolutioninfo">No higher resolution available.</div></div>
+<div class="fullMedia"><a href="Text_plain.png" class="internal" title="Text plain.png">Text_plain.png</a>‎ <span class="fileInfo">(375 × 37 pixels, file size: 3 KB, MIME type: image/png)</span>
+</div>
+<div id="mw-imagepage-content" lang="en" dir="ltr" class="mw-content-ltr"><p>The following program was used to generate this texture image (as well as all of the other text samples on this page):
+</p>
+<table class="code"><tr><td><pre>
+from direct.directbase.DirectStart import *
+from pandac.PandaModules import *
+
+# How much bigger to render the images onscreen, for antialiasing?
+renderFactor = 5
+
+# How much to scale the resulting image from what I originally had in
+# mind?
+outputFactor = 1.5
+
+def saveImage(basename, color = 0):
+    base.graphicsEngine.renderFrame()
+    image = PNMImage()
+    base.win.getScreenshot(image)
+    if color:
+        image.setColorType(PNMImage.CTColor)
+    else:
+        image.setColorType(PNMImage.CTGrayscale)
+
+    filename = Filename('%s.png'&#160;% (basename))
+
+    scale = float(outputFactor) / float(renderFactor)
+
+    if scale&#160;!= 1:
+        reduced = PNMImage(int(image.getXSize() * scale),
+                           int(image.getYSize() * scale),
+                           image.getNumChannels())
+        reduced.gaussianFilterFrom(0.5, image)
+        reduced.write(filename)
+    else:
+        image.write(filename)
+    print &quot;wrote&#160;%s&quot;&#160;% (filename.getFullpath())
+
+base.setBackgroundColor(1, 1, 1, 1)
+base.setFrameRateMeter(0)
+
+wp = WindowProperties()
+wp.setSize(250 * renderFactor, 25 * renderFactor)
+base.win.requestProperties(wp)
+base.aspect2d.setScale(1.0, 1.0, 250./25.)
+base.graphicsEngine.openWindows()
+
+text = TextNode('node name')
+textNodePath = aspect2d.attachNewNode(text)
+text.setTextColor(0, 0, 0, 1)
+textNodePath.setPos(-.95, 0, -0.02)
+textNodePath.setScale(0.1)
+
+text.setText(&quot;Every day in every way I'm getting better and better.&quot;)
+saveImage('Text_plain')
+
+cmr12 = loader.loadFont('cmr12.egg')
+text.setFont(cmr12)
+textNodePath.setScale(0.085)
+saveImage('Text_font')
+text.setFont(text.getDefaultFont())
+textNodePath.setScale(0.1)
+
+text.setSmallCaps(1)
+textNodePath.setScale(0.09)
+saveImage('Text_smallcaps')
+
+text.setSmallCapsScale(0.4)
+saveImage('Text_smallcaps_scale')
+text.setSmallCaps(0)
+textNodePath.setScale(0.1)
+
+text.setSlant(0.3)
+saveImage('Text_slant')
+text.setSlant(0)
+
+text.setTextColor(1, 0.5, 0.5, 1)
+saveImage('Text_color', color = 1)
+
+text.setShadow(0.05, 0.05)
+text.setShadowColor(0, 0, 0, 1)
+saveImage('Text_shadow', color = 1)
+text.clearShadow()
+text.setTextColor(0, 0, 0, 1)
+
+wp.setSize(200 * renderFactor, 50 * renderFactor)
+base.win.requestProperties(wp)
+base.aspect2d.setScale(250./200., 1.0, 250./50.)
+base.graphicsEngine.openWindows()
+
+textNodePath.setPos(-0.75, 0, 0.04)
+text.setWordwrap(15)
+saveImage('Text_wordwrap')
+
+text.setAlign(TextNode.ACenter)
+textNodePath.setX(0)
+saveImage('Text_align')
+
+text.setFrameColor(0, 0, 1, 1)
+text.setFrameAsMargin(0.2, 0.2, 0.1, 0.1)
+text.setFrameLineWidth(renderFactor)
+text.setFrameCorners(1)
+saveImage('Text_frame', color = 1)
+
+text.setCardColor(1, 1, 0.5, 1)
+text.setCardAsMargin(0, 0, 0, 0)
+saveImage('Text_card', color = 1)
+</pre></td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 5/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1116-0!*!*!*!*!*!* and timestamp 20171008113420 -->
+</div><h2 id="filehistory">File history</h2>
+<div id="mw-imagepage-section-filehistory">
+<p>Click on a date/time to view the file as it appeared at that time.
+</p>
+<table class="wikitable filehistory">
+<tr><td></td><th>Date/Time</th><th>Thumbnail</th><th>Dimensions</th><th>User</th><th>Comment</th></tr>
+<tr><td>current</td><td class='filehistory-selected' style='white-space: nowrap;'><a href="Text_plain.png">12:11, 11 May 2005</a></td><td><a href="Text_plain.png"><img alt="Thumbnail for version as of 12:11, 11 May 2005" src="120px-Text_plain.png" width="120" height="12" /></a></td><td>375 × 37 <span style="white-space: nowrap;">(3 KB)</span></td><td><a href="http://www.panda3d.org/manual/index.php?title=User:Drwr&amp;action=edit&amp;redlink=1" class="new mw-userlink" title="User:Drwr (page does not exist)">Drwr</a> <span style="white-space: nowrap;"> <span class="mw-usertoollinks">(<a href="http://www.panda3d.org/manual/index.php?title=User_talk:Drwr&amp;action=edit&amp;redlink=1" class="new" title="User talk:Drwr (page does not exist)">Talk</a> | <a href="Drwr.html" title="Special:Contributions/Drwr">contribs</a>)</span></span></td><td dir="ltr">TextNode initial example</td></tr>
+</table>
+
+</div>
+<br /><ul>
+<li id="mw-imagepage-edit-external"><a href="http://www.panda3d.org/manual/index.php?title=File:Text_plain.png&amp;action=edit&amp;externaledit=true&amp;mode=file" title="File:Text plain.png">Edit this file using an external application</a> <small>(See the <a rel="nofollow" class="external text" href="http://www.mediawiki.org/wiki/Manual:External_editors">setup instructions</a> for more information)</small></li>
+</ul>
+<h2 id="filelinks">File usage</h2>
+<div id='mw-imagepage-section-linkstoimage'>
+<p>The following page links to this file:
+</p><ul class="mw-imagepage-linkstoimage">
+<li id="mw-imagepage-linkstoimage-ns0"><a href="Text_Node.html" title="Text Node">Text Node</a></li>
+</ul>
+</div>
+</div><table width="100%" cellpadding="0" cellspacing="0" border="0" class="manualnav"><tr><td align="left"><a href="Main_Page.html" title="Main Page">Back to the Manual</a>&nbsp;&nbsp;&nbsp;</td></tr></table><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

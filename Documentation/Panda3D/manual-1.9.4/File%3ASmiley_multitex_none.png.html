@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Smiley multitex none.png - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Smiley multitex none.png</h2>
+<div class='wikicontent' id='wikicontentid'><ul id="filetoc"><li><a href="File%253ASmiley_multitex_none.png.html#file">File</a></li>
+<li><a href="File%253ASmiley_multitex_none.png.html#filehistory">File history</a></li>
+<li><a href="File%253ASmiley_multitex_none.png.html#filelinks">File usage</a></li></ul><div class="fullImageLink" id="file"><a href="Smiley_multitex_none.png"><img alt="File:Smiley multitex none.png" src="Smiley_multitex_none.png" width="267" height="200" /></a><div class="mw-filepage-resolutioninfo">No higher resolution available.</div></div>
+<div class="fullMedia"><a href="Smiley_multitex_none.png" class="internal" title="Smiley multitex none.png">Smiley_multitex_none.png</a>‎ <span class="fileInfo">(267 × 200 pixels, file size: 96 KB, MIME type: image/png)</span>
+</div>
+<div id="mw-imagepage-content" lang="en" dir="ltr" class="mw-content-ltr"><p>Smiley with no multitexture
+</p><p>The following program was used to generate this image:
+</p>
+<table class="code"><tr><td><pre>
+from direct.directbase.DirectStart import *
+from pandac.PandaModules import *
+
+smiley = loader.loadModel('smiley.egg')
+smiley.reparentTo(render)
+smiley.setPos(0, 4.2, 0)
+
+dl = DirectionalLight('dl')
+dlnp = base.camera.attachNewNode(dl)
+smiley.setLight(dlnp)
+
+cm = CardMaker('background')
+cm.setFrame(-5, 5, -5, 5)
+background = render.attachNewNode(cm.generate())
+background.setPos(0, 12, 0)
+background.setTexture(loader.loadTexture('maps/noise.rgb'))
+
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_none.png', defaultFilename = 0)
+
+ts = TextureStage('ts')
+pattern = loader.loadTexture('color_pattern.png')
+pattern.setWrapU(Texture.WMBorderColor)
+pattern.setWrapV(Texture.WMBorderColor)
+pattern.setBorderColor(VBase4(1, 1, 1, 1))
+
+smiley.setTexture(ts, pattern)
+smiley.setTexScale(ts, 8, 4)
+smiley.setTexOffset(ts, -4, -2)
+smiley.setTransparency(TransparencyAttrib.MAlpha)
+
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_modulate.png', defaultFilename = 0)
+
+ts.setMode(TextureStage.MReplace)
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_replace.png', defaultFilename = 0)
+
+pattern.setBorderColor(VBase4(1, 1, 1, 0))
+ts.setMode(TextureStage.MDecal)
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_decal.png', defaultFilename = 0)
+
+pattern.setBorderColor(VBase4(0, 0, 0, 1))
+ts.setMode(TextureStage.MAdd)
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_add.png', defaultFilename = 0)
+
+a = loader.loadTexture('white_a.png')
+a.setWrapU(Texture.WMBorderColor)
+a.setWrapV(Texture.WMBorderColor)
+a.setBorderColor(VBase4(0, 0, 0, 0))
+smiley.setTexture(ts, a)
+ts.setMode(TextureStage.MBlend)
+ts.setColor(VBase4(1, 0, 0, 1))
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_blend_red.png', defaultFilename = 0)
+
+ts.setColor(VBase4(0, 0, 1, 1))
+base.graphicsEngine.renderFrame()
+base.screenshot('smiley_multitex_blend_blue.png', defaultFilename = 0)
+</pre></td></tr></table>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 5/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1180-0!*!*!*!*!*!* and timestamp 20171008113414 -->
+</div><h2 id="filehistory">File history</h2>
+<div id="mw-imagepage-section-filehistory">
+<p>Click on a date/time to view the file as it appeared at that time.
+</p>
+<table class="wikitable filehistory">
+<tr><td></td><th>Date/Time</th><th>Thumbnail</th><th>Dimensions</th><th>User</th><th>Comment</th></tr>
+<tr><td>current</td><td class='filehistory-selected' style='white-space: nowrap;'><a href="Smiley_multitex_none.png">19:11, 4 October 2005</a></td><td><a href="Smiley_multitex_none.png"><img alt="Thumbnail for version as of 19:11, 4 October 2005" src="120px-Smiley_multitex_none.png" width="120" height="90" /></a></td><td>267 × 200 <span style="white-space: nowrap;">(96 KB)</span></td><td><a href="http://www.panda3d.org/manual/index.php?title=User:Drwr&amp;action=edit&amp;redlink=1" class="new mw-userlink" title="User:Drwr (page does not exist)">Drwr</a> <span style="white-space: nowrap;"> <span class="mw-usertoollinks">(<a href="http://www.panda3d.org/manual/index.php?title=User_talk:Drwr&amp;action=edit&amp;redlink=1" class="new" title="User talk:Drwr (page does not exist)">Talk</a> | <a href="Drwr.html" title="Special:Contributions/Drwr">contribs</a>)</span></span></td><td dir="ltr">Smiley with no multitexture</td></tr>
+</table>
+
+</div>
+<br /><ul>
+<li id="mw-imagepage-edit-external"><a href="http://www.panda3d.org/manual/index.php?title=File:Smiley_multitex_none.png&amp;action=edit&amp;externaledit=true&amp;mode=file" title="File:Smiley multitex none.png">Edit this file using an external application</a> <small>(See the <a rel="nofollow" class="external text" href="http://www.mediawiki.org/wiki/Manual:External_editors">setup instructions</a> for more information)</small></li>
+</ul>
+<h2 id="filelinks">File usage</h2>
+<div id='mw-imagepage-section-linkstoimage'>
+<p>The following 7 pages link to this file:
+</p><ul class="mw-imagepage-linkstoimage">
+<li id="mw-imagepage-linkstoimage-ns0"><a href="Texture_Modes.html" title="Texture Modes">Texture Modes</a></li>
+<li id="mw-imagepage-linkstoimage-ns6"><a href="File%253ASmiley_multitex_add.png.html" title="File:Smiley multitex add.png">File:Smiley multitex add.png</a></li>
+<li id="mw-imagepage-linkstoimage-ns6"><a href="File%253ASmiley_multitex_blend_blue.png.html" title="File:Smiley multitex blend blue.png">File:Smiley multitex blend blue.png</a></li>
+<li id="mw-imagepage-linkstoimage-ns6"><a href="File%253ASmiley_multitex_blend_red.png.html" title="File:Smiley multitex blend red.png">File:Smiley multitex blend red.png</a></li>
+<li id="mw-imagepage-linkstoimage-ns6"><a href="File%253ASmiley_multitex_decal_1.png.html" title="File:Smiley multitex decal 1.png">File:Smiley multitex decal 1.png</a></li>
+<li id="mw-imagepage-linkstoimage-ns6"><a href="File%253ASmiley_multitex_modulate.png.html" title="File:Smiley multitex modulate.png">File:Smiley multitex modulate.png</a></li>
+<li id="mw-imagepage-linkstoimage-ns6"><a href="File%253ASmiley_multitex_replace.png.html" title="File:Smiley multitex replace.png">File:Smiley multitex replace.png</a></li>
+</ul>
+</div>
+</div><table width="100%" cellpadding="0" cellspacing="0" border="0" class="manualnav"><tr><td align="left"><a href="Main_Page.html" title="Main Page">Back to the Manual</a>&nbsp;&nbsp;&nbsp;</td></tr></table><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

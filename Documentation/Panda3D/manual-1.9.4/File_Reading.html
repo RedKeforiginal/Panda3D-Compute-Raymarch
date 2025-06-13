@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>File Reading - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: File Reading</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="ShowBase.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Threading.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>General file reading in Panda is handled by the Virtual File System.
+</p><p>Although it presents the files and directories that it provides access to as a single, unbroken file system, it can in fact include files from multiple sources (such as <a href="Multifiles.html" title="Multifiles">Multifiles</a>) in the hierarchy, regardless of the underlying structure.
+</p><p>This has the advantage of allowing one to access files and directories without worrying overmuch about where they actually reside, and even access Multifile archives as a directory hierarchy.
+</p><p>NB: While present in C++, on the Python side Panda does not offer file <em>writing</em> functionality, with the exception of writing to certain specialized file types.  For general file writing, however, Python itself offers file-handling functionality, including potentially-useful features such as reading to the end of the line in a single call.
+</p>
+<h2> <span class="mw-headline" id="Thread-safe_file_I.2FO">Thread-safe file I/O</span></h2>
+<p>In versions 1.6.0 and above, Panda3D offers a <a href="Thread.html" title="Thread" class="mw-redirect">thread</a>-safe replacement for the Python file module. You can find it in direct.stdpy.file. The interface is exactly the same as Python's, so it's safe to put this import above all the files where you want to use the "file" or "open" functions:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">stdpy</span>.<span style="color: #008000;">file</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span></pre>
+<p>This module reimplements Python's file I/O mechanisms using Panda constructs.  This enables Python to interface more easily with Panda's virtual file system, and it also better-supports Panda's SIMPLE_THREADS model, by avoiding blocking all threads while waiting for I/O to complete.
+
+</p>
+<h2> <span class="mw-headline" id="Incomplete_Section">Incomplete Section</span></h2>
+<p>Note: This section is incomplete.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 11/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2260-0!*!0!!*!*!* and timestamp 20171007194750 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="ShowBase.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Threading.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
