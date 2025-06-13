@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Audio Managers - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Audio Managers</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Manipulating_Sounds.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DSP_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Sound effects and music in code are implemented as <code>AudioManager</code> objects. You can access these audio managers with the following code:
+</p>
+<pre class="python">sfxMgr = base.<span style="color: black;">sfxManagerList</span><span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span><br />musicMgr = base.<span style="color: black;">musicManager</span></pre>
+<p>In <code>base</code>, <code>sfxManagerList</code> is a list of <code>AudioManager</code> objects intended to be used for sound effects, and <code>musicManager</code> is an <code>AudioManager</code> object intended to be used for music.
+</p><p>Each <code>AudioManager</code> object can have 16 different sounds cached at a given time. This value is actually set as the <code>audio-cache-limit</code> in the panda config.prc (found in your install directory) and can be changed.
+</p><p>There are times where either sound effects, music, or both should be disabled and later enabled. These commands affect entire categories of sounds. Passing True or False in the last 2 functions will disable or enable the respective groups.
+</p>
+<pre class="python">base.<span style="color: black;">disableAllAudio</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">enableAllAudio</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">enableMusic</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">enableSoundEffects</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+<p>Positional audio is implemented through a wrapper of these objects and is covered in the next section, <a href="3D_Audio.html" title="3D Audio">3D Audio</a>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 31/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2370-0!*!0!*!*!*!* and timestamp 20171007174018 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Manipulating_Sounds.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="DSP_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

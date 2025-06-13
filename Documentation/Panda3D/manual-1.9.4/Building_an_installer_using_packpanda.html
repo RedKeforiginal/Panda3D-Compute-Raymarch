@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Building an installer using packpanda - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Building an installer using packpanda</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><br><small><i>This page is not in the table of contents.</i></small><br><p><b>packpanda is now deprecated.  Please use the replacement pdeploy instead.  See <a href="Distributing_as_a_self-contained_installer.html" title="Distributing as a self-contained installer">Distributing_as_a_self-contained_installer</a></b>
+</p><p><b>packpanda is no longer supported and is removed in 1.10 versions of Panda.</b>
+</p><p>Note: In version 1.6.0, support was added for Linux. Before this version, you will only be able to use packpanda on a windows system.
+</p><p>Packpanda is a utility that lets you create an automatic self-extracting installer for a Panda3D game. On Linux, it is capable of creating an .rpm or .deb package. On Windows, it creates an installation wizard, that will look like this:
+</p>
+<p style="text-align: center;"> <a href="File%253APackpanda1.jpg.html" class="image"><img alt="Packpanda1.jpg" src="Packpanda1.jpg" width="503" height="393" /></a> </p>
+<p>When the installation is done, the end-user will find your game in his start menu:
+</p>
+<p style="text-align: center;"> <a href="File%253APackpanda2.jpg.html" class="image"><img alt="Packpanda2.jpg" src="Packpanda2.jpg" width="401" height="107" /></a> </p>
+<p>The end-user doesn't need to have a copy of panda.  He doesn't even need to know that he is using panda.  He just installs the game and plays it.
+</p><p><b>Files that your Game should Contain</b>
+</p><p>Before you pack up your game, you need to put all of your game files into a single directory (which may have as many subdirectories as you desire).  This directory will be packed up and shipped to the user, along with the panda runtime system.  Your game directory needs to contain several files:
+</p><p><br />
+<i>main.py</i>.  This is your main program.  When the user clicks on the start-menu entry for the game, this is the file that will get executed.
+</p><p><i>installer.bmp</i>.  Windows only. This image will appear on the installer screen.   If present, it must be a 164x314 windows BMP file.  This file is not required.
+</p><p><i>license.txt</i>.  This is your game's software license.  The file, if present, must be plain ascii.  The game's license will appear inside the installer, and will also be copied to the game's installation directory.  Of course, your license only covers the code that you wrote, not panda itself, which is covered by the panda license.  The license file is not required.
+</p><p><i>icon.ico</i>.  Windows only. This is your game's icon, which will appear in the start menu.  If you don't supply an icon, the panda icon will be used instead.  This file is not required.  
+</p><p><b>Packing up your Game</b>
+</p><p>The command to pack up your game is "packpanda", and you must specify the "--dir" command line option to tell it the name of the directory containing your game.  Packpanda will immediately analyze your game and print out a status report:
+</p>
+<p style="text-align: center;"> <a href="File%253APackpanda3.jpg.html" class="image"><img alt="Packpanda3.jpg" src="Packpanda3.jpg" width="606" height="271" /></a> </p>
+<p>In this example, packpanda has inferred that the name of the game is "Airblade," based on the directory name.  On Windows, it will install the game into "C:\Airblade", and to add the start menu folder "Airblade".  It plans to call the installer "Airblade.exe" (append .rpm or .deb for Linux). Later, we will tell you how to override some of these defaults.
+</p><p>As you can see, packpanda is looking inside the game directory for the files mentioned above: main.py, installer.bmp, icon.ico, and license.txt.  It notes that some of those files are "missing", which is not a problem.  The only file that is required is main.py.
+</p><p>Packpanda can clean up your source tree before shipping it.  When doing so, packpanda never modifies your original copy of the game.  Instead, it copies the game to a temporary directory, as seen above.
+</p><p><b>Automatically generating BAM and PYC files while Packing</b>
+</p><p>Packpanda can optionally create BAM and PYC files and ship them to the end-user. To ask it to do so, use the following command-line options;
+</p>
+<pre class="class">
+packpanda --bam   # Generate and ship BAM files
+packpanda --pyc   # Generate and ship PYC files
+</pre>
+<p>These command line options do <i>not</i> remove the corresponding EGG and PY files from the distribution.  If you wish to remove EGG and PY files, you need to use the --rmext option, documented below.
+</p><p>When packpanda generates a BAM or PYC file, it puts it in the same directory as the corresponding EGG or PY file.  If an EGG file contains a texture path, then the generated BAM will contain a <i>relative</i> texture path that is relative to the game's root directory.  Packpanda makes sure that your game's root directory ends up on the model path.
+</p><p><b>EGG Verification and PY Verification</b>
+</p><p>Packpanda will check all of your EGG and PY files to make sure that they compile correctly.  It checks EGG files by running them through egg2bam.  It checks PY files by running the python compiler on them.  If any file fails, the game will not be packed.
+</p><p>In fact, this is related to the --bam and --pyc options mentioned earlier.  In fact, packpanda always generates bam and pyc files.  However, if you do not specify the --bam and --pyc options, then these files will be generated, verified, and then discarded.  The effect of the --bam and --pyc options is to cause these files to be shipped to the end-user.
+</p><p><b>Preloading the Model Cache</b>
+</p><p>If your distribution includes EGG files, and if you choose not to remove those using --rmext egg, then panda will convert them to BAM files at install time.  This is a somewhat time consuming process, it makes the install take longer.  If you want to avoid this, do not distribute EGG files --- instead, distribute BAM files, as explained above.
+</p><p><b>Stripping Files from the Distribution</b>
+</p><p>Often, your master copy of a game contains files that should not be shipped to the end-user.  For situations like this, packpanda contains command-line options to strip out unnecessary files:
+</p>
+<pre class="class">
+packpanda --rmdir dir  # Strip all directories with given name
+packpanda --rmext ext  # Strip all files with given extension
+</pre>
+<p>These options are particularly useful in several common situations:
+</p><p><i>To remove CVS directories</i>: packpanda --rmdir CVS
+</p><p><i>To ship BAM instead of EGG</i>: packpanda --bam --rmext egg
+</p><p><i>To ship PYC instead of PY</i>: packpanda --pyc --rmext py
+</p><p><b>Changing the Game's Name</b>
+</p><p>Normally, packpanda infers the game's name to be the same as the directory name.  That isn't always convenient, especially when the game has a long name.  The following command line option allows you to tell packpanda the name of the game:
+</p>
+<pre class="class">
+packpanda --name &quot;Evil Space Monkeys of The Planet Zort&quot;
+</pre>
+<p>This string will show up in a number of places: in particular, throughout the installation dialogs, and in the start menu.
+</p><p><b>Version Numbers</b>
+</p><p>If you wish, you can assign your game a version number using this command line option:
+</p>
+<pre class="class">
+packpanda --version X.Y.Z  # Assign a version number
+</pre>
+<p>The only thing this does is to add "X.Y.Z" to the install directory and to the start menu item.  That, in turn, makes it possible for two versions of the same game to coexist on a machine without conflict.
+</p><p><b>Compression Speed</b>
+</p><p>On Windows, packpanda uses a very good compression algorithm, but it's excruciatingly slow to compress.  You can specify this command line option to make it go faster, at the cost of compression effectiveness: (not available on Linux)
+</p>
+<pre class="class">
+packpanda --fast  # Quick but not so great compression
+</pre>
+<p><b>Moving Beyond Packpanda</b>
+</p><p>Packpanda has a lot of limitations.  However, packpanda is actually a front end to more powerful systems. On Linux, it uses the system tools dpkg-deb and rpmbuild. On Windows, it uses NSIS, the "Nullsoft Scriptable Install System."  NSIS is incredibly powerful, and very flexible, but unfortunately rather complicated to use.  Packpanda hides all that complexity from you, but unfortunately, in so doing, it limits your options.
+</p><p>If you find yourself outgrowing packpanda, one sensible thing to do would be to learn how to use those systems directly.  This is an easy transition to make.  The first step is to simply watch packpanda in action.  It will show you all of the commands it is executing.  You can then copy those commands into a batch file.  If you run that batch file, you're executing those base tools directly.
+</p><p>Once you have direct control over NSIS, you can begin editing the NSIS command-line options and the NSIS configuration file (packpanda.nsi).  Of course, to do so, you'll need to first read the NSIS manual (available on the web).  From that point forward, you have unlimited flexibility.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1268-0!*!0!*!*!2!* and timestamp 20171008085553 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;</td>
+              <td width="70px" align="center"></td>
+              <td width="70px" align="right">&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

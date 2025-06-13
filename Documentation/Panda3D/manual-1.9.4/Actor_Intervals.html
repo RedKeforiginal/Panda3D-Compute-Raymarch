@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Actor Intervals - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Actor Intervals</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Function_Intervals.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Sound_Intervals.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>
+Actor intervals allow actor animations to be played as an interval, which allows them to be combined with other intervals through sequences and parallels.  
+</p><p>The subrange of the animation to be played may be specified via frames (<code>startFrame</code> up to and including <code>endFrame</code>) or seconds (<code>startTime</code> up to and including <code>endTime</code>). It may also be specified with a <code>startFrame</code> or <code>startTime</code> in conjunction with the duration, in seconds. If none of these is specified, then the default is to play the entire range of the animation.
+</p><p>If <code>endFrame</code> is before <code>startFrame</code>, or if the play rate is negative, then the animation will be played backwards.
+</p><p>You may specify a subrange that is longer than the actual animation, but if you do so, you probably also want to specify either <code>loop=1</code> or <code>constrainedLoop=1</code>; see below.
+</p><p>The loop parameter is a boolean value.  When it is true, it means that the animation restarts and plays again if the interval extends beyond the animation's last frame.  When it is false, it means that the animation stops and holds its final pose when the interval extends beyond the animation's last frame.  Note that, in neither case, will the ActorInterval loop indefinitely: all intervals always have a specific, finite duration, and the duration of an ActorInterval is controlled by either the duration parameter, the <code>startTime</code>/<code>endTime</code> parameters, or the <code>startFrame</code>/<code>endFrame</code> parameters.  Setting <code>loop=1</code> has no effect on the duration of the ActorInterval, it only controls what the actor does if you try to play past the end of the animation.
+</p><p>The parameter <code>constrainedLoop</code> works similarly to loop, but while <code>loop=1</code> implies a loop within the entire range of animation, <code>constrainedLoop=1</code> implies a loop within <code>startFrame</code> and <code>endFrame</code> only. That is, if you specify <code>loop=1</code> and the animation plays past <code>endFrame</code>, in the next frame it will play beginning at frame 0; while if you specify <code>constrainedLoop=1</code> instead, then the next frame after <code>endFrame</code> will be <code>startFrame</code> again.
+</p><p>All parameters other than the animation name are optional.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">interval</span>.<span style="color: black;">ActorInterval</span> <span style="color: #ff7700;font-weight:bold;">import</span> ActorInterval<br />&#160;<br />myInterval = myactor.<span style="color: black;">actorInterval</span><span style="color: black;">&#40;</span><br />    <span style="color: #483d8b;">&quot;Animation Name&quot;</span>,<br />    loop=<span style="color: #66cc66;">&lt;</span><span style="color: #ff4500;">0</span> <span style="color: #ff7700;font-weight:bold;">or</span> <span style="color: #ff4500;">1</span><span style="color: #66cc66;">&gt;</span>,<br />    constrainedLoop=<span style="color: #66cc66;">&lt;</span><span style="color: #ff4500;">0</span> <span style="color: #ff7700;font-weight:bold;">or</span> <span style="color: #ff4500;">1</span><span style="color: #66cc66;">&gt;</span>,<br />    duration=D,<br />    startTime=T1,<br />    endTime=T2,<br />    startFrame=N1,<br />    endFrame=N2,<br />    playRate=R,<br />    partName=PN,<br />    lodName=LN,<br /><span style="color: black;">&#41;</span></pre>
+<p>
+
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 79/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:947-0!*!*!*!*!*!* and timestamp 20171008020200 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Function_Intervals.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Sound_Intervals.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

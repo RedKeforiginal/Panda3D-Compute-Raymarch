@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Backface Culling and Frontface Culling - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Backface Culling and Frontface Culling</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Tinting_and_Recoloring.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Occlusion_Culling.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Backface_and_Frontface_Culling">Backface and Frontface Culling</span></h2>
+<p>By default, Panda3D automatically culls (doesn't render) backfaces of
+polygons.  In other words, the polygon acts like a one-way mirror: you
+can see it from one side, but from the other side, it's see-through.
+Backface culling is a very
+useful performance optimization.  Without it, the 3D engine would have to
+render the <i>inside surface</i> of 3D models.  Since this surface is not
+visible anyhow, this is entirely wasted work.  Since the surface area
+of the inside is equal to the surface area of the outside, this would
+roughly double the amount of work the video card has to do.  This is why
+backface culling is enabled by default.
+</p><p>Interestingly, this means that if you move the camera inside of a
+closed 3D model, you can usually see out.  This is actually pretty convenient
+most of the time.
+</p><p>However, there are cases when you do want to be able to see backfaces.
+There are also very rare cases when you <i>don't</i> want to see front-faces.
+Therefore, backface and frontface culling can be controlled.
+</p><p>Caution: inexperienced 3D modelers sometimes create models with the polygons
+facing <i>inward</i>: ie, the visible side of the polygon is on the inside
+of the 3D model, and the see-through side is on the outside.  As a result,
+the 3D model can look very weird - it can have holes, or it can look inside-out.
+Turning off backface culling can sort of "fix" these models, at a heavy cost:
+first, it makes them render half as fast, and second, it causes weird
+lighting artifacts (because the video card is calculating the lighting
+for the inside of the model, not the outside).  This is not a real solution
+to bad 3D modeling: the only real fix is to make the 3D models correctly
+in the first place.
+</p><p>In other words, don't alter the backface or frontface culling unless you're
+using an algorithm that requires it, such as stencil shadows.
+</p>
+<h2> <span class="mw-headline" id="Rendering_Double-Sided">Rendering Double-Sided</span></h2>
+<p>There is a quick way to render a certain <a href="NodePath.html" title="NodePath" class="mw-redirect">NodePath</a> in your scene double-sided, which means no culling is performed at all and both sides are visible, without hassling with attribs:
+</p>
+<pre class="python">nodePath.<span style="color: black;">setTwoSided</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+
+<p>If you want more advanced control over the culling you might want to look at the CullFaceAttrib:
+</p>
+<h2> <span class="mw-headline" id="Controlling_Backface_and_Frontface_Culling">Controlling Backface and Frontface Culling</span></h2>
+<p>There are three valid settings for culling:
+</p>
+<pre class="python">nodePath.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>CullFaceAttrib.<span style="color: black;">make</span><span style="color: black;">&#40;</span>CullFaceAttrib.<span style="color: black;">MCullNone</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />nodePath.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>CullFaceAttrib.<span style="color: black;">make</span><span style="color: black;">&#40;</span>CullFaceAttrib.<span style="color: black;">MCullClockwise</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />nodePath.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>CullFaceAttrib.<span style="color: black;">make</span><span style="color: black;">&#40;</span>CullFaceAttrib.<span style="color: black;">MCullCounterClockwise</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+
+<p>None means that all faces are visible, both back and front.  Clockwise is the default setting, it causes backfaces to be culled.  Counter-clockwise is the reverse setting, it causes frontfaces to be culled.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 34/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2225-0!*!0!!*!*!* and timestamp 20171008055537 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Tinting_and_Recoloring.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Occlusion_Culling.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

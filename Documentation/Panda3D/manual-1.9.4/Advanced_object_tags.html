@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Advanced object tags - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Advanced object tags</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DetectPanda3D.js.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Splash_window_tags.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>When you embed a Panda3D application in a web page, either with the &lt;object&gt; tag or with P3D_RunContent, you specify certain key pieces of information such as window size and p3d URL.
+</p><p>You can specify more exotic things too:
+</p>
+<table border="1">
+<tr>
+<th> Token </th>
+<th> Meaning
+</th></tr>
+<tr>
+<td> auto_start </td>
+<td> "1" to launch the app without waiting for the green "play" button
+</td></tr>
+<tr>
+<td> hidden </td>
+<td> "1" to avoid opening a Panda3D window
+</td></tr>
+<tr>
+<td> keep_pythonpath </td>
+<td> "1" to allow the user's PYTHONPATH environment variable to remain intact, and thus to override Python files within the app (requires -D on p3d file)
+</td></tr>
+<tr>
+<td> log_basename </td>
+<td> Specifies the log file within Panda3D/log to write to for this app
+</td></tr>
+<tr>
+<td> prc_name </td>
+<td> Specifies a directory name within Panda3D/prc from which user prc files custom to this app will be loaded
+</td></tr>
+<tr>
+<td> alt_host </td>
+<td> Specifies one of the "alternate host" keywords defined for the p3d file's download host, to enable alternate download contents
+</td></tr></table>
+<p>In addition to the above list, you may specify any of numerous splash image URL's, or any of the plugin notify callbacks; these are described on the following pages.
+</p><p>Furthermore, you can specify tokens that have particular meaning to your own application.  Any additional tokens you specify are passed to the application and can be queried by Python code via base.appRunner.getToken('keyword'), so any application is free to define its own custom tokens.
+</p><p>To use any of the above, specify the token and the value as a pair in the embedding HTML syntax.  In the Internet Explorer syntax, this means you use the &lt;param&gt; element, e.g.:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-html4strict" style="font-family: monospace;"><pre><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;object</span> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span>
+  <span style="color: #000066;">classid</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;CLSID:924B4927-D3BA-41EA-9F7E-8A89194AB3AC&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;param</span> <span style="color: #000066;">name</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;data&quot;</span> <span style="color: #000066;">value</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;param</span> <span style="color: #000066;">name</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;splash_img&quot;</span> <span style="color: #000066;">value</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;my_splash.jpg&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;param</span> <span style="color: #000066;">name</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;auto_start&quot;</span> <span style="color: #000066;">value</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre></div></div>
+<p>In the non-Internet Explorer syntax, you can use the &lt;param&gt; element as above, or you can insert the token directly within the &lt;object&gt; tag, e.g.:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-html4strict" style="font-family: monospace;"><pre><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;object</span> <span style="color: #000066;">width</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;640&quot;</span> <span style="color: #000066;">height</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;480&quot;</span>
+  <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;application/x-panda3d&quot;</span> <span style="color: #000066;">data</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;myapp.p3d&quot;</span>
+  splash_img<span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;my_splash.jpg&quot;</span> auto_start<span style="color: #66cc66;">=</span><span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/object&gt;</span></span></pre></div></div>
+<p>When using RunPanda3D, you just add the token and value as a pair of strings to the P3D_RunContent() call:
+</p>
+<div dir="ltr" class="mw-geshi mw-content-ltr"><div class="source-javascript" style="font-family: monospace;"><pre>P3D_RunContent<span style="color: #009900;">&#40;</span><span style="color: #3366CC;">'data'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'myapp.p3d'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'id'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'myapp_id'</span><span style="color: #339933;">,</span>
+    <span style="color: #3366CC;">'width'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'640'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'height'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'480'</span><span style="color: #339933;">,</span>
+    <span style="color: #3366CC;">'splash_img'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'my_splash.jpg'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'auto_start'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'1'</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#125;</span></pre></div></div>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 10/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2418-0!*!*!*!*!*!* and timestamp 20171008113354 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DetectPanda3D.js.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Splash_window_tags.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

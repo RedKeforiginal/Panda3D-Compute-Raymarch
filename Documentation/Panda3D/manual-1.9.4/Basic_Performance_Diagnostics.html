@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Basic Performance Diagnostics - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Basic Performance Diagnostics</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Performance_Tuning.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Measuring_Performance_with_PStats.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Introductory_Performance_Diagnostics">Introductory Performance Diagnostics</span></h2>
+<p>In Panda3D, the "big gun" of performance analysis is called <i>pstats</i>.
+This program gives you real-time diagnostic analysis of a running Panda3D
+virtual world broken down into hundreds of different categories.
+</p><p>But sometimes, when you've just encountered a problem, you don't want
+that much information.  Sometimes, you just want a simple question
+answered, like "how many meshes do I have," or "is this a
+fill-rate problem?"  For simple questions like that, there are lots
+of things you can do to get a quick-and-dirty answer.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="The_Frame-Rate_Meter">The Frame-Rate Meter</span></h2>
+<p>The frame-rate meter doesn't tell you why your program is running slow,
+but it does have one important purpose: it's a lightweight and unobtrusive
+utility that you can leave on throughout the entire development process.
+This is valuable in that it gives you immediate feedback when you do
+something inefficient.
+To turn on the frame-rate meter, put this in your config file:
+</p>
+<pre class="codeblock">
+show-frame-rate-meter #t
+</pre>
+<p>Or, if you want to have it set at run-time:
+</p>
+<pre class="python">base.<span style="color: black;">setFrameRateMeter</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="The_Scene_Analyzer">The Scene Analyzer</span></h2>
+<p>If a scene needs to be rendered and has multiple nodes, Panda has to send each node to the graphics hardware as a separate batch of polygons (because the nodes might move independently, or have different state changes on them). Modern graphics hardware hasn't made any improvements recently in handling large numbers of batches, just in handling large numbers of polygons per batch. So if a scene is composed of a large number of nodes with a small number of polygons per node, the frame rate will suffer. This problem is not specific to Panda; any graphics engine will have the same problem.  The problem is due to the nature of the PC and the AGP bus. 
+</p><p>For example, though your graphics card may claim it can easily handle 100,000 polygons, this may be true in practice only if all of those polygons are sent in one batch--that is, just a single <a href="Geom.html" title="Geom">Geom</a>.  If, however, your scene consists of 1,000 nodes with 100 polygons each, it may not have nearly as good a frame rate.
+</p><p>To inspect performance the NodePath.analyze() method is extremely useful.  For example:
+</p>
+<pre class="python">render.<span style="color: black;">analyze</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre> 
+<p>The response is printed to the command window.  It may look something like this: 
+</p>
+<pre class="codeblock"> 
+371 total nodes (including 43 instances). 
+21 transforms; 16% of nodes have some render attribute. 
+205 Geoms, with 94 GeomVertexDatas, appear on 133 GeomNodes. 
+21665 vertices, 21573 normals, 21557 texture coordinates. 
+35183 triangles: 
+   3316 of these are on 662 tristrips (5.00906 average tris per strip). 
+   0 of these are on 0 trifans. 
+   31867 of these are independent triangles. 
+0 lines, 0 points. 
+99 textures, estimated minimum 326929K texture memory required. 
+</pre> 
+<p>For a scene with many static nodes there exists a workaround. 
+</p><p>If a scene is composed of many static objects, for example boxes, and the intent of all of these boxes to just sit around and be part of the background, or to move as a single unit, they can flattened together into a handful of nodes (or even one node). To do this, parent them all to the same node, and use: 
+</p>
+<pre class="python">node.<span style="color: black;">flattenStrong</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>One thing that flattenStrong() won't touch is geometry under a ModelRoot or ModelNode node. Since each egg or bam file loads itself up under a ModelRoot node, the proper way to handle this is to get rid of that node first to make the geometry from multiple different egg files to be flattened together. This can be done with the following:
+</p>
+<pre class="python">modelRoot = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'myModel.egg'</span><span style="color: black;">&#41;</span> <br />newModel = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">'model'</span><span style="color: black;">&#41;</span> <br />modelRoot.<span style="color: black;">getChildren</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>newModel<span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 55/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1727-0!*!0!!*!*!* and timestamp 20171007235613 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Performance_Tuning.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Measuring_Performance_with_PStats.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

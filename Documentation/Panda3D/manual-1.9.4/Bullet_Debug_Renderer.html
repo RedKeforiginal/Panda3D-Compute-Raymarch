@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Debug Renderer - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Debug Renderer</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Hello_World.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Collision_Shapes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>In the previous "hello world" sample we have been introduced to a few Bullet physics objects, for example the rigid body (<code>BulletRigidBodyNode</code>) or box and plane collision shapes (<code>BulletPlaneShape</code>, <code>BulletBoxShape</code>).
+</p><p>These objects are part of the Panda3D scene graph. But they are not visible. In order to be able to actually see a rigid body we had to reparent a visible geometry below the rigid body node. This is fine, since we (1) can control the way an object looks like, by choosing whatever visible geoemtry we want, and (2) we can create invisible objects too, by not reparenting any geometry below a rigid body.
+</p><p>But when developing a game it sometimes would be handy to actually see where the physical objects are. This is what the <code>BulletDebugNode</code> is for. It's not meant for users playing the game, but as an aid in finding problems while developing the game.
+</p><p>The debug node is pretty easy to use. We just need to create such a node, place it in the scene graph, and tell the Bullet world that we have such a node. From now on Bullet will create a "debug" visualisation of the world's content within the debug node, whenever <code>doPhysics</code> is called. The following code snippet shows how to do this:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletDebugNode<br />&#160;<br />debugNode = BulletDebugNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'Debug'</span><span style="color: black;">&#41;</span><br />debugNode.<span style="color: black;">showWireframe</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />debugNode.<span style="color: black;">showConstraints</span><span style="color: black;">&#40;</span><span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />debugNode.<span style="color: black;">showBoundingBoxes</span><span style="color: black;">&#40;</span><span style="color: #008000;">False</span><span style="color: black;">&#41;</span><br />debugNode.<span style="color: black;">showNormals</span><span style="color: black;">&#40;</span><span style="color: #008000;">False</span><span style="color: black;">&#41;</span><br />debugNP = render.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>debugNode<span style="color: black;">&#41;</span><br />debugNP.<span style="color: black;">show</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />&#160;<br />world = BulletWorld<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />world.<span style="color: black;">setGravity</span><span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-9.81</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />world.<span style="color: black;">setDebugNode</span><span style="color: black;">&#40;</span>debugNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>We can control the amount of information rendered using the following methods:
+</p>
+<ul><li> showWireframe: Displays collisions shapes in wireframe mode.
+</li><li> showConstraints: Display limits defined for constraints, e. g. a pivot axis or maximum amplitude.
+</li><li> showBoundingBoxes: Displays axis aligned bounding boxes for objects.
+</li><li> showNormals: Displays normals for triangle mesh and heightfield faces.
+</li></ul>
+<p>There is one thing to pay attention to: By default the <code>BulletDebugNode</code> is hidden right after creation. If we want to see the debug visualisation from the first frame on we have to unhide it, using <code>show()</code>.
+</p><p>Since debug rendering is not very fast we can turn debug rendering on and off, without having to remove the debug node from the scene graph. Turning debug rendering on and of is simply done by hiding or showing the debug node. The following code shows how to toggle debug node visibility on and off, using the F1 key:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span>.<span style="color: black;">DirectObject</span> <span style="color: #ff7700;font-weight:bold;">import</span> DirectObject<br />&#160;<br />o = DirectObject<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />o.<span style="color: black;">accept</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'f1'</span>, toggleDebug<span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #ff7700;font-weight:bold;">def</span> toggleDebug<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />  <span style="color: #ff7700;font-weight:bold;">if</span> debugNP.<span style="color: black;">isHidden</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>:<br />    debugNP.<span style="color: black;">show</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />  <span style="color: #ff7700;font-weight:bold;">else</span>:<br />    debugNP.<span style="color: black;">hide</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 40/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2618-0!*!*!*!*!*!* and timestamp 20171008061247 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Hello_World.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Collision_Shapes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

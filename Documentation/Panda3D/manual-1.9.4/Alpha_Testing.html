@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Alpha Testing - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Alpha Testing</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Fog.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Color_Write_Masks.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Alpha_Testing">Alpha Testing</span></h2>
+<p>The alpha test attribute governs whether or not a part of a node will be rendered based on the alpha value of its texture.  This is particularly useful for rendering complex geometry into the depth or stencil buffer with a textured card rather than explicitly creating the shapes.</p>
+<p>This test is different from rendering with respect to alpha transparency value.  If you set an alpha test attribute on a node which is rendering into the color buffer, you may be surprised by the result.  All pixels that pass the alpha test will be rendered just as if no test had been performed, including their appropriate transparency and pixels that fail the test will not be rendered at all.</p>
+<p>Remember to set your attribute's priority to override any other alpha test attributes inherited from higher in the scene graph.</p>
+<p>In the following example, we create an attribute that would cause objects to render only if their alpha value is below one quarter intensity.</p>
+<pre class="python">lowPassFilter = AlphaTestAttrib.<span style="color: black;">make</span><span style="color: black;">&#40;</span>RenderAttrib.<span style="color: black;">MLess</span>,<span style="color: #ff4500;">0.25</span><span style="color: black;">&#41;</span></pre>
+<p>And now, this attribute can be added to a node to enable the action.</p>
+<pre class="python">nodePath.<span style="color: black;">setAttrib</span><span style="color: black;">&#40;</span>lowPassFilter<span style="color: black;">&#41;</span></pre>
+<h2> <span class="mw-headline" id="Incomplete_Section">Incomplete Section</span></h2>
+<p>Note: this section is incomplete.  It will be updated soon.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 41/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2097-0!*!*!!*!*!* and timestamp 20171007114041 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Fog.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Color_Write_Masks.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

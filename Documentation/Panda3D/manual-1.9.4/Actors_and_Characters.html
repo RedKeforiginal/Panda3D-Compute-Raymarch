@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Models and Actors - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Models and Actors</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Accessing_Config_Vars_in_a_Program.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_Models.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Geometry_Basics">Geometry Basics</span></h2>
+<p>There are two classes in Panda3D for 3D Geometry: the 'Model', which is 
+for non-animated geometry, and the 'Actor', which is for animated geometry.
+</p><p>Note that a geometry is only considered animated if it changes shape.  So
+for example, a baseball wouldn't be considered animated: it may fly all
+over the place, but it stays a sphere.  A baseball would be a model,
+not an actor.
+</p><p>Panda does not distinguish between big stuff and small stuff.  For example,
+if a virtual world contains a coffee cup on a table, and the table is in the
+middle of a small island, then the coffee cup, the table, and the island are all
+models: each is a piece of static non-animated geometry.
+</p><p>Many engines provide tools to create terrain, and store that terrain into heightmap images. Panda3D can generate geometry for kind of heightmap terrains, refer to the <a href="Terrain.html" title="Terrain">Terrain</a> section for more information. For many simple terrains, though, many people prefer to use a static model rather than a heightmap image.
+</p><p>The following sections of the manual assume that you have a valid egg file which has an animatable
+model, and some additional egg files containing animations.
+To learn how to convert a model into an egg file see the <a href="Model_Export.html" title="Model Export">Model Export</a> section.
+</p>
+<h2> <span class="mw-headline" id="Panda.27s_Primary_File_Format">Panda's Primary File Format</span></h2>
+<p>In Panda3D, geometry is generally stored in EGG files.  An EGG file can contain:
+</p>
+<ul>
+<li>A Model (static geometry)
+<li>An Actor (dynamic geometry)
+<li>An Animation (to be applied to an actor)
+<li>Both an Actor and an Animation.
+</ul>
+<p>EGG files are created by exporting models from 3D modeling programs like
+Maya, Max, or Blender.  Currently, the support for Maya is very strong,
+since the developers of Panda3D mostly use Maya.  The
+Max exporter is not very reliable right now.  There is a third-party
+exporter for Blender, which is said to be quite good.
+</p><p>It is not recommended to pack both an actor and an animation into an EGG file:
+this tends to result in developer confusion.
+</p>
+<h2> <span class="mw-headline" id="Panda.27s_Other_File_Format">Panda's Other File Format</span></h2>
+<p>The EGG file is optimized for debugging, not speed.  The first time
+you load an EGG file, it loads slowly.  However, the second time
+you use that same EGG file, it loads fast.
+</p><p>This is possible because Panda3D is quietly translating the EGG file into
+a performance-optimized form: the BAM file.  It stores these BAM files in a
+directory called the model cache.  When developing a game, this works great:
+the only time you notice a delay is if you just created the EGG file
+for the first time.  Otherwise, it runs blazing fast.
+</p><p>However, there is one situation where this doesn't work so well: if you
+are shipping your game to a customer.  You don't want your customer's first
+experience with your game to have delays caused by egg file loading.
+In that case, it may make sense to ship BAM files instead of EGG files to
+the user.  To do this, you would use a tool like <code>egg2bam</code> or
+<code>packpanda</code> to convert your EGG files into BAM files manually.
+</p><p><i>CAUTION:</i> A BAM file only functions with the one version of Panda3D that
+created it!  By contrast, EGG files will work with any version of Panda3D. 
+Because of this, is is NOT recommended that you use BAM files for your
+day-to-day development.  They should only be used when shipping to
+customers.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 20/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:949-0!*!0!!*!*!* and timestamp 20171008054225 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Accessing_Config_Vars_in_a_Program.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Loading_Models.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

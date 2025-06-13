@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Collision Shapes - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Collision Shapes</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Debug_Renderer.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Collision_Filtering.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>On the previous page we have been introduced to Bullet basics. Two simple collision shapes - a box and a plane - have been used in this simple script. This page will now introduce more collison shapes provided by Bullet, starting with primitive shapes and then moving on to more complex ones.
+</p><p>Primitive shapes:
+</p>
+<ul><li> Sphere Shape
+</li><li> Plane Shape
+</li><li> Box Shape
+</li><li> Cylinder Shape
+</li><li> Capsule Shape
+</li><li> Cone Shape
+</li></ul>
+<p>Complex shapes:
+</p>
+<ul><li> Compound Shape
+</li><li> Convex Hull Shape
+</li><li> Triangle Mesh Shape
+</li><li> Heightfield Shape
+</li><li> Soft Body Shape
+</li><li> Multi Sphere Shape
+</li><li> Convex Point Cloud Shape
+</li></ul>
+<p><br />
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Bullet_Collision_Shapes.html#Sphere_Shape"><span class="tocnumber">1</span> <span class="toctext">Sphere Shape</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Bullet_Collision_Shapes.html#Plane_Shape"><span class="tocnumber">2</span> <span class="toctext">Plane Shape</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Bullet_Collision_Shapes.html#Box_Shape"><span class="tocnumber">3</span> <span class="toctext">Box Shape</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Bullet_Collision_Shapes.html#Cylinder_Shape"><span class="tocnumber">4</span> <span class="toctext">Cylinder Shape</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Bullet_Collision_Shapes.html#Capsule_Shape"><span class="tocnumber">5</span> <span class="toctext">Capsule Shape</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="Bullet_Collision_Shapes.html#Cone_Shape"><span class="tocnumber">6</span> <span class="toctext">Cone Shape</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="Bullet_Collision_Shapes.html#Compound_Shape"><span class="tocnumber">7</span> <span class="toctext">Compound Shape</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="Bullet_Collision_Shapes.html#Convex_Hull_Shape"><span class="tocnumber">8</span> <span class="toctext">Convex Hull Shape</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="Bullet_Collision_Shapes.html#Triangle_Mesh_Shape"><span class="tocnumber">9</span> <span class="toctext">Triangle Mesh Shape</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="Bullet_Collision_Shapes.html#Heightfield_Shape"><span class="tocnumber">10</span> <span class="toctext">Heightfield Shape</span></a></li>
+<li class="toclevel-1 tocsection-11"><a href="Bullet_Collision_Shapes.html#Soft_Body_Shape"><span class="tocnumber">11</span> <span class="toctext">Soft Body Shape</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Sphere_Shape">Sphere Shape</span></h2>
+<p>The most basic collision shape, a sphere with radius radius. The sphere is centered around it's origin.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletSphereShape<br />radius = <span style="color: #ff4500;">0.5</span><br />shape = BulletSphereShape<span style="color: black;">&#40;</span>radius<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Plane_Shape">Plane Shape</span></h2>
+<p>Another primitive collision shape, an infinite plane. To create a plane you have to pass both the plane's normal vector (Vec3(nx, ny, nz)) and the plane constant (d, which is the distance of the plane's origin. Planes can only be used for static objects.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletPlaneShape<br />normal = Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><br />d = <span style="color: #ff4500;">0</span><br />shape = BulletPlaneShape<span style="color: black;">&#40;</span>normal, d<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Box_Shape">Box Shape</span></h2>
+<p>A box-shaped primitive collision shape. To create a box you have to pass a vector with the half-extents (Vec3(dx, dx, dx)). The full extents of the box will be twice the half extents, e. g. from -dx to +dx on the local x-axis.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletBoxShape<br />dx = <span style="color: #ff4500;">0.5</span><br />dy = <span style="color: #ff4500;">0.5</span><br />dz = <span style="color: #ff4500;">1.0</span><br />shape = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span>dx, dy, dz<span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Cylinder_Shape">Cylinder Shape</span></h2>
+<p>A primitive collision shape which is represents a cylinder. We can create a cylinder shape by either passing it's radius, height and cylinder axis, or by passing a vector with half extents and the cylinder axis. The following example creates two cylinder shapes, both with radius 0.5 and height 1.4.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletCylinderShape<br />radius = <span style="color: #ff4500;">0.5</span><br />height = <span style="color: #ff4500;">1.4</span><br />shape1 = BulletCylinderShape<span style="color: black;">&#40;</span>radius, height, ZUp<span style="color: black;">&#41;</span><br />shape2 = BulletCylinderShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span>radius, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.5</span><span style="color: #66cc66;">*</span>height<span style="color: black;">&#41;</span>, ZUp<span style="color: black;">&#41;</span></pre>
+<p>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Capsule_Shape">Capsule Shape</span></h2>
+<p>A primitive collision shape which is a "capped" cylinder. "Capped" means that there are half-spheres at both ends, unlike the real cylinder which has flat ends. Capsule shapes are a good choice for character controllers, since they are fast, symmetrical, and allow smooth movement over steps.
+</p><p>To create a capsule shape we have to pass the capsule's radius, the height of the cylindrical part, and the up-axis. The total height of the capsule will be the height of the cylindrical part, plus twice the radius.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletCapsuleShape<br />radius = <span style="color: #ff4500;">0.5</span><br />height = <span style="color: #ff4500;">1.0</span><br />shape = BulletCapsuleShape<span style="color: black;">&#40;</span>radius, height, ZUp<span style="color: black;">&#41;</span></pre>
+<p>
+<h2> <span class="mw-headline" id="Cone_Shape">Cone Shape</span></h2>
+<p>Again a primitive collision shape, which represents a cone. We have to pass the radius of the circular base of the cone, and it's height.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletConeShape<br />radius = <span style="color: #ff4500;">0.6</span><br />height = <span style="color: #ff4500;">1.0</span><br />shape = BulletConeShape<span style="color: black;">&#40;</span>radius, height, ZUp<span style="color: black;">&#41;</span></pre>
+<p>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Compound_Shape">Compound Shape</span></h2>
+<p>Compound shapes are assemblies made up from two or more individual shapes. For example you could create a collision shape for a table from five box shapes. One "flat" box for the table plate, and four "thin" ones for the table legs.
+</p><p>The Panda3D Bullet module has no specialized class for compound shapes. It automatically creates a compound shape if more than one shape is added to a body node.
+</p><p>The following code snippet will create such a compound shape, resembling the before mentioned table.
+</p>
+<pre class="python">shape1 = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1.3</span>, <span style="color: #ff4500;">1.3</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape2 = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape3 = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape4 = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape5 = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.1</span>, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />bodyNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape1, TransformState.<span style="color: black;">makePos</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />bodyNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape2, TransformState.<span style="color: black;">makePos</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />bodyNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape3, TransformState.<span style="color: black;">makePos</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />bodyNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape4, TransformState.<span style="color: black;">makePos</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">-1</span>, <span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />bodyNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape5, TransformState.<span style="color: black;">makePos</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">-0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Convex_Hull_Shape">Convex Hull Shape</span></h2>
+<p>The first of the non-primitive collision shapes. A good analogy for a convex hull is an elastic membrane or balloon under pressure which is placed around a given set of vertices. When released the membrane will assume the shape of the convex hull. Convex hull shapes should be used for dynamic objects, if it is not possible to find a good approximation of the objects shape using collision primitives.
+</p><p>Convex hull shapes can be created is several ways:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletConvexHullShape<br />&#160;<br /><span style="color: #808080; font-style: italic;"># Add each vertex separately</span><br />shape1 = BulletConvexHullShape<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />shape1.<span style="color: black;">addPoint</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape1.<span style="color: black;">addPoint</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape1.<span style="color: black;">addPoint</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape1.<span style="color: black;">addPoint</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape1.<span style="color: black;">addPoint</span><span style="color: black;">&#40;</span>Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Add several vertices with a single call</span><br />shape2 = BulletConvexHullShape<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />shape2.<span style="color: black;">addArray</span><span style="color: black;">&#40;</span><span style="color: black;">&#91;</span><br />  Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span>,<br />  Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>,<br />  Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>,<br />  Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>,<br />  Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>,<br />  <span style="color: black;">&#93;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Add all vertices which can be found in a Geom object</span><br />geomNodes = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span>path<span style="color: black;">&#41;</span>.<span style="color: black;">findAllMatches</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'**/+GeomNode'</span><span style="color: black;">&#41;</span><br />geomNode = geomNodes.<span style="color: black;">getPath</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />geom = geomNode.<span style="color: black;">getGeom</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />shape3 = BulletConvexHullShape<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />shape3.<span style="color: black;">addGeom</span><span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Triangle_Mesh_Shape">Triangle Mesh Shape</span></h2>
+<p>Another non-primitive collision shape. A triangle mesh shape is similar to the convex hull shape, except that it is not restricted to convex geometry; it can contain concave parts. A typical use case for triangle mesh shapes is the static geometry of a game level. However, it is possible to use triangle mesh shapes for dynamic objects too. We have to explicitly tell Bullet if we want a static or dynamic triangle mesh shape at the time the shape is created.
+</p><p>To create a triangle mesh shape, we first have to create a triangle mesh object. The following example will create a simple quad composed of two triangles.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletTriangleMeshShape<br />p0 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-10</span>, <span style="color: #ff4500;">-10</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />p1 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">-10</span>, <span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />p2 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">-10</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />p3 = Point3<span style="color: black;">&#40;</span><span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">10</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><br />mesh = BulletTriangleMesh<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mesh.<span style="color: black;">addTriangle</span><span style="color: black;">&#40;</span>p0, p1, p2<span style="color: black;">&#41;</span><br />mesh.<span style="color: black;">addTriangle</span><span style="color: black;">&#40;</span>p1, p2, p3<span style="color: black;">&#41;</span><br />shape = BulletTriangleMeshShape<span style="color: black;">&#40;</span>mesh, dynamic=<span style="color: #008000;">False</span><span style="color: black;">&#41;</span></pre>
+<p>
+<p>We can use a convenience method to add all triangles from a Geom object with one method call. The geom will be decomposed first, so it does not have to contain only triangles; for example, it can contain triangle strips too.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletTriangleMesh<br />mesh = BulletTriangleMesh<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mesh.<span style="color: black;">addGeom</span><span style="color: black;">&#40;</span>geom<span style="color: black;">&#41;</span></pre>
+<p>
+<h2> <span class="mw-headline" id="Heightfield_Shape">Heightfield Shape</span></h2>
+<p>A special non-primitive collision shape. Give a heightfield image we can construct a terrain mesh with only a few lines of code.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Filename<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> PNMImage<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> BulletHeightfieldShape<br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">bullet</span> <span style="color: #ff7700;font-weight:bold;">import</span> ZUp<br />height = <span style="color: #ff4500;">10.0</span><br />img = PNMImage<span style="color: black;">&#40;</span>Filename<span style="color: black;">&#40;</span><span style="color: #483d8b;">'elevation.png'</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />shape = BulletHeightfieldShape<span style="color: black;">&#40;</span>img, height, ZUp<span style="color: black;">&#41;</span></pre>
+<p>
+</p><p>The heightfield shape will be oriented the same way as a GeoMipTerrain created from the same image, but GeoMipTerrain and BulletHeightfieldShape have different origins. The BulletHeightfieldShape is centered around the origin, while the GeoMipTerrain uses the lower left corner as its origin. However, this can be easily corrected by positioning the GeoMipTerrain with an offset relative to the static rigid body node.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Filename<br />offset = img.<span style="color: black;">getXSize</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span> / <span style="color: #ff4500;">2.0</span> - <span style="color: #ff4500;">0.5</span><br />terrain = GeoMipTerrain<span style="color: black;">&#40;</span><span style="color: #483d8b;">'terrain'</span><span style="color: black;">&#41;</span><br />terrain.<span style="color: black;">setHeightfield</span><span style="color: black;">&#40;</span>img<span style="color: black;">&#41;</span><br />terrainNP = terrain.<span style="color: black;">getRoot</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />terrainNP.<span style="color: black;">setSz</span><span style="color: black;">&#40;</span>height<span style="color: black;">&#41;</span><br />terrainNP.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span>-offset, -offset, -height / <span style="color: #ff4500;">2.0</span><span style="color: black;">&#41;</span></pre>
+<p>
+<p><br />
+</p>
+<h2> <span class="mw-headline" id="Soft_Body_Shape">Soft Body Shape</span></h2>
+<p>This special collision shape is used in connection with soft bodies. It can not be created directly. Soft bodies will be discussed later within this manual.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 259/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2608-0!*!*!!en!*!* and timestamp 20171008011324 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Debug_Renderer.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Collision_Filtering.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

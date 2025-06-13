@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Billboard Effects - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Billboard Effects</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Compass_Effects.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Finite_State_Machines.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>A billboard is a special effect that causes a node to rotate automatically to face the camera, regardless of the direction from which the camera is looking.  It is usually applied to a single textured polygon representing a complex object such as a tree.  Judicious use of billboards can be an effective way to create a rich background environment using very few polygons.
+</p><p>Panda indicates that a node should be billboarded to the camera by storing a BillboardEffect on that node.  Normally, you do not need to create a BillboardEffect explicitly, since there are a handful of high-level methods on NodePath that will create one for you:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">setBillboardAxis</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setBillboardPointWorld</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">setBillboardPointEye</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Each of the above calls is mutually exclusive; there can be only one kind of billboard effect on a node at any given time.  To undo a billboard effect, use:
+</p>
+<pre class="python">myNodePath.<span style="color: black;">clearBillboard</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>The most common billboard type is an axial billboard, created by the <code>setBillboardAxis()</code> method.  This kind of billboard is constrained to rotate around its vertical axis, so is usually used to represent objects that are radially symmetric about the vertical axis (like trees).
+</p><p>Less often, you may need to use a point billboard, which is free to rotate about any axis.  There are two varieties of point billboard.  The world-relative point billboard always keeps its up vector facing up, i.e. along the Z axis, and is appropriate for objects that are generally spherical and have no particular axis of symmetry, like clouds.  The eye-relative point billboard, on the other hand, always keeps its up vector towards the top of the screen, no matter which way the camera tilts, and is usually used for text labels that float over objects in the world.  
+</p><p>There are several more options available on a BillboardEffect, but these are rarely used.  If you need to take advantage of any of these more esoteric options, you must create a BillboardEffect and apply it to the node yourself:
+</p>
+<pre class="python">myEffect = BillboardEffect.<span style="color: black;">make</span><span style="color: black;">&#40;</span><br />  upVector = vec3,<br />  eyeRelative = <span style="color: #008000;">bool</span>,<br />  axialRotate = <span style="color: #008000;">bool</span>,<br />  offset = <span style="color: #008000;">float</span>,<br />  lookAt = nodepath,<br />  lookAtPoint = point3<br /><span style="color: black;">&#41;</span><br />myNodePath.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setEffect</span><span style="color: black;">&#40;</span>myEffect<span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:944-0!*!*!*!*!*!* and timestamp 20171007130129 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Compass_Effects.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Finite_State_Machines.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bullet Collision Filtering - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Bullet Collision Filtering</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Collision_Shapes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Continuous_Collision_Detection.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>By default all Bullet collision objects collide with all other Bullet collision objects. Here the term "collision objects" referns to objects which are derived from <code>BulletBodyNode</code>, namely <code>BulletRigidBodyNode</code>, <code>BulletGhostNode</code>, <code>BulletSoftBodyNode</code>.
+</p><p>Bullet collision objects won't collide with visible geometry, that is objects of type GeomNode!
+</p><p>Sometime we need more control over who collides with whom. This can be achieved by setting up collision filtering properly. Collision filtering is done using bitmasks, which get assigned to every collision object.
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="Bit_Masks">Bit Masks</span></h2>
+<p>Bullet makes use of the regular Panda3D collide masks, which are instances of <code>BitMask32</code>. Two objects collide if the two masks have at least one bit in common. The following example shows a selection of common ways to set up a bit mask. For more information please refer to the manual page on <a href="Collision_Bitmasks.html" title="Collision Bitmasks">Collision Bitmasks</a>.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> BitMask32<br />&#160;<br />mask1 = BitMask32.<span style="color: black;">allOn</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mask2 = BitMask32.<span style="color: black;">allOff</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />mask3 = BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span><br />mask4 = BitMask32.<span style="color: black;">bit</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">5</span><span style="color: black;">&#41;</span><br />mask5 = BitMask32<span style="color: black;">&#40;</span>0x3<span style="color: black;">&#41;</span></pre>
+
+<p>Given the above bit masks we would get the following results for collision:
+</p>
+<pre>mask1 and mask2 = false
+mask1 vs. mask3 = true
+mask3 vs. mask4 = false
+mask3 vs. mask5 = true
+mask4 vs. mask5 = false</pre>
+<h2> <span class="mw-headline" id="Group_Masks">Group Masks</span></h2>
+<p>Sometimes BitMasks alone are not flexible enough to represent the relationships between a large number of groups of objects. Group masks are similar to bit masks in that each object belongs to a group, but instead of collisions only occurring between objects that belong to the same group, collision relationships are instead represented by a collision matrix. This means that a larger number of groups can be represented in the same 32 bits of a <code>BitMask32</code>.
+</p><p>To use group mask filtering instead of the default bit mask filtering mentioned above, set the <code>bullet-filter-algorithm</code> configuration variable to <code>groups-mask</code>. The default collision matrix is set to only collide objects that are in the same group. As you make changes, the collision matrix is kept symmetrical along the line of the diagonal for you. So if you set Group 0 to collide with Group 1, then Group 1 will also automatically collide with Group 0.
+</p><p>The following collision matrix shows that the only collisions that occur are between group 1 and group 2, and group 2 with itself.
+</p>
+<table class="wikitable" border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th>
+</th>
+<th> Group 0
+</th>
+<th> Group 1
+</th>
+<th> Group 2
+</th></tr>
+<tr>
+<td> Group 0
+</td>
+<td> False
+</td>
+<td> False
+</td>
+<td> False
+</td></tr>
+<tr>
+<td> Group 1
+</td>
+<td> -
+</td>
+<td> False
+</td>
+<td> True
+</td></tr>
+<tr>
+<td> Group 2
+</td>
+<td> -
+</td>
+<td> -
+</td>
+<td> True
+</td></tr></table>
+<p>The following code segment shows how this matrix is represented in code.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># Group 0 never collides</span><br />world.<span style="color: black;">setGroupCollisionFlag</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #008000;">False</span><span style="color: black;">&#41;</span><br />world.<span style="color: black;">setGroupCollisionFlag</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #008000;">False</span><span style="color: black;">&#41;</span><br />world.<span style="color: black;">setGroupCollisionFlag</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">2</span>, <span style="color: #008000;">False</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Group 1 only collides with Group 2</span><br />world.<span style="color: black;">setGroupCollisionFlag</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span>, <span style="color: #008000;">False</span><span style="color: black;">&#41;</span><br />world.<span style="color: black;">setGroupCollisionFlag</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">2</span>, <span style="color: #008000;">True</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Group 2 only collides with itself</span><br />world.<span style="color: black;">setGroupCollisionFlag</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">2</span>, <span style="color: #ff4500;">2</span>, <span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+
+<h2> <span class="mw-headline" id="Group_Assignment">Group Assignment</span></h2>
+<p>The example below shows a typical setup for a rigid body. Only the last line of the code block is new. Here we set the collide mask which specifies which collision groups the object belongs to.
+</p>
+<pre class="python">shape = shape = BulletBoxShape<span style="color: black;">&#40;</span>Vec3<span style="color: black;">&#40;</span><span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.5</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />body = BulletRigidBodyNode<span style="color: black;">&#40;</span><span style="color: #483d8b;">'Body'</span><span style="color: black;">&#41;</span><br />body.<span style="color: black;">addShape</span><span style="color: black;">&#40;</span>shape<span style="color: black;">&#41;</span><br />&#160;<br />world.<span style="color: black;">attachRigidBody</span><span style="color: black;">&#40;</span>body<span style="color: black;">&#41;</span><br />&#160;<br />bodyNP = <span style="color: #008000;">self</span>.<span style="color: black;">worldNP</span>.<span style="color: black;">attachNewNode</span><span style="color: black;">&#40;</span>body<span style="color: black;">&#41;</span><br />bodyNP.<span style="color: black;">setPos</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">-1</span><span style="color: black;">&#41;</span><br />bodyNP.<span style="color: black;">setCollideMask</span><span style="color: black;">&#40;</span>mask1<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;"># Here we set the collision mask</span></pre>
+
+<p>PandaNodes have two kinds of collide masks, a "from" collide mask and an "into" collide mask. Panda3D's internal collision system requires both masks set, but when using Bullet physics only the "into" collide mask is used. The following line is an alternate way to set the collide mask:
+</p>
+<pre class="python">bodyNP.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setIntoCollideMask</span><span style="color: black;">&#40;</span>mask<span style="color: black;">&#41;</span></pre>
+
+<p>This way of setting collide masks can be used for rigid bodies and ghost objects. Soft body collisions (and soft body vs. rigid body collisions) are more complex. Please see the manual pages about soft body configuration for details.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 140/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2609-0!*!0!!*!*!* and timestamp 20171008061302 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Bullet_Collision_Shapes.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Bullet_Continuous_Collision_Detection.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
