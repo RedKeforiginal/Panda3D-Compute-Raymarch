@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>OnscreenText - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: OnscreenText</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Text_Node.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="OnscreenImage.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The OnscreenText object is a convenience wrapper around <a href="Text_Node.html" title="Text Node">TextNode</a>.  You can use it as a quick way to put text onscreen without having to go through the trouble of creating a TextNode and setting properties on it.  However, it doesn't have the full range of rendering options that you can get with TextNode directly; and it doesn't support the DirectGUI features of a <a href="DirectLabel.html" title="DirectLabel">DirectLabel</a>.  Use an OnscreenText whenever you want a quick way to display some ordinary text without a lot of fancy requirements.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenText</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenText<br />textObject = OnscreenText<span style="color: black;">&#40;</span>text = <span style="color: #483d8b;">'my text string'</span>, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">-0.5</span>, <span style="color: #ff4500;">0.02</span><span style="color: black;">&#41;</span>, scale = <span style="color: #ff4500;">0.07</span><span style="color: black;">&#41;</span></pre>
+<p>The OnscreenText object inherits from NodePath, so all of the standard NodePath operations can be used on the text object.  When you are ready to take the text away, use:
+</p>
+<pre class="python">textObject.<span style="color: black;">destroy</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>The following keyword parameters may be specified to the constructor:
+</p>
+<table>
+<tr>
+<td>text
+</td>
+<td>the actual text to display. This may be omitted and specified later via setText() if you don’t have it available, but it is better to specify it up front.
+</td></tr>
+<tr>
+<td>style
+</td>
+<td>one of the pre-canned style parameters defined at the head of OnscreenText.py. This sets up the default values for many of the remaining parameters if they are unspecified; however, a parameter may still be specified to explicitly set it, overriding the pre-canned style.
+</td></tr>
+<tr>
+<td>pos
+</td>
+<td>the x, y position of the text on the screen.
+</td></tr>
+<tr>
+<td>scale
+</td>
+<td>the size of the text. This may either be a single float (and it will usually be a small number like 0.07) or it may be a 2-tuple of floats, specifying a different x, y scale.
+</td></tr>
+<tr>
+<td>fg
+</td>
+<td>the (r, g, b, a) foreground color of the text. This is normally a 4-tuple of floats or ints.
+</td></tr>
+<tr>
+<td>bg
+</td>
+<td>the (r, g, b, a) background color of the text. If the fourth value, a, is nonzero, a card is created to place behind the text and set to the given color.
+</td></tr>
+<tr>
+<td>shadow
+</td>
+<td>the (r, g, b, a) color of the shadow behind the text. If the fourth value, a, is nonzero, a little drop shadow is created and placed behind the text.
+</td></tr>
+<tr>
+<td>frame
+</td>
+<td>the (r, g, b, a) color of the frame drawn around the text. If the fourth value, a, is nonzero, a frame is created around the text.
+</td></tr>
+<tr>
+<td>align
+</td>
+<td>one of TextNode.ALeft, TextNode.ARight, or TextNode.ACenter.
+</td></tr>
+<tr>
+<td>wordwrap
+</td>
+<td>either the width to wordwrap the text at, or None to specify no automatic word wrapping.
+</td></tr>
+<tr>
+<td>font
+</td>
+<td>the font to use for the text.
+</td></tr>
+<tr>
+<td>parent
+</td>
+<td>the NodePath to parent the text to initially; the default is aspect2d.
+</td></tr>
+<tr>
+<td>mayChange
+</td>
+<td>pass true if the text or its properties may need to be changed at runtime, false if it is static once created (which leads to better memory optimization). The default is false.
+</td></tr></table>
+<p><a href="OnscreenImage.html" title="OnscreenImage">OnscreenImage</a> works similarly, but it shows an image on the screen instead of text.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 7/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1123-0!*!0!*!*!*!* and timestamp 20171007130033 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Text_Node.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="OnscreenImage.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

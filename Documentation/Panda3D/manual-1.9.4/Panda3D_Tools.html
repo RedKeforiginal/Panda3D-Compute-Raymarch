@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Panda3D Tools - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Panda3D Tools</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Reference_Counting.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_Scene_Graph_Browser.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>This section lists a number of tools to support programming in Panda.
+</p><p>Many of the tools provided are invoked by pressing a
+hot-key inside of the panda main window.  These hot-key driven tools
+are called the "direct tools."  The direct tools are initially disabled,
+because the hot-keys used to invoke them might interfere with the program's
+own keys and events.
+</p><p>To enable the hot-keys for the direct tools, you
+need to set the 'want-directtools' variable in config.prc, the main
+panda configuration file.  Additionally, set 'want-tk' to '#t' in order to enable the Direct Session Panel. More information about this configuration
+file is available in the <a href="Configuring_Panda.html" title="Configuring Panda" class="mw-redirect">Configuring Panda</a> section.
+</p><p>If you want to quickly enable the Direct Session browser, add the following code <i>before</i> importing DirectStart:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> loadPrcFileData<br />loadPrcFileData<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;&quot;</span>, <span style="color: #483d8b;">&quot;want-directtools #t&quot;</span><span style="color: black;">&#41;</span><br />loadPrcFileData<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;&quot;</span>, <span style="color: #483d8b;">&quot;want-tk #t&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>After enabling direct tools and starting panda, the
+Direct Session window should appear:
+</p><p><a href="File%253ADirecttools1.jpg.html" class="image"><img alt="Directtools1.jpg" src="Directtools1.jpg" width="440" height="288" /></a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1000-0!*!0!*!*!2!* and timestamp 20171008030922 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Reference_Counting.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="The_Scene_Graph_Browser.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Multi-Pass Rendering - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Multi-Pass Rendering</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Stereo_Display_Regions.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="How_to_Control_Render_Order.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="Multi-Pass_Rendering">Multi-Pass Rendering</span></h2>
+<p>Sometimes you may need to draw the same scene more than once per frame, each view looking different. This is where multi-pass rendering comes into play.
+</p><p><br />
+The easiest way to do implement multi-pass rendering is to render offscreen to a separate buffer. You:
+</p>
+<ol><li> setup a GraphicsBuffer object
+</li><li> create a camera for it and
+</li><li> place the camera in the scene.
+</li></ol>
+<p>However, this method assumes you have two independent scene graphs. If you use this method to render the same scene graph, it is only useful for showing the scene from a different camera view. To actually make the scenes have different <a href="Render_Attributes.html" title="Render Attributes">RenderStates</a> (i.e. one without lighting, one with lighting) you must also change how each Camera renders the scene.
+</p><p>Each Camera node has a function called <code>setInitialState(state)</code>. It makes every object in the scene get drawn as if the top node in its scene graph has <code>state</code> as its <a href="Render_Attributes.html" title="Render Attributes">RenderState</a>. This still means that <a href="Render_Attributes.html" title="Render Attributes">attributes</a> can be changed/overridden after the Camera has been put on a scene.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># This makes everything drawn by the default camera use myNodePath's </span><br /><span style="color: #808080; font-style: italic;"># RenderState.  Note:  base.cam is not base.camera.  If you have an </span><br /><span style="color: #808080; font-style: italic;"># reference to base.camera, use base.camera.node().</span><br />base.<span style="color: black;">cam</span>.<span style="color: black;">setInitialState</span><span style="color: black;">&#40;</span>myNodePath.<span style="color: black;">getState</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>You may, however, want more control over what RenderState gets assigned to each node in the scene. You can do this using the Camera class methods <code>setTagStateKey(key)</code> and <code>setTagState(value, state)</code>. For any NodePaths that you want to recieve special treatment you call <code>setTag(key, value)</code>(See <a href="Common_State_Changes.html" title="Common State Changes">Common State Changes</a>). Now, anytime the Camera sees a NodePath with a tag named <code>key</code> the Camera assigns it whatever RenderState is associated with <code>value</code>.
+</p>
+<pre class="python"><span style="color: #808080; font-style: italic;"># Assume we have Shader instances toon_shader and blur_shader</span><br /><span style="color: #808080; font-style: italic;"># and we have a Camera whose NodePath is myCamera</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># Create a temporary node in order to create a usable RenderState.</span><br />tempnode = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;temp node&quot;</span><span style="color: black;">&#41;</span><br />tempnode.<span style="color: black;">setShader</span><span style="color: black;">&#40;</span>toon_shader<span style="color: black;">&#41;</span><br />base.<span style="color: black;">cam</span>.<span style="color: black;">setTagStateKey</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Toon Shading&quot;</span><span style="color: black;">&#41;</span><br />base.<span style="color: black;">cam</span>.<span style="color: black;">setTagState</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;True&quot;</span>, tempnode.<span style="color: black;">getState</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br />tempnode = NodePath<span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;temp node&quot;</span><span style="color: black;">&#41;</span><br />tempnode.<span style="color: black;">setShader</span><span style="color: black;">&#40;</span>blur_shader<span style="color: black;">&#41;</span><br />myCamera.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setTagStateKey</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Blur Shading&quot;</span><span style="color: black;">&#41;</span><br />myCamera.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setTagState</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;True&quot;</span>, tempnode.<span style="color: black;">getState</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br />&#160;<br /><span style="color: #808080; font-style: italic;"># this makes myNodePath and its children get toonShaded</span><br /><span style="color: #808080; font-style: italic;"># when rendered by the default camera</span><br />myNodePath.<span style="color: black;">setTag</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Toon Shading&quot;</span>, <span style="color: #483d8b;">&quot;True&quot;</span><span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># ....</span><br /><span style="color: #808080; font-style: italic;"># now if you want myNodePath to be blurred when seen by myCamera,</span><br /><span style="color: #808080; font-style: italic;"># it's as easy as adding a tag</span><br />myNodePath.<span style="color: black;">setTag</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;Blur Shading&quot;</span>, <span style="color: #483d8b;">&quot;True&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>For a full guide about Multi-Pass rendering in Panda3D, please read the <a rel="nofollow" class="external text" href="http://panda3d.cvs.sourceforge.net/*checkout*/panda3d/panda/src/doc/howto.use_multipass.txt">Howto on Multipass Rendering</a> of the original Panda3D documentation.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 83/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1155-0!*!0!*!*!*!* and timestamp 20171008060841 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Stereo_Display_Regions.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="How_to_Control_Render_Order.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

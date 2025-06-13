@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Particle Effect Basic Parameters - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Particle Effect Basic Parameters</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_Particle_Systems.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Factories.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Every particle effect needs at least eleven parameters. These govern the overall properties, such as the number of particles on the screen, the birth and death rates, and the renderer, emitter, and factory that are used.
+</p>
+<table>
+<tr>
+<th>Variable
+</th>
+<th>Definition
+</th>
+<th>Values
+</th></tr>
+<tr>
+<td>poolSize
+</td>
+<td>Maximum number of simultaneous particles
+</td>
+<td>[0, infinity)
+</td></tr>
+<tr>
+<td>birthRate
+</td>
+<td>Seconds between particle births
+</td>
+<td>(0, infinity)
+</td></tr>
+<tr>
+<td>litterSize
+</td>
+<td>Number of particles created at each birth
+</td>
+<td>[1, infinity)
+</td></tr>
+<tr>
+<td>litterSpread
+</td>
+<td>Variation of litter size
+</td>
+<td>[0, infinity)
+</td></tr>
+<tr>
+<td>localVelocityFlag
+</td>
+<td>Whether or not velocities are absolute
+</td>
+<td>Boolean
+</td></tr>
+<tr>
+<td>systemGrowsOlder
+</td>
+<td>Whether or not the system has a lifespan
+</td>
+<td>Boolean
+</td></tr>
+<tr>
+<td>systemLifespan
+</td>
+<td>Age of the system in seconds
+</td>
+<td>[0, infinity)
+</td></tr>
+<tr>
+<td>BaseParticleRenderer* renderer
+</td>
+<td>Pointer to particle renderer
+</td>
+<td>Renderer type
+</td></tr>
+<tr>
+<td>BaseParticleRenderer* emitter
+</td>
+<td>Pointer to particle emitter
+</td>
+<td>Emitter type
+</td></tr>
+<tr>
+<td>BaseParticleRenderer* factory
+</td>
+<td>Pointer to particle factory
+</td>
+<td>Factory type
+</td></tr></table>
+<p>The renderer, emitter, and factory types will be discussed in the next three sections.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 1/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1002-0!*!*!*!*!*!* and timestamp 20171008060906 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Loading_Particle_Systems.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Factories.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

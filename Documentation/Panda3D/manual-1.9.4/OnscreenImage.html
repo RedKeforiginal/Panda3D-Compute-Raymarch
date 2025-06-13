@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>OnscreenImage - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: OnscreenImage</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="OnscreenText.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Embedded_Text_Properties.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Just like <a href="OnscreenText.html" title="OnscreenText">OnscreenText</a>, you can use OnscreenImage as a quick way to put an image onscreen. Use an OnscreenImage whenever you want a quick way to display an ordinary image without a lot of fancy requirements.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">gui</span>.<span style="color: black;">OnscreenImage</span> <span style="color: #ff7700;font-weight:bold;">import</span> OnscreenImage<br />imageObject = OnscreenImage<span style="color: black;">&#40;</span>image = <span style="color: #483d8b;">'myImage.jpg'</span>, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">-0.5</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0.02</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span></pre>
+<p>If you want, you can change the image into another one using setImage():
+</p>
+<pre class="python">imageObject.<span style="color: black;">setImage</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'myImage2.jpg'</span><span style="color: black;">&#41;</span></pre>
+<p>When you want to take the image away, use:
+</p>
+<pre class="python">imageObject.<span style="color: black;">destroy</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>The following keyword parameters may be specified to the constructor:
+</p>
+<table>
+<tr>
+<td>image
+</td>
+<td>the actual geometry to display or a file name. This may be omitted and specified later via setImage() if you don’t have it available.<br />
+<p>Note: Omitting this parameter results in the OnscreenImage being created as an empty NodePath, meaning that many NodePath methods (including setPos()) are not valid and should raise assertion errors until an image is specified via setImage().
+</p>
+</td></tr>
+<tr>
+<td>pos
+</td>
+<td>the x, y, z position of the geometry on the screen. This maybe a 3-tuple of floats or a vector. y should be zero
+</td></tr>
+<tr>
+<td>scale
+</td>
+<td>the size of the geometry. This may either be a single float, a 3-tuple of floats, or a vector, specifying a different x, y, z scale. y should be 1
+</td></tr>
+<tr>
+<td>hpr
+</td>
+<td>the h, p, r of the geometry on the screen. This maybe a 3-tuple of floats or a vector.
+</td></tr>
+<tr>
+<td>color
+</td>
+<td>the (r, g, b, a) color of the geometry. This is normally a 4-tuple of floats or ints.
+</td></tr>
+<tr>
+<td>parent
+</td>
+<td>the NodePath to parent the text to initially; the default is aspect2d.
+</td></tr></table>
+<p><b>NOTE:</b> To enable transparency in images, you must first set the TransparencyAttrib, otherwise the transparent parts of the image will be shown black:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> TransparencyAttrib<br /><span style="color: #008000;">self</span>.<span style="color: black;">myImage</span>=OnscreenImage<span style="color: black;">&#40;</span>image = <span style="color: #483d8b;">'myImage.png'</span>, pos = <span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span><br /><span style="color: #008000;">self</span>.<span style="color: black;">myImage</span>.<span style="color: black;">setTransparency</span><span style="color: black;">&#40;</span>TransparencyAttrib.<span style="color: black;">MAlpha</span><span style="color: black;">&#41;</span></pre>
+<p>Since GIF's are not supported you should use PNG or TGA if you need transparency.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 14/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2047-0!*!0!*!*!*!* and timestamp 20171008020802 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="OnscreenText.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Embedded_Text_Properties.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

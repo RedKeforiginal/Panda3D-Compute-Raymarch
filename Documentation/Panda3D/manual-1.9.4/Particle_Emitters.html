@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Particle Emitters - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Particle Emitters</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Particle_Factories.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Renderers.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>There are a large number of particle emitters, each categorized by the volume of space they represent. Additionally, all emitters have three modes: explicit, radiate, and custom. Explicit mode emits the particles in parallel in the same direction. Radiate mode emits particles away from a specific point. Custom mode emits particles with a velocity determined by the particular emitter.</p>
+<p>All emitters have a number of common parameters.</p>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>emissionType</td><td>Emission mode</td><td>ET_EXPLICIT, ET_RADIATE, ET_CUSTOM</td></tr>
+<tr><td>explicitLaunchVector</td><td>Initial velocity in explicit mode</td><td>(x, y, z)</td></tr>
+<tr><td>radiateOrigin</td><td>Point particles launch away from in radiate mode</td><td>(x, y, z)</td></tr>
+<tr><td>amplitude</td><td>Launch velocity multiplier</td><td>(-infinity, infinity)</td></tr>
+<tr><td>amplitudeSpeed</td><td>Spread for launch velocity multiplier</td><td>[0, infinity)</td></tr>
+</table></center>
+<p>The following list contains the different types of emitters, their unique parameters, and the effect of the custom mode.</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="Particle_Emitters.html#BoxEmitter"><span class="tocnumber">1</span> <span class="toctext">BoxEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#DiscEmitter"><span class="tocnumber">2</span> <span class="toctext">DiscEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#PointEmitter"><span class="tocnumber">3</span> <span class="toctext">PointEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#RectangleEmitter"><span class="tocnumber">4</span> <span class="toctext">RectangleEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#RingEmitter"><span class="tocnumber">5</span> <span class="toctext">RingEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#SphereSurfaceEmitter"><span class="tocnumber">6</span> <span class="toctext">SphereSurfaceEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#SphereVolumeEmitter"><span class="tocnumber">7</span> <span class="toctext">SphereVolumeEmitter</span></a></li>
+<li class="toclevel-1"><a href="Particle_Emitters.html#TangentRingEmitter"><span class="tocnumber">8</span> <span class="toctext">TangentRingEmitter</span></a></li>
+</ul>
+</td></tr></table>
+<h3> <span class="mw-headline" id="BoxEmitter">BoxEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>minBound</td><td>Minimum point for box volume</td><td>(x, y, z)</td></tr>
+<tr><td>maxBound</td><td>Maximum point for box volume</td><td>(x, y, z)</td></tr>
+</table></center>
+<p>Custom mode generates particles with no initial velocity.</p>
+<h3> <span class="mw-headline" id="DiscEmitter">DiscEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>radius</td><td>Radius of disc</td><td>[0, infinity)</td></tr>
+<tr><td>outerAngle</td><td>Particle launch angle at edge of disc</td><td>[0, 360]</td></tr>
+<tr><td>innterAngle</td><td>Particle launch angle at center of disc</td><td>[0, 360]</td></tr>
+<tr><td>outerMagnitude</td><td>Launch velocity multiplier at edge of disc</td><td>(-infinity, infinity)</td></tr>
+<tr><td>innerMagnitude</td><td>Launch velocity multiplier at center of disc</td><td>(-infinity, infinity)</td></tr>
+<tr><td>cubicLerping</td><td>Whether or not magnitude/angle interpolation is cubic</td><td>Boolean</td></tr>
+</table></center>
+<p>Custom mode uses the last five parameters. Particles emitted from areas on the inside use interpolated magnitudes and angles, either liner or cubic.</p>
+<h3> <span class="mw-headline" id="PointEmitter">PointEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>location</td><td>Location of outer point</td><td>(x, y, z)</td></tr>
+</table></center>
+<p>Custom mode generates particles with no initial velocity.</p>
+<h3> <span class="mw-headline" id="RectangleEmitter">RectangleEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>minBound</td><td>2D point defining the rectangle</td><td>(x, z)</td></tr>
+<tr><td>maxBound</td><td>2D point defining the rectangle</td><td>(x, z)</td></tr>
+</table></center>
+<p>Custom mode generates particles with no initial velocity.</p>
+<h3> <span class="mw-headline" id="RingEmitter">RingEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>radius</td><td>Radius of disc</td><td>[0, infinity)</td></tr>
+<tr><td>angle</td><td>Particle launch angle</td><td>[0, 360]</td></tr>
+</table></center>
+<p>Custom mode uses the second parameter to emit particles at an angle with respect to the vector from the ring center to the spawn point. 0 degrees emits particles away from the center, and 180 degrees emits particles into the center.</p>
+<h3> <span class="mw-headline" id="SphereSurfaceEmitter">SphereSurfaceEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>radius</td><td>Radius of sphere</td><td>[0, infinity)</td></tr>
+</table></center>
+<p>Custom mode generates particles with no initial velocity.</p>
+<h3> <span class="mw-headline" id="SphereVolumeEmitter">SphereVolumeEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>radius</td><td>Radius of sphere</td><td>[0, infinity)</td></tr>
+</table></center>
+<p>Custom mode emits particles away from the sphere center. Their velocity is dependent on their spawn location within the sphere. It is 0 at the center, of magnitude 1 at the outer edge of the sphere, and linearly interpolated in between.</p>
+<h3> <span class="mw-headline" id="TangentRingEmitter">TangentRingEmitter</span></h3>
+<center><table>
+<tr><td><b>Variable</b></td><td><b>Definition</b></td><td><b>Values</b></td></tr>
+<tr><td>radius</td><td>Radius of ring</td><td>[0, infinity)</td></tr>
+</table></center>
+<p>Custom mode emits particles tangentially to the ring edge, with a velocity magnitude of 1.</p>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 2/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1004-0!*!*!!en!*!* and timestamp 20171008050911 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Particle_Factories.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Renderers.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

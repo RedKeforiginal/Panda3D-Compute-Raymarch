@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Orthographic Lenses - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Orthographic Lenses</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Lenses_and_Field_of_View.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Sound.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>The previous page described the PerspectiveLens class, and the various properties of a perspective lens, especially its field of view.  There is another kind of lens that is frequently used in 3-D rendering, but it doesn't have a field of view in the same sense at all.  This is an <b>orthographic lens</b>.
+</p><p><a href="File%253ALens_tutorial_orthographic.jpg.html" class="image" title="Lens tutorial, orthographic lenses"><img alt="Lens tutorial, orthographic lenses" src="Lens_tutorial_orthographic.jpg" width="400" height="300" /></a>
+</p><p>In an orthographic lens, there is no perspective--parallel lines viewed by the lens don't converge; instead, they remain absolutely parallel in the image.  While a <code>PerspectiveLens</code> closely imitates the behavior of a real, physical camera lens, there is no real lens that does what an <code>OrthographicLens</code> does.  An <code>OrthographicLens</code>, therefore, is most useful for special effects, where you want that unnatural look, or to emulate the so-called 2½-D look of several popular real-time strategy games, or strictly to render 2-d objects that shouldn't have any perspective anyway.  In fact, the default camera created for the render2d scene graph, which is used to draw all of the onscreen GUI elements in Panda, uses an OrthographicLens.
+</p><p>Since an orthographic lens doesn't have a field of view angle, the <code>lens.setFov()</code> method does nothing.  To adjust the amount that the orthographic lens sees, you must adjust its film size.  And unlike a PerspectiveLens, the film size units are not arbitrary--for an OrthographicLens, the film size should be specified in spatial units, the same units you used to model your scene.  For instance, the film size of the OrthographicLens in the above illustration was set with the call <code>lens.setFilmSize(20, 15)</code>, which sets the film size to 20 feet by 15 feet--because the scene is modeled in feet, and the panda is about 12 feet tall.
+</p><p>Another nice property of an orthographic lens is that the near distance does not have to be greater than zero.  In fact, it can be negative--you can put the near plane behind the camera plane, which means the camera will see objects behind itself.  The OrthographicLens for render2d is set up with <code>.setNearFar(-1000, 1000)</code>, so it will render any objects with a Y value between -1000 and 1000 (assuming the default Z-up coordinate system).  (Of course, in render2d almost all objects have a Y value of 0, so it doesn't matter much.)
+</p><p>If you like, you can change the default camera to use an orthographic lens with something like this:
+</p>
+<pre class="python">lens = OrthographicLens<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />lens.<span style="color: black;">setFilmSize</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">20</span>, <span style="color: #ff4500;">15</span><span style="color: black;">&#41;</span>  <span style="color: #808080; font-style: italic;"># Or whatever is appropriate for your scene</span><br />base.<span style="color: black;">cam</span>.<span style="color: black;">node</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>.<span style="color: black;">setLens</span><span style="color: black;">&#40;</span>lens<span style="color: black;">&#41;</span></pre>
+
+<p>Note that using an orthographic lens can be nonintuitive at times--for instance, objects don't get larger as you come closer to them, and they don't get smaller as you get farther away--so it may be impossible to tell your camera is even moving!
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 25/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1163-0!*!*!*!*!2!* and timestamp 20171008113330 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Lenses_and_Field_of_View.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Sound.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

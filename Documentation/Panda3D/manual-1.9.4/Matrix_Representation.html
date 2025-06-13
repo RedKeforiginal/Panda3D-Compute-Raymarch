@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Matrix Representation - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Matrix Representation</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Math_Engine.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Physics.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Periodically, the question arises: does Panda store matrices in column-major or row-major format?  Unfortunately, people who ask that question often fail to realize that there are four ways to represent matrices, two of which are called "column major," and two of which are called "row major."  So the answer to the question is not very useful.  This section explains the four possible ways to represent matrices, and then explains which one panda uses.
+</p><p><b>The Problem</b>
+</p><p>In graphics, matrices are mainly used to transform vertices.  So one way to write a matrix is to write the four transform equations that it represents.  Assuming that the purpose of a matrix is to transform an input-vector (Xi,Yi,Zi,Wi) into an output vector (Xo,Yo,Zo,Wo), the four equations are:
+</p>
+<pre class="codeblock">
+Xo = A*Xi + B*Yi + C*Zi + D*Wi
+Yo = E*Xi + F*Yi + G*Zi + H*Wi
+Zo = J*Xi + K*Yi + L*Zi + M*Wi
+Wo = N*Xi + O*Yi + P*Zi + Q*Wi
+</pre>
+<p>There are two different orders that you can store these coefficients in RAM:
+</p>
+<pre class="codeblock">
+Storage Option 1: A,B,C,D,E,F,G,H,J,K,L,M,N,O,P,Q
+Storage Option 2: A,E,J,N,B,F,K,O,C,G,L,P,D,H,M,Q
+</pre>
+<p>Also, when you're typesetting these coefficients in a manual (or printing them on the screen), there are two possible ways to typeset them:
+</p>
+<table border="0" cellpadding="0" cellspacing="10"><tr><td>
+<pre class="codeblock">
+A  B  C  D
+E  F  G  H
+J  K  L  M
+N  O  P  Q
+
+Typesetting
+ Option 1
+</pre>
+</td><td>
+<pre class="codeblock">
+A  E  J  N
+B  F  K  O
+C  G  L  P
+D  H  M  Q
+
+Typesetting
+Option 2
+</pre>
+</td></tr></table>
+<p>These are <i>independent choices</i>!  There is no reliable relationship between the order that people choose to store the numbers, and the order in which they choose to typeset them.  That means that any given system could use one of four different notations.
+</p><p>So clearly, the two terms "row major" and "column major" are not enough to distinguish the four possibilities.  Worse yet, to my knowledge, there is no established terminology to name the four possibilities.  So the next part of this section is dedicated to coming up with a usable terminology.
+</p><p><b>The Coefficients are Derivatives</b>
+</p><p>The equations above contain sixteen coefficients.  Those coefficients are derivatives.  For example, the coefficient "G" could also be called "the derivative of Yo with respect to Zi."
+</p><p>This gives us a handy way to refer to groups of coefficients.  Collectively, the coefficients "A,B,C,D" could also be called "the derivatives of Xo with respect to Xi,Yi,Zi,Wi" or just "the derivatives of Xo" for short.  The coefficients "A,E,J,N" could also be called "the derivatives of Xo,Yo,Zo,Wo with respect to Xi" or just "the derivatives with respect to Xi" for short.
+</p><p>This is a good way to refer to groups of four coefficients because it unambiguously names four of them without reference to which storage option or which typesetting option you choose.
+</p><p>An alternative that works just as well (and is usually the only way to reverse-engineer a document that was written without specifying these conventions) is to find the translation parts of the matrix. If the translation lives in the rightmost column, then the matrix is intended for column vectors on the right. If the translation lives in the bottom row, then the matrix is intended for row vectors on the left.
+</p><p><b>What to Call the Two Ways of Storing a Matrix.</b>
+</p><p>So here, again, are the two ways of storing a matrix.  But using this newfound realization that the coefficients are derivatives, I have a meaningful way to name the two different ways of storing a matrix:
+</p><p><a href="File%253ADeriv-xo.png.html" class="image"><img alt="Deriv-xo.png" src="Deriv-xo.png" width="390" height="80" /></a>
+</p><p><a href="File%253ADeriv-xi.png.html" class="image"><img alt="Deriv-xi.png" src="Deriv-xi.png" width="390" height="80" /></a>
+</p><p>In the first storage scheme, the derivatives of Xo are stored first.  In the second storage scheme, the derivatives with respect to Xi are stored first.
+</p><p><b>What to Call the Two Ways of Printing a Matrix.</b>
+</p><p>One way to write the four equations above is to write them out using proper mathematical notation.  There are two ways to do this, shown below:
+</p><p><a href="File%253AMatrix-c.png.html" class="image"><img alt="Matrix-c.png" src="Matrix-c.png" width="395" height="140" /></a>
+</p><p><a href="File%253AMatrix-r.png.html" class="image"><img alt="Matrix-r.png" src="Matrix-r.png" width="395" height="140" /></a>
+</p><p>Notice that the two matrices shown above are laid out differently.  The first layout is the appropriate layout for use with column vectors.  The second layout is the appropriate layout for use with row vectors.  So that gives me a possible terminology for the two different ways of typesetting a matrix: the "row-vector-compatible" notation, and the "column-vector-compatible" notation.
+</p><p><b>The Four Possibilities</b>
+</p><p>So now, the four possible representations that an engine could use are:
+</p>
+<ol>
+<li>Store derivatives of Xo first, typeset in row-vector-compatible notation.</li>
+<li>Store derivatives of Xo first, typeset in column-vector-compatible notation.</li>
+<li>Store derivatives wrt Xi first, typeset in row-vector-compatible notation.</li>
+<li>Store derivatives wrt Xi first, typeset in column-vector-compatible notation.</li>
+</ol>
+<p><b>The Terms "Column Major" and "Row Major"</b>
+</p><p>The term "row-major" means "the first four coefficients that you store, are also the first row when you typeset."  So the four possibilities break down like this:
+</p>
+<ol>
+<li>Store derivatives of Xo first, typeset in row-vector-compatible notation  (COLUMN MAJOR)</li>
+<li>Store derivatives of Xo first, typeset in column-vector-compatible notation (ROW MAJOR)</li>
+<li>Store derivatives wrt Xi first, typeset in row-vector-compatible notation (ROW MAJOR)</li>
+<li>Store derivatives wrt Xi first, typeset in column-vector-compatible notation  (COLUMN MAJOR)</li>
+</ol>
+<p>That makes the terms "row major" and "column major" singularly useless, in my opinion.  They tell you nothing about the actual storage or typesetting order.
+</p><p><b>Panda Notation</b>
+</p><p>Now that I've established my terminology, I can tell you what panda uses.  If you examine the panda source code, in the method "LMatrix4f::xform," you will find the four transform equations.  I have simplified them somewhat (ie, removed some of the C++ quirks) in order to put them here:
+</p>
+<pre class="codeblock">
+define VECTOR4_MATRIX4_PRODUCT(output, input, M)  \
+output._0 = input._0*M._00 + input._1*M._10 + input._2*M._20 + input._3*M._30;  \
+output._1 = input._0*M._01 + input._1*M._11 + input._2*M._21 + input._3*M._31;  \
+output._2 = input._0*M._02 + input._1*M._12 + input._2*M._22 + input._3*M._32;  \
+output._3 = input._0*M._03 + input._1*M._13 + input._2*M._23 + input._3*M._33;
+</pre>
+<p>Then, if you look in the corresponding header file for matrices, you will see the matrix class definition:
+</p>
+<pre class="codeblock">
+struct {
+  FLOATTYPE  _00, _01, _02, _03;
+  FLOATTYPE  _10, _11, _12, _13;
+  FLOATTYPE  _20, _21, _22, _23;
+  FLOATTYPE  _30, _31, _32, _33;
+} m;
+</pre>
+<p>So this class definition shows not only how the coefficients of the four equations are stored, but also the layout in which they were intended to be typeset.  So from this, you can see that panda stores derivatives wrt Xi first, and it typesets in row-vector-compatible notation.
+</p><p><b>Interoperability with OpenGL and DirectX</b>
+</p><p>Panda is code-compatible with both OpenGL and DirectX.  All three use the same storage format: derivatives wrt Xi first.  You can pass a panda matrix directly to OpenGL's "glLoadMatrixf" or DirectX's "SetTransform".
+</p><p>However, remember that typesetting format and data storage format are <i>independent choices</i>.  Even though two engines are interoperable at the code level (because their data storage formats match), their manuals might disagree with each other (because their typesetting formats do not match).
+</p><p>The panda typesetting conventions and the OpenGL typesetting conventions are opposite from each other.  The OpenGL manuals use a column-vector-compatible notation.  The Panda manuals use a row-vector-compatible notation.
+</p><p>DirectX uses the same conventions as Panda for both typesetting and memory storage: row vectors on the left, row major storage with the translation in the bottom row.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 20/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1722-0!*!*!*!*!2!* and timestamp 20171007162843 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Math_Engine.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Physics.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

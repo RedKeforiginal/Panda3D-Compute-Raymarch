@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Panda3D Utility Functions - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Panda3D Utility Functions</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="How_to_Control_Render_Order.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Panda3D has a set of utilities that may be used to learn more about various objects and methods within an application. To access these utilities you need to import the PythonUtil module as follows.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span>.<span style="color: black;">PythonUtil</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #66cc66;">*</span></pre>
+<p>The <code> * </code> can be replaced by any of the utility functions in that module.
+</p><p>To get a detailed listing of a class or an object's attributes and methods, use the pdir() command. pdir() prints the information out to the command console. pdir() can take many arguments for formatting the output but the easiest way to use it is to provide it a NodePath.
+</p><p>pdir() will list all of the functions of the class of NodePath including those of its base classes
+</p>
+<pre class="python">pdir<span style="color: black;">&#40;</span>NodePath<span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># e.g. pdir(camera)</span></pre>
+<p>There are many other useful functions in the PythonUtil module. All of these are not necessarily Panda specific, but utility functions for python.
+There are random number generators, random number generator in a gaussian distribution curve, quadratic equation solver, various list functions, useful angle functions
+etc. A full list can be found in the API.
+</p><p>An alternative command to <code> pdir</code> is <code>inspect()</code>. This command will create a window with methods and attributes on one side, and the details of a selected attribute on the other. <code>inspect()</code> also displays the current values of a class’ attributes. If these attributes are changing, you may have to click on a value to refresh it. To use inspect() you have to do the following:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">tkpanels</span>.<span style="color: black;">inspector</span> <span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #dc143c;">inspect</span><br /><span style="color: #dc143c;">inspect</span><span style="color: black;">&#40;</span>NodePath<span style="color: black;">&#41;</span><br /><span style="color: #808080; font-style: italic;"># e.g. inspect(camera)</span></pre>
+<p>While the directtools suite calls upon a number of tools, if the suite is disabled, the user may activate certain panels of the suite. The <code>place()</code> command opens the object placer console. The <code>explore()</code> opens the scene graph explorer, which allows you to inspect the hierarchy of a NodePath. Finally, in order to change the color of a NodePath, the <code>rgbPanel()</code> command opens color panel.
+</p>
+<pre class="python">camera.<span style="color: black;">place</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />render.<span style="color: black;">explore</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />panda.<span style="color: black;">rgbPanel</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Useful DirectTool panels are explained in the <a href="Panda_Tools.html" title="Panda Tools" class="mw-redirect">Panda Tools</a> section.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 34/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1001-0!*!0!*!*!*!* and timestamp 20171007121515 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="How_to_Control_Render_Order.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Particle_Effects.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

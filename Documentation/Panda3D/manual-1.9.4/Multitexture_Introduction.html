@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Multitexture Introduction - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Multitexture Introduction</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Simple_Texture_Replacement.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Modes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Panda3D provides the ability to apply more than one texture image at a time to the polygons of a model.  The textures are applied on top of each other, like coats of paint; very much like the "layers" in a popular photo-paint program.
+</p><p>To layer a second texture on a model, you will have to understand Panda's concept of a <b>TextureStage</b>.  Think of a TextureStage as a slot to hold a single texture image.  You can have as many different TextureStages as you want in your scene, and each TextureStage might be used on one, several, or all models.
+</p><p>When you apply a texture to a model, for instance with the <code>setTexture()</code> call, you are actually binding the texture to a particular TextureStage.  If you do not specify a TextureStage to use, Panda assumes you mean the "default" TextureStage object, which is a global pointer which you can access as <code>TextureStage.getDefault()</code>.
+</p><p>Each TextureStage can hold one texture image for a particular model.  If you assign a texture to a particular TextureStage, and then later (or at a lower node) assign a different texture to the same TextureStage, the new texture completely replaces the old one.  (Within the overall scene, a given TextureStage can be used to hold any number of different textures for different nodes; but it only holds one texture for any one particular node.)
+</p><p>However, you can have as many different TextureStages as you want.  If you create a new TextureStage and use it to assign a second texture to a node, then the node now has both textures assigned to it.
+</p><p>Although there is no limit to the number of TextureStages you assign this way, your graphics card will impose some limit on the number it can render on any one node.  Modern graphics cards will typically have a limit of 4 or 8 textures at once; some older cards can only do 2, and some very old cards have a limit of 1 (only one texture at a time).  You can find out the multitexture limit on your particular card with the call <code>base.win.getGsg().getMaxTextureStages()</code>.
+</p><p>Remember, however, that this limit only restricts the number of different TextureStages you can have on any one particular node; you can still have as many different TextureStages as you like as long as they are all on different nodes.
+</p><p>Let's revisit the example from <a href="Simple_Texture_Replacement.html" title="Simple Texture Replacement">Simple Texture Replacement</a>, where we replaced the normal texture on smiley.egg with a new texture image that contains a random color pattern.  This time, instead of assigning the new texture to the default TextureStage, we'll create a new TextureStage for it, so that both textures will still be in effect:
+</p>
+<pre class="python">smiley = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'smiley.egg'</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">reparentTo</span><span style="color: black;">&#40;</span>render<span style="color: black;">&#41;</span><br />tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'maps/noise.rgb'</span><span style="color: black;">&#41;</span><br />ts = TextureStage<span style="color: black;">&#40;</span><span style="color: #483d8b;">'ts'</span><span style="color: black;">&#41;</span><br />smiley.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>ts, tex<span style="color: black;">&#41;</span></pre> 
+<p>Note that we can create a new TextureStage object on the fly; the only parameter required to the TextureStage parameter is a name, which is significant only to us.  When we pass the TextureStage as the first parameter to <code>setTexture()</code>, it means to assign the indicated texture to that TextureStage.  Also note that we no longer need to specify an override to the setTexture() call, since we are not overriding the texture specified at the Geom level, but rather we are adding to it.
+</p><p>And the result is this:
+</p><p><a href="File%253AMultitex_smiley_noise.png.html" class="image" title="Description"><img alt="Description" src="Multitex_smiley_noise.png" width="267" height="200" /></a>
+</p><p>To undo a previous call to add a texture, use:
+</p>
+<pre class="codeblock">
+smiley.clearTexture(ts)
+</pre> 
+<p>passing in the same TextureStage that you used before.  Or, alternatively, you may simply use:
+</p>
+<pre class="codeblock">
+smiley.clearTexture()
+</pre> 
+<p>to remove <i>all</i> texture specifications that you previously added to the node smiley.  This does not remove the original textures that were on the model when you loaded it; those textures are assigned at a different node level, on the Geom objects that make up the model.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 22/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1178-0!*!0!*!*!2!* and timestamp 20171007194620 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Simple_Texture_Replacement.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Texture_Modes.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

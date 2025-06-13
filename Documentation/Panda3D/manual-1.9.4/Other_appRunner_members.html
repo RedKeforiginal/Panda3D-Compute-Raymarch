@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Other appRunner members - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Other appRunner members</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Reading_the_HTML_tokens.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="P3D_origin_security.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><ul><li> appRunner.Undefined
+</li></ul>
+<p>The JavaScript language has two different value types that are conceptually similar to Python's None type: the null type, and the void or undefined type.  The plugin system could convert both of these to Python's None, but sometimes it is important to make a distinction between them.
+</p><p>To solve this problem, the plugin converts the Javascript null type to Python's None, and the void/undefined type to base.appRunner.Undefined, which is a special singleton that has no properties, similar to None.  To check for undefined, you can use (object == base.appRunner.Undefined) or (object is base.appRunner.Undefined).  Since Undefined evaluates to false in a boolean test, you could also just use "if object:" to test for whether an object is neither None nor Undefined.
+</p>
+<ul><li> appRunner.ConcreteStruct
+</li></ul>
+<p>Most Python objects are passed to JavaScript by reference, the same way Python deals with them internally.  This means that if you store an object on base.appRunner.main, the JavaScript code can query and update its members individually, and those changes are visible on the Python side.
+</p><p>Often, you only need to provide a read-only object to JavaScript, and you don't want the additional overhead that's required to make the object writable.  In this case, you can make your object an instance of (or inherit from) appRunner.ConcreteStruct.  This tells the plugin that there is no need for JavaScript to modify its contents, and it will copy all of its members to JavaScript once, at the time that JavaScript first accesses the overall object, and not have to go back-and-forth between Python and JavaScript with each individual member access.  Only the data members are transmitted; callable methods of ConcreteStruct are not supported.  This is a performance optimization only; everything will still work perfectly well if you don't do this.
+</p><p>Note that in order to gather the full benefit of this optimization, your JavaScript code should access the Python object only once and store it locally, rather than querying it repeatedly out of plugin.main.
+</p>
+<ul><li> appRunner.multifileRoot
+</li></ul>
+<p>When the AppRunner mounts your p3d file into the VirtualFileSystem, it installs it in the directory named by appRunner.multifileRoot.  This directory, then, is the root directory of the contents of your p3d file.  If you need to load a file directly out of your p3d file, look for it here.  At the moment, this is a constant string; but future releases of Panda might need to install the multifile into a different place each time, so you should not write code that depends on this string being fixed.
+</p>
+<ul><li> appRunner.exceptionHandler
+</li></ul>
+<p>You can assign a Python function object to this member.  This function will be called whenever a Python exception propagates to the top of the call stack; you can use this to deal appropriately with unexpected behavior in your application.  If you do not assign this, the default behavior for an uncaught exception will be to terminate the app.
+</p>
+<ul><li> appRunner.windowProperties
+</li></ul>
+<p>This is the WindowProperties structure that is used for the initial window that is created when you import DirectStart; you can use this if you want to re-create a new window in the same place later (for instance, because you have an in-game option to switch between fullscreen and embedded mode).
+</p>
+<ul><li> appRunner.installPackage()
+</li></ul>
+<p>Call this method to download and install a Panda3D package, as built by the ppackage.p3d utility, at runtime.  This allows you to install the package at your leisure, instead of requiring the package to be downloaded before starting the p3d application.
+</p><p>Note that this method runs synchronously: it will download the package on-the-spot, however long that takes, and not return until it has finished.  If you want to use an asynchronous download instead, downloading a package in the background while gameplay continues, you should use the <a href="PackageInstaller.html" title="PackageInstaller">PackageInstaller</a> interface instead.
+</p>
+<ul><li> appRunner.notifyRequest()
+</li></ul>
+<p>This allows you to define your own callback events, similar to the built-in ones described in <a href="Plugin_notify_callbacks.html" title="Plugin notify callbacks">Plugin notify callbacks</a>.  Simply call base.appRunner.notifyRequest(name), where name is the name of your callback event; for example base.appRunner.notifyRequest('onGameRestart').  There is no facility to pass parameters; if you need to call a JavaScript function with parameters, use a different mechanism, such as calling the function directly through appRunner.dom, or use appRunner.evalScript(), below.
+</p>
+<ul><li> appRunner.evalScript()
+</li></ul>
+<p>Whatever string you pass to base.appRunner.evalScript() is evaluated and executed directly in the JavaScript environment.  By default, the return value, if any, is not preserved; but if you need the return value you can also pass needsResponse = True.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 1/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2425-0!*!0!*!*!*!* and timestamp 20171008062124 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Reading_the_HTML_tokens.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="P3D_origin_security.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

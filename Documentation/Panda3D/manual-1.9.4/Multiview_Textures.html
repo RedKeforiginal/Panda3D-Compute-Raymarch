@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Stereo/Multiview Textures - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Stereo/Multiview Textures</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Playing_MPG_and_AVI_files.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Transparency_and_Blending.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>Any Panda texture, including a cube map or video texture, can also be loaded as a <em>multiview</em> texture.  This means that there are multiple different images, or views, stored within the texture object.
+</p><p>This feature is new as of Panda3D version 1.8.
+</p><p>The most common use for a multiview texture is to implement a <em>stereo</em> texture, or a texture with two views: one for each of the left and the right eyes.  For instance, you would do this to project a 3-D movie onto a screen in your virtual space.
+</p><p>In its default configuration, whenever Panda renders to a 3-D stereo window (see <a href="Stereo_Display_Regions.html" title="Stereo Display Regions">Stereo Display Regions</a>), any multiview textures are automatically treated as stereo textures.  View 0 is presented to the left eye, and view 1 is presented to the right eye.  Additional views beyond view 1 are not used.
+</p><p>A multiview texture is loaded as a series of independent texture images (similar to the way a cube map or 3-D texture is loaded).  Each image is numbered, and first image (or left image) is image number 0.  The right image is image number 1.  If there are additional views, they are numbered consecutively from there.  All of the images in the series must have the same filename, except for the image sequence number.
+</p><p>To load a multiview texture, use:
+</p>
+<pre class="python">tex = loader.<span style="color: black;">loadTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'filename_#.png'</span>, multiview = <span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+
+<p>where the hash mark in the filename is replaced with the digit (or digits) that correspond to the image sequence number.  For instance, the above example would load image files named filename_0.png and filename_1.png.
+</p><p>You can also load cube maps in the same way.  A cube map consists of six independently loaded texture images numbered 0 through 5, which define the six faces of a cube.  With a stereo cube map, there are twelve texture images numbered 0 through 11.  The first six images define the six faces of the cube in the left view, and the next six images define the six faces of the cube in the right view.
+</p>
+<pre class="python">tex = loader.<span style="color: black;">loadCubeMap</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'cubemap_##.png'</span>, multiview = <span style="color: #008000;">True</span><span style="color: black;">&#41;</span></pre>
+
+<p>Finally, 3-D textures work this way as well.  (Note that here by 3-D texture we mean one that contains height, width, and depth; this is not to be confused with a stereo texture, which contains a left and a right view.  It is possible to have a stereo 3-D texture, which contains a left and a right view that both contain height, width, and depth.)  When loading a multiview 3-D texture, you must specify the number of views explicitly, because Panda won't be able to figure that out based on the number of images files alone.
+</p>
+<pre class="python">tex = loader.<span style="color: black;">load3DTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'tex3d_#.png'</span>, multiview = <span style="color: #008000;">True</span>, numViews = <span style="color: #ff4500;">2</span><span style="color: black;">&#41;</span></pre>
+
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 19/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2626-0!*!0!*!*!*!* and timestamp 20171007194626 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Playing_MPG_and_AVI_files.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Transparency_and_Blending.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

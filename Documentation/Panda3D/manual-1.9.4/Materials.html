@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Materials - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: Materials</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Lighting.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Depth_Test_and_Depth_Write.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="Materials.html#Materials"><span class="tocnumber">1</span> <span class="toctext">Materials</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="Materials.html#Explanation_of_Lighting"><span class="tocnumber">2</span> <span class="toctext">Explanation of Lighting</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="Materials.html#Default_Behavior_and_Explicit_Behavior"><span class="tocnumber">3</span> <span class="toctext">Default Behavior and Explicit Behavior</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="Materials.html#Creating_and_Using_Materials"><span class="tocnumber">4</span> <span class="toctext">Creating and Using Materials</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="Materials.html#Material_Properties"><span class="tocnumber">5</span> <span class="toctext">Material Properties</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="Materials.html#Other_Material_Methods"><span class="tocnumber">6</span> <span class="toctext">Other Material Methods</span></a>
+<ul>
+<li class="toclevel-2 tocsection-7"><a href="Materials.html#Related_Classes"><span class="tocnumber">6.1</span> <span class="toctext">Related Classes</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Materials"> Materials </span></h2>
+<p>Materials affect how the surfaces of models appear when lights are enabled in Panda. These have various effects such as how shiny an object appears, the brightness of it's colors etc. Material properties are combined with textures and lighting to get the final look of an object.
+</p><p>It must be emphasized that materials only work when lights are applied to an object. Otherwise, materials have no effect.
+</p>
+<h2> <span class="mw-headline" id="Explanation_of_Lighting">Explanation of Lighting</span></h2>
+<p>When light strikes a 3D model, light reflects off the model.  If there were no light reflecting off the model, the model would appear pitch black.  The light reflecting off the model is what causes it to have a non-black color onscreen.  In the real world, light is incredibly complicated --- so complicated, that it is infeasible to do realistic calculations.  Instead, Panda3D leaves it in your
+hands, giving you some basic tools to express how much light you want
+reflecting from each surface.
+</p><p>The tools provided are <i>lights</i> and <i>materials.</i> Lights are used
+to express how much light is <i>striking</i> the model.  Materials are used to express how much of the light striking the model is <i>reflected</i>.
+</p><p>Panda3D separates the light striking the model into two general categories: nondirectional, and directional.  Directional light is light that comes straight from a particular lamp.  Because we know where it's coming from, we also know what direction it is coming from.  Nondirectional light is light that maybe came from somewhere, bounced around a bit, and then eventually hit the model.  Because we don't know exactly where it came from, we don't know what direction it is coming from.  Panda3D handles nondirectional and directional light separately.
+</p><p>There are four kinds of lights in Panda3D: ambient, point, diffuse, and directional.  The ambient light only creates nondirectional light.  The other three create directional light.
+</p><p>When light strikes the surface of the model, it is the Material that governs how much of it reflects.  The Material consists of four values:
+</p>
+<dl><dt>Ambient Scattering
+</dt><dd>Governs how much of the nondirectional light is reflected.  Nondirectional light is always assumed to come from all directions, and it always reflects in all directions equally.
+</dd><dt>Diffuse Scattering
+</dt><dd>Governs how much of the directional light is scattered.  Scattering means that the light may have arrived from a particular direction, but it bounces off the model in all directions.  Scattering looks like light hitting a painted white wall.
+</dd><dt>Specular Reflection
+</dt><dd>Governs how much of the directional light is reflected.  Specular reflection looks like light hitting a shiny piece of plastic: you can vaguely see a reflection of the lamp in the plastic, though the reflection just looks like a bright spot.
+</dd><dt>Emissivity
+</dt><dd>Governs how much light the surface produces itself, for glowing surfaces like neon or glow sticks.
+</dd></dl>
+<h2> <span class="mw-headline" id="Default_Behavior_and_Explicit_Behavior">Default Behavior and Explicit Behavior</span></h2>
+<p>If the model does not have an explicit material, does not have a flat color, and does not have vertex colors, the behavior is this:
+</p>
+<ol><li> All nondirectional light is reflected without being tinted.
+</li><li> All directional light is scattered without being tinted.
+</li><li> No specular reflection occurs.
+</li><li> No emissivity occurs.
+</li></ol>
+<p>If the model does not have an explicit material, but it does have a flat color or a vertex color, the behavior is this:
+</p>
+<ol><li> All nondirectional light is reflected after being modulated by the model's color.
+</li><li> All directional light is scattered after being modulated by the model's color.
+</li><li> No specular reflection occurs.
+</li><li> No emissivity occurs.
+</li></ol>
+<p>When you set an explicit material on an object, the behavior is as follows:
+</p>
+<ol><li> All nondirectional light is reflected after being modulated by the explicit ambient color.
+</li><li> All directional light is scattered after being modulated by the explicit diffuse color.
+</li><li> All directional light is reflected specularly after being modulated by the explicit specular color.
+</li><li> The explicit emissive color is added to the light.
+</li></ol>
+<p>It is possible to mix-and-match explicit with default behavior.  For example, you can specify an explicit specular color, but not specify an explicit ambient, diffuse, or emissive color.  If you do that, the behavior would be:
+</p>
+<ol><li> All nondirectional light is reflected after being modulated by the model's color.
+</li><li> All directional light is scattered after being modulated by the model's color.
+</li><li> All directional light is reflected specularly after being modulated by the explicit specular color.
+</li><li> No emissivity occurs.
+</li></ol>
+<h2> <span class="mw-headline" id="Creating_and_Using_Materials">Creating and Using Materials</span></h2>
+<p>To use explicit materials, import the Materials module when you first begin your script. Then creating Materials is a matter of creating instances of the Material class and setting the relevant properties:
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">import</span> direct.<span style="color: black;">directbase</span>.<span style="color: black;">DirectStart</span><br /><span style="color: #ff7700;font-weight:bold;">from</span> panda3d.<span style="color: black;">core</span> <span style="color: #ff7700;font-weight:bold;">import</span> Material<br />&#160;<br />myMaterial = Material<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />myMaterial.<span style="color: black;">setShininess</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">5.0</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;">#Make this material shiny</span><br />myMaterial.<span style="color: black;">setAmbient</span><span style="color: black;">&#40;</span><span style="color: black;">&#40;</span><span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">0</span>, <span style="color: #ff4500;">1</span>, <span style="color: #ff4500;">1</span><span style="color: black;">&#41;</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;">#Make this material blue</span><br />&#160;<br />myNode = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;panda&quot;</span><span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;">#Load the model to apply the material to</span><br />myNode.<span style="color: black;">setMaterial</span><span style="color: black;">&#40;</span>myMaterial<span style="color: black;">&#41;</span> <span style="color: #808080; font-style: italic;">#Apply the material to this nodePath</span></pre>
+<h2> <span class="mw-headline" id="Material_Properties">Material Properties</span></h2>
+<p>The following table details the properties available in a material, its effects as well as the relevant setter method. Most of these properties have additional get and clear methods as well.
+</p>
+<table>
+<tr>
+<th>Property
+</th>
+<th>Effects
+</th>
+<th>Setter Method
+</th></tr>
+<tr>
+<td>Ambient
+</td>
+<td>This is the color of the object as it appears in the absence of direct light. This will be the multiplied by any ambient lights in effect on the material to set its base color.
+</td>
+<td>material.setAmbient((R,G,B,A))
+</td></tr>
+<tr>
+<td>Diffuse
+</td>
+<td>This is the primary color of an object; the color of the object as it appears in direct light, in the absence of highlights. This will be multiplied by any lights in effect on the material to get the color in the parts of the object illuminated by the lights.
+</td>
+<td>material.setDiffuse((R,G,B,A))
+</td></tr>
+<tr>
+<td>Emission
+</td>
+<td>This is the color of the object as it appears in the absence of any light whatsover, including ambient light. It is as if the object is glowing by this color (although of course it will not illuminate neighboring objects)
+</td>
+<td>material.setEmission((R,G,B,A))
+</td></tr>
+<tr>
+<td>Shininess
+</td>
+<td>This controls the size of the specular highlight spot. In general, larger number produce a smaller specular highlight, which makes the object appear shinier. Smaller numbers produce a larger highlight, which makes the object appear less shiny.
+</td>
+<td>material.setShininess(<i>float</i>)
+</td></tr>
+<tr>
+<td>Specular
+</td>
+<td>This is the highlight color of an object: the color of small highlight reflections.
+</td>
+<td>material.setSpecular((R,G,B,A))
+</td></tr></table>
+<h2> <span class="mw-headline" id="Other_Material_Methods">Other Material Methods</span></h2>
+<p>Besides the setter methods covered above, you can also get material properties using their get methods, such as <code>material.getShininess()</code> , <code>material.getDiffuse()</code>, etc.
+</p><p>Properties can also be reset by using the clear methods: <code>material.clearAmbient()</code>,<code>material.clearSpecular()</code>, etc. Shininess does not have a clear method.
+</p><p>Additionally you can check if a material has a property with the has methods: <code>material.hasAmbient()</code> , <code>material.hasEmission()</code>, etc.
+</p><p>Materials have two other methods that have not been covered yet, <code>setLocal(<bool>)</code> and <code>setTwoside(<bool>)</code>. setLocal controls whether to use camera-relative specular highlights or orthogonal specular highlights. This should be set to True unless an orthogonal projection camera is in use. setTwoside controls if lighting should appear on both sides of a polygon. Both these methods have equivalent get methods.
+</p>
+<h3> <span class="mw-headline" id="Related_Classes">Related Classes</span></h3>
+<ul><li><a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=Material">Material</a>
+</li><li><a rel="nofollow" class="external text" href="http://www.panda3d.org/apiref.php?page=MaterialCollection">MaterialCollection</a>
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 107/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2219-0!*!*!!en!*!* and timestamp 20171007194611 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Lighting.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Depth_Test_and_Depth_Write.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

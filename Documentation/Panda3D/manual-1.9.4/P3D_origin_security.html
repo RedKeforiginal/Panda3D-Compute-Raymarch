@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>P3D origin security - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: P3D origin security</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Other_appRunner_members.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="PackageInstaller.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><h2> <span class="mw-headline" id="script_origin"> script_origin </span></h2>
+<p>In order to make it harder for a malicious web page to take advantage of an inadvertent weakness in your p3d file's security, most JavaScript code is forbidden from calling Python methods exposed by your p3d file.
+</p><p>This is controlled by setting the <i>script origin</i> of your p3d file.  The default script origin is empty, which means that no web pages are allowed to call Python functions in your p3d file from JavaScript.  You can set the script_origin string to a list of hostnames that are trusted; for instance, if you set it to "www.mydomain.com", then web pages hosted at <a rel="nofollow" class="external free" href="http://www.mydomain.com">http://www.mydomain.com</a> will be allowed to call your Python functions.
+</p><p>Note that this only affects calls <i>into</i> Python from JavaScript.  Regardless of the setting of script_origin, your Python code is always allowed to call any JavaScript function.  Thus, you only need to worry about setting the script_origin if you need to write JavaScript code that calls Python functions directly.  If you are not certain whether you need this, you should leave the script_origin setting alone.
+</p><p>The term "origin" is taken from JavaScript's "same-origin" policy which normally limits the web pages that a given JavaScript program may operate on.  The origin is defined as the protocol, host, and port of the URL that hosts the p3d file.  If you omit the protocol, then any protocol is allowed; if you omit the port, then the default port is assumed.  You may define the host as either an explicit host, e.g. "www.mydomain.com", or with one or more "*" characters, which stands for any one component of a domain, e.g. "*.mydomain.com" matches "alpha.mydomain.com" and "beta.mydomain.com" but not "mydomain.com" or "www.alpha.mydomain.com".  The special code "**" stands for any zero or more components, e.g. "**.mydomain.com" matches any of the above, including "mydomain.com" and "www.alpha.mydomain.com", but not "yourdomain.com".
+</p><p>If you really wish to remove restrictions for the script_origin, you can set it to "**", which means any host at all.  We strongly recommend <i>not</i> doing this, for obvious reasons.
+</p><p>You can also set the script_origin to a semicolon-delimited set of origin strings; for instance, "www.mydomain.com;mydomain.com" would allow either www.mydomain.com or mydomain.com, but not any other variant.
+</p><p>If a p3d file is hosted on a page that doesn't match its script_origin, then that page's JavaScript code is forbidden from calling any Python methods exposed the p3d file.  It is also forbidden from accessing any attributes you assign to appRunner.main, even for read-only access.  (It is, however, allowed to query certain built-in properties of main, such as main.downloadProgress or main.read_system_log().)
+</p><p>You can set the script_origin with the -c parameter to packp3d, e.g. "-c script_origin=www.mydomain.com".
+</p>
+<h2> <span class="mw-headline" id="run_origin"> run_origin </span></h2>
+<p>A variant on the script_origin that is less often used is run_origin.  This is a stronger restriction than script_origin; if a p3d file is hosted on a page that doesn't match its run_origin, then the p3d file cannot be started at all.  You can do this to prevent third parties from deep-linking your p3d file or otherwise running it out of its intended context.  This is less of a security restriction, and more a usage restriction on your own content.  (Of course, a malicious individual may make a copy your p3d file and modify the run_origin setting, to allow it to run on their own page.  But they will have to re-sign it with their own certificate, since any modifications will invalidate your own signature.)
+</p><p>The default run_origin is "**", which means there is no restriction.  You can set the run_origin with the -c parameter to packp3d, e.g. "-c run_origin=www.mydomain.com".
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 6/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:2471-0!*!*!!*!*!* and timestamp 20171008062131 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Other_appRunner_members.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="PackageInstaller.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
