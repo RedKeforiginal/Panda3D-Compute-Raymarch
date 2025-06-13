@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>3-D Textures - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: 3-D Textures</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Simple_Environment_Mapping.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Cube_Maps.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>So far, we have only talked about ordinary 2-D texture maps.
+Beginning with version 1.1, Panda3D also supports the concept of a 3-D
+texture map.  This is a volumetric texture: in addition to a height
+and a width, it also has a depth:
+</p><p><a href="File%253A3dtexture_cube.png.html" class="image" title="A sample 3-D texture."><img alt="A sample 3-D texture." src="3dtexture_cube.png" width="400" height="300" /></a>
+</p><p>The 3-D texture image is solid all the way through; if we were to cut
+away part of the cube we would discover that the checkerboard pattern
+continues within:
+</p><p><a href="File%253A3dtexture_sphere.png.html" class="image" title="A sample 3-D texture on a sphere."><img alt="A sample 3-D texture on a sphere." src="3dtexture_sphere.png" width="400" height="300" /></a>
+</p><p>This is true no matter what shape we carve out of the cube:
+</p><p><a href="File%253A3dtexture_teapot.png.html" class="image" title="A sample 3-D texture on a teapot."><img alt="A sample 3-D texture on a teapot." src="3dtexture_teapot.png" width="400" height="300" /></a>
+</p><p>In addition to the usual <i>u</i> and <i>v</i> texture dimensions, a
+3-D texture also has <i>w</i>.  In order to apply a 3-D texture to
+geometry, you will therefore need to have 3-D texture coordinates
+<i>(u, v, w)</i> on your geometry, instead of just the ordinary <i>(u,
+v)</i>.
+</p><p>There are several ways to get 3-D texture coordinates on a model.  One
+way is to assign appropriate 3-D texture coordinates to each
+vertex when you create the model, the same way you might assign 2-D
+texture coordinates.  This requires that your modeling package (and
+its Panda converter) support 3-D texture coordinates; however, at the
+time of this writing, none of the existing Panda converters currently
+do support 3-D texture coordinates.
+</p><p>More commonly, 3-D texture coordinates are assigned to a model
+automatically with one of the <a href="Automatic_Texture_Coordinates.html" title="Automatic Texture Coordinates">TexGen modes</a>,
+especially <code>MWorldPosition</code>.  For example, to
+assign 3-D texture coordinates to the teapot, you might do something
+like this:
+</p>
+<pre class="python">teapot = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'teapot.egg'</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexGen</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, TexGenAttrib.<span style="color: black;">MWorldPosition</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexProjector</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, render, teapot<span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexPos</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">0.44</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexScale</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span></pre>
+<p>The above assigns 3-D texture coordinates to the teapot based on the
+(x, y, z) positions of its vertices, which is a common way to assign
+3-D texture coordinates.  The <code>setTexPos()</code> and
+<code>setTexScale()</code> calls in the above are particular to the
+teapot model; these numbers are chosen to scale the texture so that
+its unit cube covers the teapot.
+</p><p>Storing 3-D texture maps on disk is a bit of a problem, since most
+image formats only support 2-D images.  By convention, then, Panda3D
+will store a 3-D texture image by slicing it into horizontal
+cross-sections and writing each slice as a separate 2-D image.  When
+you load a 3-D texture, you specify a series of 2-D images which
+Panda3D will load and stack up like pancakes to make the full 3-D
+image.
+</p><p>The above 3-D texture image, for instance, is stored as four separate
+image files:
+</p><p><a href="File%253A3dtexture_levels_0.png.html" class="image" title="The four images that make up the 3-D Texture"><img alt="The four images that make up the 3-D Texture" src="3dtexture_levels_0.png" width="400" height="300" /></a>
+</p><p>Note that, although the image is stored as four separate images on
+disk, internally Panda3D stores it as a single, three-dimensional
+image, with height, width, and depth.
+</p><p>The Panda3D convention for naming the slices of a 3-D texture is
+fairly rigid.  Each slice must be numbered, and all of the filenames
+must be the same except for the number; and the first (bottom) slice
+must be numbered 0.  If you have followed this convention, then you
+can load a 3-D texture with a call like this:
+</p>
+<pre class="python">tex = loader.<span style="color: black;">load3DTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">&quot;grid_#.png&quot;</span><span style="color: black;">&#41;</span></pre>
+<p>The hash sign ("#") in the filename passed to
+<code>loader.load3DTexture()</code> will be filled in with the
+sequence number of each slice, so the above loads files named
+"grid_0.png", "grid_1.png", "grid_2.png", and so on.  If you prefer to
+pad the slice number with zeros to a certain number of digits, repeat
+the hash sign; for instance, loading "grid_###.png" would look for
+files named "grid_000.png", "grid_001.png", and so on.  Note that you
+don't have to use multiple hash marks to count higher than 9.  You can
+count as high as you like even with only one hash mark; it just won't pad
+the numbers with zeros.
+</p><p>Remember that you must usually <a href="Choosing_a_Texture_Size.html" title="Choosing a Texture Size">choose a power of two</a> for the size of your texture images.  This extends to the <i>w</i> size, too: for most graphics cards, the number of slices of your texture should be a power of two.  Unlike the ordinary <i>(u, v)</i> dimensions, Panda3D won't automatically rescale your 3-D texture if it has a non-power-of-two size in the <i>w</i> dimension, so it is important that you choose the size correctly yourself.
+</p>
+<h2> <span class="mw-headline" id="Applications_for_3-D_textures">Applications for 3-D textures</span></h2>
+<p>3-D textures are often used in scientific and medical imagery
+applications, but they are used only rarely in 3-D game programs.  One
+reason for this is the amount of memory they require; since a 3-D
+texture requires storing <i>(u&#160;&#215;&#160;v&#160;&#215;&#160;w)</i> texels, a large 3-D
+texture can easily consume a substantial fraction of your available
+texture memory.
+</p><p>But probably the bigger reason that 3-D textures are rarely used in
+games is that the texture images in games are typically hand-painted,
+and it is difficult for an artist to paint a 3-D texture.  It is
+usually much easier just to paint the surface of an object.
+</p><p>So when 3-D textures are used at all, they are often generated
+procedurally.  One classic example of a procedural 3-D texture is wood
+grain; it is fairly easy to define a convincing woodgrain texture
+procedurally.  For instance, <a href="Woodgrain_Example.html" title="Woodgrain Example">click here</a> to view
+a Panda3D program that generates a woodgrain texture and stores it as
+a series of files named woodgrain_0.png, woodgrain_1.png, and so on.
+The following code applies this woodgrain texture to the teapot, to
+make a teapot that looks like it was carved from a single block of
+wood:
+</p>
+<pre class="python">teapot = loader.<span style="color: black;">loadModel</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'teapot.egg'</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexGen</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, TexGenAttrib.<span style="color: black;">MWorldPosition</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexProjector</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, render, teapot<span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexPos</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">0.44</span>, <span style="color: #ff4500;">0.5</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexScale</span><span style="color: black;">&#40;</span>TextureStage.<span style="color: black;">getDefault</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span>, <span style="color: #ff4500;">0.2</span><span style="color: black;">&#41;</span><br />&#160;<br />tex = loader.<span style="color: black;">load3DTexture</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'woodgrain_#.png'</span><span style="color: black;">&#41;</span><br />teapot.<span style="color: black;">setTexture</span><span style="color: black;">&#40;</span>tex<span style="color: black;">&#41;</span></pre>
+<p><a href="File%253AWooden_teapot.jpg.html" class="image" title="A wooden teapot."><img alt="A wooden teapot." src="Wooden_teapot.jpg" width="400" height="300" /></a>
+</p><p>However, even procedurally-generated 3-D textures like this are used
+only occasionally.  If the algorithm to generate your texture is not too
+complex, it may make more sense to program a <a href="Pixel_and_Vertex_Shaders.html" title="Pixel and Vertex Shaders" class="mw-redirect">pixel shader</a>
+to generate the texture implicitly, as your models are rendered.
+</p><p>Still, even if it is used only occasionally, the 3-D texture remains a
+powerful rendering technique to keep in your back pocket.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 65/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1216-0!*!0!*!*!2!* and timestamp 20171007194624 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="Simple_Environment_Mapping.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Cube_Maps.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>

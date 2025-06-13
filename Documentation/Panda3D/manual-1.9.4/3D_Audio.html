@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>3D Audio - Panda3D Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css"><link rel="shortcut icon" href="favicon.ico">    <meta name="keywords" content="Panda3D, Panda, 3D, Python, graphics, free, game, engine, game rendering engine, simulation, open source, free download, Disney, ETC, Entertainment Technology Center, open-source">
+    <meta name="description" content="Free open source 3D game and simulation engine developed by Disney and maintained by Carnegie Mellon University\'s Entertainment Technology Center">
+    </head>
+    <body>
+<table width=960 cellpadding=0 cellspacing=0 id=main align=center>
+<tr>
+<td id=borderleft></td>
+<td id=maincenter valign=top>
+<table id=container width="100%" cellpadding=0 cellspacing=0 align=center><tr><td id=pcontent valign=top><h2>Panda3D Manual: 3D Audio</h2>
+<div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DSP_Effects.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Multi-Channel.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div class='wikicontent' id='wikicontentid'><p>A wrapper <code>Audio3DManager</code> class has been implemented to help do positional audio. <code>Audio3DManager</code> takes as input an <code>AudioManager</code> and a listener for the sound. A listener is the point of reference from where the sound should be heard. For a player in a Panda3D session, this will most likely be the camera. Sounds further away from the camera will not be loud. Objects nearer to the camera will be loud.
+Make sure to use a mono sound source for your 3D audio as stereo sound sources will not be able to be spatialized and hence can't be used for 3D audio.
+</p>
+<pre class="python"><span style="color: #ff7700;font-weight:bold;">from</span> direct.<span style="color: black;">showbase</span> <span style="color: #ff7700;font-weight:bold;">import</span> Audio3DManager<br />audio3d = Audio3DManager.<span style="color: black;">Audio3DManager</span><span style="color: black;">&#40;</span>base.<span style="color: black;">sfxManagerList</span><span style="color: black;">&#91;</span><span style="color: #ff4500;">0</span><span style="color: black;">&#93;</span>, camera<span style="color: black;">&#41;</span></pre>
+<p>To create a sound that is positional, you need to use the <code>loadSfx()</code> function on the <code>Audio3DManager</code> rather than the normal <code>loader.loadSfx()</code> which is for non-positional sounds. e.g.
+</p>
+<pre class="python">mySound = audio3d.<span style="color: black;">loadSfx</span><span style="color: black;">&#40;</span><span style="color: #483d8b;">'blue.wav'</span><span style="color: black;">&#41;</span></pre>
+<p>Sounds can be attached to objects such that when they move, the sound source will move along with them. 
+</p>
+<pre class="python">audio3d.<span style="color: black;">attachSoundToObject</span><span style="color: black;">&#40;</span>mySound, teapot<span style="color: black;">&#41;</span></pre>
+<p>You can use the <code>Audio3DManager's setSoundVelocity()</code> and <code>setListenerVelocity()</code> to set the velocity of sounds or the listener to get the doppler pitch shifting of moving objects. If you would like the <code>Audio3DManager</code> to help you adjust the velocity of moving objects automatically like it does with their position, you can call <code>setSoundVelocityAuto()</code> or <code>setListenerVelocityAuto()</code> like this:
+</p>
+<pre class="python">audio3d.<span style="color: black;">setSoundVelocity</span><span style="color: black;">&#40;</span>sound,velocityVector<span style="color: black;">&#41;</span><br />audio3d.<span style="color: black;">setListenerVelocity</span><span style="color: black;">&#40;</span>velocityVector<span style="color: black;">&#41;</span><br />&#160;<br />base.<span style="color: black;">cTrav</span> = CollisionTraverser<span style="color: black;">&#40;</span><span style="color: black;">&#41;</span><br />audio3d.<span style="color: black;">setSoundVelocityAuto</span><span style="color: black;">&#40;</span>sound<span style="color: black;">&#41;</span><br />audio3d.<span style="color: black;">setListenerVelocityAuto</span><span style="color: black;">&#40;</span><span style="color: black;">&#41;</span></pre>
+<p>Currently, for the latter to work, a CollisionTraverser must be attached to base.cTrav as you see in the example. If you already have one assigned to do collision detection that will be sufficient. Read more about <a href="Collision_Traversers.html" title="Collision Traversers">Collision Traversers</a>.
+</p><p>The attenuation of moving sounds by distance and the doppler shift are based the way sound works in the real world. By default it assumes a scale of 1 panda unit equal to 1 foot. If you use another scale you'll need to use <code>setDistanceFactor</code> to adjust the scale.  
+</p>
+<pre class="python">audio3d.<span style="color: black;">setDistanceFactor</span><span style="color: black;">&#40;</span>scale<span style="color: black;">&#41;</span></pre>
+<p>You can adjust the rate that sounds attenuate by distance. If you want to position the sounds but don't want the volume to be effected by their distance, you can set the drop off factor to 0.
+</p>
+<pre class="python">audio3d.<span style="color: black;">setDropOffFactor</span><span style="color: black;">&#40;</span>scale<span style="color: black;">&#41;</span></pre>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 55/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key mw_manual:pcache:idhash:1785-0!*!0!*!*!*!* and timestamp 20171008060037 -->
+</div><div style="width:100%; padding: 1px;" class=subnavigation>
+<table width="640px" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+              <td width="70px" align="left">&nbsp;&nbsp;<a style="text-decoration:none" href="DSP_Effects.html"><img border=0 width=16 height=16 src="arrow_left.png" align=absmiddle> <u>Prev</u></a></td>
+              <td width="70px" align="center"><a style="text-decoration:none" href="Main_Page.html"><img border=0 width=16 height=16 src="arrow_up.png" align=absmiddle><u>Top</u></a></td>
+              <td width="70px" align="right"><a style="text-decoration:none" href="Multi-Channel.html"><u>Next</u> <img border=0 width=16 height=16 src="arrow_right.png" align=absmiddle></a>&nbsp;&nbsp;</td>
+              </tr></table></div><div id=legal>&copy; Carnegie Mellon University 2010</div></td></tr></table></td><td id=borderright></td></tr></table></body></html>
