@@ -231,12 +231,17 @@ vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
 
     
     if (u_use_camera_grid != 0) {
-        for (int ix = -1; ix <= 1; ix += 2) {
-            for (int iy = -1; iy <= 1; iy += 2) {
-                for (int iz = -1; iz <= 1; iz += 2) {
-                    // Offset each point light relative to the camera position
-                    // while honoring the user-configurable grid offset.
-                    vec3 light_pos = camera_pos + u_light_offset + vec3(ix, iy, iz) * u_light_spacing * 0.5;
+        // Construct a 2x2x2 light grid centered on the camera position. The
+        // grid origin is offset by half the spacing so that the eight lights
+        // surround the camera rather than all occupying the same point. This
+        // configuration avoids self-shadowing and maintains consistent
+        // attenuation regardless of camera movement.
+
+        vec3 grid_base = camera_pos + u_light_offset - u_light_spacing * 0.5;
+        for (int ix = 0; ix < 2; ++ix) {
+            for (int iy = 0; iy < 2; ++iy) {
+                for (int iz = 0; iz < 2; ++iz) {
+                    vec3 light_pos = grid_base + vec3(ix, iy, iz) * u_light_spacing;
                     vec3 L = normalize(light_pos - p);
                     float light_dist = length(light_pos - p);
                     float attenuation = 1.0 / (light_dist * light_dist);
