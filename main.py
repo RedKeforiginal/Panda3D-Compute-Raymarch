@@ -19,6 +19,7 @@ from panda3d.core import (
     Shader,
     ComputeNode,
     CardMaker,
+    ShaderBuffer,
     Mat4,
 )
 
@@ -207,11 +208,8 @@ class MainMenuApp(ShowBase):
             print("Invalid lighting parameters")
             return
         if hasattr(self, "compute_np"):
-            self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
-            self.compute_np.set_shader_input("u_light_offset", self.light_offset)
-            self.compute_np.set_shader_input("u_light_color", self.light_color)
+            self._update_light_buffer()
 
-# In main.py, replace the MainMenuApp class's compute methods with these:
 
     def _setup_compute(self):
         width = self.win.getXSize()
@@ -231,9 +229,7 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("outputImage", self.output_tex, False, True)
         self.compute_np.set_shader(self.compute_shader)
         self.compute_np.set_shader_input("u_R0", 0.04)
-        self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
-        self.compute_np.set_shader_input("u_light_offset", self.light_offset)
-        self.compute_np.set_shader_input("u_light_color", self.light_color)
+        self._update_light_buffer()
 
         # Set initial values for the new uniforms
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
@@ -247,6 +243,21 @@ class MainMenuApp(ShowBase):
         card.set_shader_off()
 
         self.taskMgr.add(self._update_compute, "update-compute")
+
+    def _update_light_buffer(self):
+        """Upload light data via a ShaderBuffer."""
+        import struct
+        lights = []
+        for ix in range(-1, 2):
+            for iy in range(-1, 2):
+                for iz in range(-1, 2):
+                    pos = (Vec3(ix, iy, iz) * self.light_spacing) + self.light_offset
+                    lights.append((pos, self.light_color))
+        data = b''.join([struct.pack('4f4f', p.x, p.y, p.z, 1.0, c.x, c.y, c.z, 1.0) for p, c in lights])
+        self.light_buffer = ShaderBuffer('Lights', data, ShaderBuffer.UH_dynamic)
+        self.num_lights = len(lights)
+        self.compute_np.set_shader_input('Lights', self.light_buffer, Shader.BUFFER)
+        self.compute_np.set_shader_input('num_lights', self.num_lights)
 
     def _update_compute(self, task):
         # Instead of calculating a complex inverse matrix, we pass the simple,
