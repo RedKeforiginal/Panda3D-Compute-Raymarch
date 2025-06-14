@@ -109,6 +109,11 @@ class MainMenuApp(ShowBase):
         self.primary_steps = 256  # Defaults used for menu
         self.max_dist = 1000.0  # Passed to the shader via setShaderInput (see https://docs.panda3d.org)
         self.shadow_steps = 256  # Defaults used for menu
+        self.material_scale = 2.0
+        self.fbm_octaves = 7
+        self.fbm_lacunarity = 2.0
+        self.fbm_gain = 0.5
+        self.fbm_amplitude = 0.5
         self._build_menu()
         self.accept("escape", self._toggle_menu)
     def _toggle_menu(self):
@@ -216,6 +221,40 @@ class MainMenuApp(ShowBase):
             self.compute_np.set_shader_input("u_light_color", self.light_color)
 
 
+    def _build_materials_menu(self):
+        if hasattr(self, "menu_frame"):
+            self.menu_frame.destroy()
+        self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.7,0.7,-0.9,0.9), pos=(0,0,0))
+        entries = {}
+        labels = ["Scale", "Octaves", "Lacunarity", "Gain", "Amplitude"]
+        defaults = [self.material_scale, self.fbm_octaves, self.fbm_lacunarity, self.fbm_gain, self.fbm_amplitude]
+        for i, label in enumerate(labels):
+            y = 0.6 - i * 0.15
+            DirectLabel(text=label, scale=0.05, pos=(-0.4, y, 0), parent=self.menu_frame)
+            entry = DirectEntry(initialText=str(defaults[i]), scale=0.05, pos=(0.2, y - 0.02, 0), numLines=1, focus=0, parent=self.menu_frame)
+            entries[label] = entry
+        self.material_entries = entries
+        DirectButton(text="Apply", scale=0.07, pos=(-0.2,-0.75,0), command=self._apply_materials, parent=self.menu_frame)
+        DirectButton(text="Back", scale=0.07, pos=(0.2,-0.75,0), command=self._build_options_menu, parent=self.menu_frame)
+
+    def _apply_materials(self):
+        try:
+            self.material_scale = float(self.material_entries["Scale"].get())
+            self.fbm_octaves = int(self.material_entries["Octaves"].get())
+            self.fbm_lacunarity = float(self.material_entries["Lacunarity"].get())
+            self.fbm_gain = float(self.material_entries["Gain"].get())
+            self.fbm_amplitude = float(self.material_entries["Amplitude"].get())
+        except ValueError:
+            print("Invalid material parameters")
+            return
+        if hasattr(self, "compute_np"):
+            self.compute_np.set_shader_input("u_material_scale", self.material_scale)
+            self.compute_np.set_shader_input("u_fbm_octaves", self.fbm_octaves)
+            self.compute_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
+            self.compute_np.set_shader_input("u_fbm_gain", self.fbm_gain)
+            self.compute_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
+
+
     def _build_graphics_menu(self):
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
@@ -270,6 +309,11 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("u_max_dist", self.max_dist)
         self.compute_np.set_shader_input("u_shadow_steps", self.shadow_steps)
         self.compute_np.set_shader_input("u_light_color", self.light_color)
+        self.compute_np.set_shader_input("u_material_scale", self.material_scale)
+        self.compute_np.set_shader_input("u_fbm_octaves", self.fbm_octaves)
+        self.compute_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
+        self.compute_np.set_shader_input("u_fbm_gain", self.fbm_gain)
+        self.compute_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
 
         # Set initial values for the new uniforms
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
@@ -333,7 +377,7 @@ class MainMenuApp(ShowBase):
         print("SDF options not implemented")
 
     def _on_materials(self):
-        print("Material options not implemented")
+        self._build_materials_menu()
 
 
 if __name__ == "__main__":
