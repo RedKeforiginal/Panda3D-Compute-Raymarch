@@ -1,7 +1,7 @@
 #version 430 core
 
 //================================================================================================
-// Panda3D Compute Shader Raymarcher - v2 (Corrected)
+// Panda3D Compute Shader Raymarcher - v3 (Disney Principled BRDF)
 //================================================================================================
 
 //------------------------------------------------------------------------------------------------
@@ -26,21 +26,18 @@ uniform vec3 u_light_offset;
 uniform vec3 u_light_color;
 uniform int u_use_camera_grid;
 
-// Procedural material controls. These parameters allow the Python UI to modify
-// the fBm noise used for the marble material. See the GLSL uniform rules:
-// https://docs.gl/gl4/glUniform
-uniform float u_material_scale;   // Overall material scale
-uniform int   u_fbm_octaves;      // Number of fBm layers
-uniform float u_fbm_lacunarity;   // Frequency multiplier per octave
-uniform float u_fbm_gain;         // Amplitude multiplier per octave
-uniform float u_fbm_amplitude;    // Starting amplitude
+// Procedural material controls
+uniform float u_material_scale;
+uniform int   u_fbm_octaves;
+uniform float u_fbm_lacunarity;
+uniform float u_fbm_gain;
+uniform float u_fbm_amplitude;
 
 // PBR Material Properties
-// Albedo and roughness are computed procedurally now, leaving only the
-// reflectance parameter. See the GLSL uniform rules in the spec:
-// https://docs.gl/gl4/glUniform
-uniform float u_R0; // Reflectance at normal incidence (typically ~0.04 for dielectrics)
-
+// u_R0 is no longer directly used by the Disney BRDF, which derives reflectance
+// from more intuitive parameters like 'metallic' and 'specular'. It is kept
+// here for compatibility with the Python host code.
+uniform float u_R0;
 
 //------------------------------------------------------------------------------------------------
 // Constants
@@ -56,7 +53,7 @@ float epsilon(float t) {
 }
 
 //================================================================================================
-// Scene Definition (Signed Distance Function)
+// Scene Definition (Signed Distance Function) - (Unchanged)
 //================================================================================================
 float lattice(vec3 p) {
     vec3 q = abs(mod(p, vec3(32, 16, 32)) - vec3(16, 8, 16));
@@ -101,16 +98,43 @@ vec3 getNormal(vec3 p) {
 }
 
 //================================================================================================
-// PBR, Lighting, and Shadowing
+// Disney Principled BRDF, Lighting, and Shadowing
 //================================================================================================
-float DistributionGGX(vec3 N, vec3 H, float r) { float a2=r*r*r*r; float nH=max(dot(N,H),0.); return a2/(PI*pow(nH*nH*(a2-1.)+1.,2.)); }
-float GeometrySchlickGGX(float nV, float r) { float k=(r+1.)*(r+1.)/8.; return nV/(nV*(1.-k)+k); }
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float r) { return GeometrySchlickGGX(max(dot(N,V),0.),r)*GeometrySchlickGGX(max(dot(N,L),0.),r); }
-vec3 fresnelSchlick(float c, vec3 F0) { return F0+(vec3(1.)-F0)*pow(clamp(1.-c,0.,1.),5.);}
 
-/* Ambient occlusion disabled for now */
-float calcAO(vec3 pos, vec3 nor) { return 1.0; }
+// Microfacet Distribution (D) - Trowbridge-Reitz GGX
+float DistributionGGX(float NdotH, float roughness) {
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float d = NdotH * NdotH * (a2 - 1.0) + 1.0;
+    return a2 / (PI * d * d);
+}
 
+// Geometry Function (G) - Smith's method with Schlick-GGX
+float GeometrySchlickGGX(float NdotV, float roughness) {
+    float r = (roughness + 1.0);
+    float k = (r * r) / 8.0;
+    return NdotV / (NdotV * (1.0 - k) + k);
+}
+
+float GeometrySmith(float NdotV, float NdotL, float roughness) {
+    return GeometrySchlickGGX(NdotV, roughness) * GeometrySchlickGGX(NdotL, roughness);
+}
+
+// Fresnel (F) - Schlick's approximation
+vec3 fresnelSchlick(float cosTheta, vec3 F0) {
+    return F0 + (vec3(1.0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}
+
+// Disney Diffuse BRDF
+vec3 disneyDiffuse(vec3 baseColor, float roughness, float NdotL, float NdotV, float LdotH) {
+    float Fd90 = 0.5 + 2.0 * LdotH * LdotH * roughness;
+    float F_light = pow(1.0 - NdotL, 5.0);
+    float F_view = pow(1.0 - NdotV, 5.0);
+    float Fd = mix(1.0, Fd90, F_light) * mix(1.0, Fd90, F_view);
+    return baseColor * Fd / PI;
+}
+
+// Shadowing
 float calculateShadow(vec3 ro, vec3 rd, float max_t) {
     float t = 0.01;
     for (int i = 0; i < u_shadow_steps; ++i) {
@@ -121,68 +145,12 @@ float calculateShadow(vec3 ro, vec3 rd, float max_t) {
     }
     return 1.0;
 }
-// 3D Simplex Noise implementation
+// 3D Simplex Noise implementation (Unchanged)
 vec3 mod289(vec3 x){return x - floor(x/289.0)*289.0;}
 vec4 mod289(vec4 x){return x - floor(x/289.0)*289.0;}
 vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-
-float snoise(vec3 v){
-    const vec2 C=vec2(1.0/6.0,1.0/3.0);
-    const vec4 D=vec4(0.0,0.5,1.0,2.0);
-
-    vec3 i=floor(v+dot(v,C.yyy));
-    vec3 x0=v-i+dot(i,C.xxx);
-
-    vec3 g=step(x0.yzx,x0.xyz);
-    vec3 l=1.0-g;
-    vec3 i1=min(g.xyz,l.zxy);
-    vec3 i2=max(g.xyz,l.zxy);
-
-    vec3 x1=x0-i1+C.xxx;
-    vec3 x2=x0-i2+C.yyy;
-    vec3 x3=x0-D.yyy;
-
-    i=mod289(i);
-    vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
-
-    float n_=0.142857142857;
-    vec3 ns=n_*D.wyz-D.xzx;
-
-    vec4 j=p-49.0*floor(p*ns.z*ns.z);
-
-    vec4 x_=floor(j*ns.z);
-    vec4 y_=floor(j-7.0*x_);
-
-    vec4 x=x_*ns.x+ns.y;
-    vec4 y=y_*ns.x+ns.y;
-    vec4 h=1.0-abs(x)-abs(y);
-
-    vec4 b0=vec4(x.xy,y.xy);
-    vec4 b1=vec4(x.zw,y.zw);
-
-    vec4 s0=floor(b0)*2.0+1.0;
-    vec4 s1=floor(b1)*2.0+1.0;
-    vec4 sh=-step(h,vec4(0.0));
-
-    vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
-    vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-
-    vec3 p0=vec3(a0.xy,h.x);
-    vec3 p1=vec3(a0.zw,h.y);
-    vec3 p2=vec3(a1.xy,h.z);
-    vec3 p3=vec3(a1.zw,h.w);
-
-    vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-    p0*=norm.x;
-    p1*=norm.y;
-    p2*=norm.z;
-    p3*=norm.w;
-
-    vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);
-    m=m*m;
-    return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}
+float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=mod289(i);vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);vec4 x=x_*ns.x+ns.y;vec4 y=y_*ns.x+ns.y;vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
 
 float fbm3(vec3 p){
     float v = 0.0;
@@ -196,119 +164,115 @@ float fbm3(vec3 p){
     return v;
 }
 
-
+// HDR Tonemapping
 vec3 ACESFilm(vec3 x){
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
+    const float a = 2.51; const float b = 0.03; const float c = 2.43;
+    const float d = 0.59; const float e = 0.14;
     return clamp((x*(a*x+b))/(x*(c*x+d)+e),0.0,1.0);
 }
 
 vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
 
-    // Procedural marble based on 3D fBm noise
-    float noiseVal = fbm3(p * u_material_scale);
-    float m = sin(p.y * u_material_scale * 4.0 + noiseVal * 6.0);
-    vec3 albedo = mix(vec3(0.2, 0.2, 0.25), vec3(0.9, 0.9, 0.95), m);
-    float roughness = 0.25 + 0.15 * noiseVal;
+    //================= Procedural Material Definition =================
+    // Use noise to drive the Disney PBR parameters for a complex look.
+    float marble_pattern = sin(p.y * u_material_scale * 4.0 + fbm3(p * u_material_scale) * 6.0);
+    vec3 baseColor = mix(vec3(0.2, 0.2, 0.25), vec3(0.9, 0.9, 0.95), marble_pattern);
 
+    float noise_a = snoise(p * 0.5 + 10.0);
+    float noise_b = snoise(p * 1.2 - 7.0);
 
-    // PBR properties for a non-metallic surface
-    float metallic = 0.0;
-    vec3 F0 = vec3(u_R0);
-// float ao = calcAO(p, n);
+    // Core PBR parameters
+    float metallic = clamp(noise_a * 0.5 + 0.5, 0.0, 1.0);
+    float roughness = clamp(0.25 + 0.15 * fbm3(p * u_material_scale), 0.05, 1.0);
+    float specular = clamp(noise_b * 0.5 + 0.5, 0.0, 1.0);
+    float specularTint = clamp(snoise(p * 1.5 + 9.0) * 0.5 + 0.5, 0.0, 1.0);
 
-    // Accumulate lighting from a 3x3x3 grid of point lights
+    // Extra effects
+    float sheen = clamp(snoise(p * 1.8 - 11.0), 0.0, 1.0) * 5.0; // Boosted for visibility
+    float sheenTint = clamp(snoise(p * 2.0 + 13.0) * 0.5 + 0.5, 0.0, 1.0);
+    float clearcoat = clamp(floor(snoise(p * 2.0 + 20.0) + 0.75), 0.0, 1.0);
+    float clearcoatGloss = clamp(snoise(p * 2.2 - 15.0) * 0.5 + 0.5, 0.0, 1.0);
+    //==================================================================
+
+    // Common view-dependent variables
+    float NdotV = max(dot(n, V), 0.0);
     vec3 Lo = vec3(0.0); // Final outgoing radiance
-    // Determine the starting point of the light grid relative to the world
-    // origin. Lighting parameters come from Python via shader inputs. See
-    // Panda3D docs on setShaderInput:
-    // https://docs.panda3d.org/1.10/python/programming/shaders/shader-inputs
-    // The grid origin is constant and does not depend on the surface hit point.
+
+    // Light grid setup
     vec3 light_grid_base = u_light_offset;
+    int grid_start = -1;
+    int grid_end = 1;
+    int grid_dim = 3; // 3x3x3 grid
 
-    
     if (u_use_camera_grid != 0) {
-        // Construct a 2x2x2 light grid centered on the camera position. The
-        // grid origin is offset by half the spacing so that the eight lights
-        // surround the camera rather than all occupying the same point. This
-        // configuration avoids self-shadowing and maintains consistent
-        // attenuation regardless of camera movement.
+        // Switch to a camera-centered 2x2x2 grid
+        light_grid_base = camera_pos + u_light_offset - u_light_spacing * 0.5;
+        grid_start = 0;
+        grid_end = 1;
+        grid_dim = 2;
+    }
 
-        vec3 grid_base = camera_pos + u_light_offset - u_light_spacing * 0.5;
-        for (int ix = 0; ix < 2; ++ix) {
-            for (int iy = 0; iy < 2; ++iy) {
-                for (int iz = 0; iz < 2; ++iz) {
-                    vec3 light_pos = grid_base + vec3(ix, iy, iz) * u_light_spacing;
-                    vec3 L = normalize(light_pos - p);
-                    float light_dist = length(light_pos - p);
-                    float attenuation = 1.0 / (light_dist * light_dist);
-                    vec3 radiance = u_light_color * attenuation;
-                    vec3 H = normalize(V + L);
-                    float NdotL = max(dot(n, L), 0.0);
+    // Accumulate lighting from all lights in the grid
+    for (int ix = grid_start; ix <= grid_end; ++ix) {
+        for (int iy = grid_start; iy <= grid_end; ++iy) {
+            for (int iz = grid_start; iz <= grid_end; ++iz) {
+                vec3 light_pos = light_grid_base + vec3(ix, iy, iz) * u_light_spacing;
+                vec3 L = normalize(light_pos - p);
+                float light_dist = length(light_pos - p);
+                float attenuation = 1.0 / (light_dist * light_dist);
+                vec3 radiance = u_light_color * attenuation;
+                vec3 H = normalize(V + L);
 
-                    if (NdotL > 0.0) {
-                        float shadow = calculateShadow(p + n * SURF_DIST * 2.0, L, light_dist);
-                        if (shadow > 0.0) {
-                            float NDF = DistributionGGX(n, H, roughness);
-                            float G = GeometrySmith(n, V, L, roughness);
-                            vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+                float NdotL = max(dot(n, L), 0.0);
+                if (NdotL > 0.0) {
+                    float shadow = calculateShadow(p + n * SURF_DIST * 2.0, L, light_dist);
+                    if (shadow > 0.0) {
+                        float NdotH = max(dot(n, H), 0.0);
+                        float LdotH = max(dot(L, H), 0.0);
 
-                            vec3 spec = (NDF * G * F) / (4.0 * max(dot(n,V),0.0) * NdotL + 0.001);
+                        // --- Base Layer (Diffuse + Specular) ---
+                        float albedo_lum = dot(baseColor, vec3(0.299, 0.587, 0.114));
+                        vec3 C_tint = albedo_lum > 0.0 ? baseColor / albedo_lum : vec3(1.0);
+                        vec3 F0_spec = mix(specular * 0.08 * mix(vec3(1.0), C_tint, specularTint), baseColor, metallic);
+                        vec3 F_spec = fresnelSchlick(LdotH, F0_spec);
 
-                            vec3 kd = vec3(1.0) - F;
-                            kd *= (1.0 - metallic);
+                        float D_spec = DistributionGGX(NdotH, roughness);
+                        float G_spec = GeometrySmith(NdotV, NdotL, roughness);
 
-                            vec3 diffuse = kd * albedo / PI;
+                        vec3 f_spec = F_spec * G_spec * D_spec / (4.0 * NdotL * NdotV + 0.001);
+                        vec3 f_diffuse = disneyDiffuse(baseColor, roughness, NdotL, NdotV, LdotH) * (1.0 - metallic);
 
-                            Lo += (diffuse + spec) * radiance * NdotL;
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        for (int ix = -1; ix <= 1; ++ix) {
-            for (int iy = -1; iy <= 1; ++iy) {
-                for (int iz = -1; iz <= 1; ++iz) {
-                    vec3 light_pos = light_grid_base + vec3(ix, iy, iz) * u_light_spacing;
-                    vec3 L = normalize(light_pos - p);
-                    float light_dist = length(light_pos - p);
-                    float attenuation = 1.0 / (light_dist * light_dist);
-                    vec3 radiance = u_light_color * attenuation;
-                    vec3 H = normalize(V + L);
-                    float NdotL = max(dot(n, L), 0.0);
+                        // --- Sheen Layer ---
+                        vec3 C_sheen = mix(vec3(1.0), C_tint, sheenTint);
+                        vec3 F_sheen = C_sheen * sheen * pow(1.0 - LdotH, 5.0); // Simple plausible sheen
 
-                    if (NdotL > 0.0) {
-                        float shadow = calculateShadow(p + n * SURF_DIST * 2.0, L, light_dist);
-                        if (shadow > 0.0) {
-                            float NDF = DistributionGGX(n, H, roughness);
-                            float G = GeometrySmith(n, V, L, roughness);
-                            vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+                        // --- Clearcoat Layer ---
+                        float cc_roughness = mix(0.1, 0.001, clearcoatGloss);
+                        vec3 F_coat = fresnelSchlick(LdotH, vec3(0.04)) * clearcoat;
+                        float D_coat = DistributionGGX(NdotH, cc_roughness);
+                        float G_coat = GeometrySmith(NdotV, NdotL, 0.25); // Use fixed roughness for G
+                        vec3 f_coat = F_coat * D_coat * G_coat / (4.0 * NdotL * NdotV + 0.001);
 
-                            vec3 spec = (NDF * G * F) / (4.0 * max(dot(n,V),0.0) * NdotL + 0.001);
+                        // --- Combine Layers ---
+                        // Base layer is attenuated by clearcoat's fresnel term
+                        vec3 base_contrib = (f_diffuse + f_spec + F_sheen) * (1.0 - F_coat);
+                        vec3 final_brdf = base_contrib + f_coat;
 
-                            vec3 kd = vec3(1.0) - F;
-                            kd *= (1.0 - metallic);
-
-                            vec3 diffuse = kd * albedo / PI;
-
-                            Lo += (diffuse + spec) * radiance * NdotL;
-                        }
+                        Lo += final_brdf * radiance * NdotL * shadow;
                     }
                 }
             }
         }
     }
-vec3 color = Lo;
+
+    vec3 color = Lo;
 
     // HDR Tone Mapping and Gamma Correction
     color = ACESFilm(color);
     color = pow(color, vec3(1.0/2.2));
     return vec4(color, 1.0);
 }
+
 
 //================================================================================================
 // Main Entry Point
@@ -320,24 +284,10 @@ void main() {
         return;
     }
 
-    // --- FUNDAMENTALLY CORRECT RAY CONSTRUCTION ---
-    // 1. Convert pixel coordinate to Normalized Device Coordinates (NDC) [-1, 1]
-    //    The Y-coordinate is flipped to match GL's bottom-left origin.
+    // --- Fundamentally Correct Ray Construction ---
     vec2 uv = (vec2(pixel) + 0.5) / vec2(size);
     vec2 ndc = vec2(uv.x, 1.0 - uv.y) * 2.0 - 1.0;
-
-    // 2. Create the ray direction in CAMERA-space.
-    //    We use the FOV information stored in the projection matrix.
-    //    Panda3D's Y-up projection matrix has the form:
-    //    [1/tan(fovX/2), 0,             0,  0]
-    //    [0,             1/tan(fovY/2), 0,  0]
-    //    [...]
-    //    So, we can find the camera-space direction by dividing NDC by these terms.
     vec3 dir_cam_space = vec3(ndc.x / proj_mat[0][0], ndc.y / proj_mat[1][1], -1.0);
-
-    // 3. Define the Ray Origin and Direction in WORLD-space.
-    //    Ray Origin (ro) is simply the camera's world position.
-    //    Ray Direction (rd) is the camera-space direction rotated into world space.
     vec3 ro = camera_pos;
     vec3 rd = normalize((cam_to_world * vec4(dir_cam_space, 0.0)).xyz);
 
