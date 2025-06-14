@@ -232,7 +232,7 @@ class MainMenuApp(ShowBase):
     def _toggle_camera_light_grid(self, value):
         self.use_camera_light_grid = bool(value)
         if hasattr(self, "compute_np"):
-            self.compute_np.set_shader_input("u_use_camera_grid", self.use_camera_light_grid)
+            self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
 
 
 
@@ -329,13 +329,11 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
         self.compute_np.set_shader_input("u_fbm_gain", self.fbm_gain)
         self.compute_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
-
-        self.compute_np.set_shader_input("u_use_camera_grid", self.use_camera_light_grid)
+        self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
         # Set initial values for the new uniforms
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
         self.compute_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
         self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
-
         cm = CardMaker("fullscreen")
         cm.set_frame_fullscreen_quad()
         card = self.render2d.attach_new_node(cm.generate())
@@ -356,8 +354,8 @@ class MainMenuApp(ShowBase):
         
         # 3. The projection matrix (to extract the FOV)
         self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
+        self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
 
-        self.compute_np.set_shader_input("u_use_camera_grid", self.use_camera_light_grid)
         self.compute_np.set_shader_input("time", task.time)
         return task.cont
         
