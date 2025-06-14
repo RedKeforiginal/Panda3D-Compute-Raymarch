@@ -36,8 +36,9 @@ uniform float u_R0; // Reflectance at normal incidence (typically ~0.04 for diel
 // Constants
 //------------------------------------------------------------------------------------------------
 const float PI = 3.14159265359;
-const int   MAX_STEPS = 256;
-const float MAX_DIST = 1000.0;
+uniform int   u_max_primary_steps;
+uniform float u_max_dist;
+uniform int   u_shadow_steps;
 const float SURF_DIST = 0.0005;
 
 float epsilon(float t) {
@@ -102,7 +103,7 @@ float calcAO(vec3 pos, vec3 nor) { return 1.0; }
 
 float calculateShadow(vec3 ro, vec3 rd, float max_t) {
     float t = 0.01;
-    for (int i = 0; i < 256; ++i) {
+    for (int i = 0; i < u_shadow_steps; ++i) {
         float h = map(ro + rd * t);
         if (h < epsilon(t)) return 0.0;
         t += h;
@@ -294,7 +295,7 @@ void main() {
 
     // --- Primary Raymarch ---
     float t = 0.0;
-    for (int i = 0; i < MAX_STEPS; ++i) {
+    for (int i = 0; i < u_max_primary_steps; ++i) {
         vec3 p = ro + rd * t;
         float d = map(p);
         if (d < epsilon(t)) {
@@ -304,7 +305,7 @@ void main() {
             return;
         }
         t += d;
-        if (t > MAX_DIST) break;
+        if (t > u_max_dist) break;
     }
 
     imageStore(outputImage, pixel, vec4(0.0, 0.0, 0.0, 1.0));
