@@ -10,7 +10,13 @@ loadPrcFileData("", "coordinate-system yup-right")
 loadPrcFileData('', 'win-size 1024 1024')
 
 from direct.showbase.ShowBase import ShowBase
-from direct.gui.DirectGui import DirectButton, DirectFrame, DirectEntry, DirectLabel
+from direct.gui.DirectGui import (
+    DirectButton,
+    DirectFrame,
+    DirectEntry,
+    DirectLabel,
+    DirectCheckButton,
+)
 
 from panda3d.core import (
     Vec3,
@@ -114,6 +120,7 @@ class MainMenuApp(ShowBase):
         self.fbm_lacunarity = 2.0
         self.fbm_gain = 0.5
         self.fbm_amplitude = 0.5
+        self.use_camera_light_grid = False
         self._build_menu()
         self.accept("escape", self._toggle_menu)
     def _toggle_menu(self):
@@ -192,6 +199,14 @@ class MainMenuApp(ShowBase):
             entry = DirectEntry(initialText=str(defaults[i]), scale=0.05, pos=(0.2, y - 0.02, 0), numLines=1, focus=0, parent=self.menu_frame)
             entries[label] = entry
         self.lighting_entries = entries
+        self.camera_grid_checkbox = DirectCheckButton(
+            text="Camera light grid",
+            scale=0.05,
+            pos=(-0.2, 0, -0.65),
+            parent=self.menu_frame,
+            indicatorValue=self.use_camera_light_grid,
+            command=self._toggle_camera_light_grid,
+        )
         DirectButton(text="Apply", scale=0.07, pos=(-0.2,-0.75,0), command=self._apply_lighting, parent=self.menu_frame)
         DirectButton(text="Back", scale=0.07, pos=(0.2,-0.75,0), command=self._build_options_menu, parent=self.menu_frame)
         
@@ -219,6 +234,12 @@ class MainMenuApp(ShowBase):
             self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
             self.compute_np.set_shader_input("u_light_offset", self.light_offset)
             self.compute_np.set_shader_input("u_light_color", self.light_color)
+
+    # See Panda3D docs on setShaderInput for updating shader uniforms
+    def _toggle_camera_light_grid(self, value):
+        self.use_camera_light_grid = bool(value)
+        if hasattr(self, "compute_np"):
+            self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
 
 
     def _build_materials_menu(self):
@@ -283,7 +304,6 @@ class MainMenuApp(ShowBase):
             self.compute_np.set_shader_input("u_max_primary_steps", self.primary_steps)
             self.compute_np.set_shader_input("u_max_dist", self.max_dist)
             self.compute_np.set_shader_input("u_shadow_steps", self.shadow_steps)
-# In main.py, replace the MainMenuApp class's compute methods with these:
 
     def _setup_compute(self):
         width = self.win.getXSize()
@@ -315,6 +335,7 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("u_fbm_gain", self.fbm_gain)
         self.compute_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
 
+        self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
         # Set initial values for the new uniforms
         self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
         self.compute_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
@@ -341,6 +362,7 @@ class MainMenuApp(ShowBase):
         # 3. The projection matrix (to extract the FOV)
         self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
 
+        self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
         self.compute_np.set_shader_input("time", task.time)
         return task.cont
         
