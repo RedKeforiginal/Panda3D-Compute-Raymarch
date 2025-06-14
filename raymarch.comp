@@ -74,7 +74,28 @@ float lattice(vec3 p) {
     return min(structure, min(fl, rail));
 }
 
-float map(vec3 p) { return lattice(p); }
+float sdSphere(vec3 p, float r) {
+    // Standard signed distance to a sphere
+    // See GLSL built-in functions documentation:
+    // https://docs.gl/gl4/glLength
+    return length(p) - r;
+}
+
+float sdLightSpheres(vec3 p) {
+    // Place a sphere at every light grid point
+    const float radius = 0.125;
+    // Convert position into grid-local coordinates using spacing and offset
+    vec3 q = mod(p - u_light_offset + 0.5 * u_light_spacing,
+                 u_light_spacing) - 0.5 * u_light_spacing;
+    return sdSphere(q, radius);
+}
+
+float map(vec3 p) {
+    // Combine the main lattice with the light spheres
+    float d_scene = lattice(p);
+    float d_lights = sdLightSpheres(p);
+    return min(d_scene, d_lights);
+}
 
 vec3 getNormal(vec3 p) {
     vec3 n = vec3(0.0);

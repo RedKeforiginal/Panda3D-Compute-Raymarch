@@ -61,6 +61,18 @@ float lattice(vec3 p){
     
     // Adding the floor and the railings to the structure.
     return min(structure, min(fl, rail));
- 
-    
+
+
+}
+
+float sdSphere(vec3 p, float r) {
+    // Signed distance to a sphere using GLSL length(), see https://docs.gl/gl4/glLength
+    return length(p) - r;
+}
+
+float sdLightSpheres(vec3 p, vec3 lightSpacing, vec3 lightOffset) {
+    const float radius = 0.125;
+    vec3 q = mod(p - lightOffset + 0.5 * lightSpacing,
+                 lightSpacing) - 0.5 * lightSpacing;
+    return sdSphere(q, radius);
 }
