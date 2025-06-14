@@ -103,9 +103,9 @@ class MainMenuApp(ShowBase):
         self.camLens = self.cam.node().getLens()
         self.camLens.setFov(70)
 
-        self.light_spacing = Vec3(4.0, 4.0, 4.0)
+        self.light_spacing = Vec3(8.0, 32.0, 16.0)
         self.light_offset = Vec3(0.0, 0.0, 0.0)
-        self.light_color = Vec3(1.0, 0.85, 0.8)
+        self.light_color = Vec3(3.0, 2.5, 2.25)
         self.primary_steps = 256  # Defaults used for menu
         self.max_dist = 1000.0  # Passed to the shader via setShaderInput (see https://docs.panda3d.org)
         self.shadow_steps = 256  # Defaults used for menu
