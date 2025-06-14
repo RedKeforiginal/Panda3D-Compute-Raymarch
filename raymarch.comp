@@ -24,7 +24,7 @@ uniform float time;
 uniform vec3 u_light_spacing;
 uniform vec3 u_light_offset;
 uniform vec3 u_light_color;
-uniform bool u_use_camera_grid;
+uniform int u_use_camera_grid;
 
 // Procedural material controls. These parameters allow the Python UI to modify
 // the fBm noise used for the marble material. See the GLSL uniform rules:
@@ -230,7 +230,7 @@ vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
     vec3 light_grid_base = u_light_offset;
 
     
-    if (u_use_camera_grid) {
+    if (u_use_camera_grid != 0) {
         for (int ix = -1; ix <= 1; ix += 2) {
             for (int iy = -1; iy <= 1; iy += 2) {
                 for (int iz = -1; iz <= 1; iz += 2) {
