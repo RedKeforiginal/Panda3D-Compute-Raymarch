@@ -10,3 +10,5 @@ Version 0.1 will:
 4. provide a default procedurally generated material the is not tiled, but seemingly infinite and non-repeating.
 5. light the scene with a dynamic point light grid centered on the world origin whose spacing and offset are configurable by the user.
 6. provide a UI with an options menu to configure settings.
+
+7. optionally use a camera-centered 2x2x2 light grid via the Lighting menu.
