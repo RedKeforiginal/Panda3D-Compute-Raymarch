@@ -106,6 +106,9 @@ class MainMenuApp(ShowBase):
         self.light_spacing = Vec3(4.0, 4.0, 4.0)
         self.light_offset = Vec3(0.0, 0.0, 0.0)
         self.light_color = Vec3(1.0, 0.85, 0.8)
+        self.primary_steps = 256  # Defaults used for menu
+        self.max_dist = 1000.0  # Passed to the shader via setShaderInput (see https://docs.panda3d.org)
+        self.shadow_steps = 256  # Defaults used for menu
         self._build_menu()
         self.accept("escape", self._toggle_menu)
     def _toggle_menu(self):
@@ -168,7 +171,8 @@ class MainMenuApp(ShowBase):
         DirectButton(text="SDF", scale=button_scale, pos=(0,spacing,0), command=self._on_sdf, parent=self.menu_frame)
         DirectButton(text="Materials", scale=button_scale, pos=(0,0,0), command=self._on_materials, parent=self.menu_frame)
         DirectButton(text="Lighting", scale=button_scale, pos=(0,-spacing,0), command=self._build_lighting_menu, parent=self.menu_frame)
-        DirectButton(text="Back", scale=button_scale, pos=(0,-spacing*2,0), command=self._build_menu, parent=self.menu_frame)
+        DirectButton(text="Graphics", scale=button_scale, pos=(0,-spacing*2,0), command=self._build_graphics_menu, parent=self.menu_frame)
+        DirectButton(text="Back", scale=button_scale, pos=(0,-spacing*3,0), command=self._build_menu, parent=self.menu_frame)
 
     def _build_lighting_menu(self):
         if hasattr(self, "menu_frame"):
@@ -211,6 +215,35 @@ class MainMenuApp(ShowBase):
             self.compute_np.set_shader_input("u_light_offset", self.light_offset)
             self.compute_np.set_shader_input("u_light_color", self.light_color)
 
+
+    def _build_graphics_menu(self):
+        if hasattr(self, "menu_frame"):
+            self.menu_frame.destroy()
+        self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.7,0.7,-0.9,0.9), pos=(0,0,0))
+        entries = {}
+        labels = ["Primary steps", "Max distance", "Shadow steps"]
+        defaults = [self.primary_steps, self.max_dist, self.shadow_steps]
+        for i, label in enumerate(labels):
+            y = 0.5 - i * 0.15
+            DirectLabel(text=label, scale=0.05, pos=(-0.4, y, 0), parent=self.menu_frame)
+            entry = DirectEntry(initialText=str(defaults[i]), scale=0.05, pos=(0.2, y - 0.02, 0), numLines=1, focus=0, parent=self.menu_frame)
+            entries[label] = entry
+        self.graphics_entries = entries
+        DirectButton(text="Apply", scale=0.07, pos=(-0.2,-0.75,0), command=self._apply_graphics, parent=self.menu_frame)
+        DirectButton(text="Back", scale=0.07, pos=(0.2,-0.75,0), command=self._build_options_menu, parent=self.menu_frame)
+
+    def _apply_graphics(self):
+        try:
+            self.primary_steps = int(self.graphics_entries["Primary steps"].get())
+            self.max_dist = float(self.graphics_entries["Max distance"].get())
+            self.shadow_steps = int(self.graphics_entries["Shadow steps"].get())
+        except ValueError:
+            print("Invalid graphics parameters")
+            return
+        if hasattr(self, "compute_np"):
+            self.compute_np.set_shader_input("u_max_primary_steps", self.primary_steps)
+            self.compute_np.set_shader_input("u_max_dist", self.max_dist)
+            self.compute_np.set_shader_input("u_shadow_steps", self.shadow_steps)
 # In main.py, replace the MainMenuApp class's compute methods with these:
 
     def _setup_compute(self):
@@ -233,6 +266,9 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("u_R0", 0.04)
         self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
         self.compute_np.set_shader_input("u_light_offset", self.light_offset)
+        self.compute_np.set_shader_input("u_max_primary_steps", self.primary_steps)
+        self.compute_np.set_shader_input("u_max_dist", self.max_dist)
+        self.compute_np.set_shader_input("u_shadow_steps", self.shadow_steps)
         self.compute_np.set_shader_input("u_light_color", self.light_color)
 
         # Set initial values for the new uniforms
