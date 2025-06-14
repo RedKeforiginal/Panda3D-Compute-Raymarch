@@ -212,7 +212,12 @@ vec4 calculateColor(vec3 p, vec3 n, vec3 V) {
 
     // Accumulate lighting from a 3x3x3 grid of point lights
     vec3 Lo = vec3(0.0); // Final outgoing radiance
-    vec3 light_grid_base = floor((p - u_light_offset) / u_light_spacing + 0.5) * u_light_spacing + u_light_offset;
+    // Determine the starting point of the light grid relative to the world
+    // origin. Lighting parameters come from Python via shader inputs. See
+    // Panda3D docs on setShaderInput:
+    // https://docs.panda3d.org/1.10/python/programming/shaders/shader-inputs
+    // The grid origin is constant and does not depend on the surface hit point.
+    vec3 light_grid_base = u_light_offset;
 
     for (int ix = -1; ix <= 1; ++ix) {
         for (int iy = -1; iy <= 1; ++iy) {
