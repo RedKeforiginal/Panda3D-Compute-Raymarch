@@ -323,13 +323,13 @@ void main() {
 
     // --- FUNDAMENTALLY CORRECT RAY CONSTRUCTION ---
     // 1. Convert pixel coordinate to Normalized Device Coordinates (NDC) [-1, 1]
-    //    The Y-coordinate is flipped to match GL's bottom-left origin.
+    //    Compute normalized device coordinates (NDC). Panda3D already
+    //    uses a bottom-left origin for textures, so no vertical flip is
+    //    required. See "API View Space" in the Panda3D manual, which
+    //    states that OpenGL is y-up right-handed.
     vec2 uv = (vec2(pixel) + 0.5) / vec2(size);
-    vec2 ndc = vec2(uv.x, 1.0 - uv.y) * 2.0 - 1.0;
+    vec2 ndc = uv * 2.0 - 1.0;
 
-    // 2. Create the ray direction in CAMERA-space.
-    //    We use the FOV information stored in the projection matrix.
-    //    Panda3D's Y-up projection matrix has the form:
     //    [1/tan(fovX/2), 0,             0,  0]
     //    [0,             1/tan(fovY/2), 0,  0]
     //    [...]
