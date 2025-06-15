@@ -112,6 +112,12 @@ class MainMenuApp(ShowBase):
         self.light_spacing = Vec3(8.0, 32.0, 16.0)
         self.light_offset = Vec3(0.0, 0.0, 0.0)
         self.light_color = Vec3(3.0, 2.5, 2.25)
+        # Store the desired render resolution used by the compute shader. The
+        # defaults match the initial window size.  See Panda3D's WindowProperties
+        # manual page for the relevant attributes:
+        # https://docs.panda3d.org/1.10/python/reference/coreclasses/windowproperties
+        self.render_width = self.win.getXSize()
+        self.render_height = self.win.getYSize()
         self.primary_steps = 256  # Defaults used for menu
         self.max_dist = 1000.0  # Passed to the shader via setShaderInput (see https://docs.panda3d.org)
         self.shadow_steps = 256  # Defaults used for menu
@@ -275,8 +281,20 @@ class MainMenuApp(ShowBase):
             self.menu_frame.destroy()
         self.menu_frame = DirectFrame(frameColor=(0,0,0,1), frameSize=(-0.7,0.7,-0.9,0.9), pos=(0,0,0))
         entries = {}
-        labels = ["Primary steps", "Max distance", "Shadow steps"]
-        defaults = [self.primary_steps, self.max_dist, self.shadow_steps]
+        labels = [
+            "Primary steps",
+            "Max distance",
+            "Shadow steps",
+            "Render width",
+            "Render height",
+        ]
+        defaults = [
+            self.primary_steps,
+            self.max_dist,
+            self.shadow_steps,
+            self.render_width,
+            self.render_height,
+        ]
         for i, label in enumerate(labels):
             y = 0.5 - i * 0.15
             DirectLabel(text=label, scale=0.05, pos=(-0.4, y, 0), parent=self.menu_frame)
@@ -291,20 +309,40 @@ class MainMenuApp(ShowBase):
             self.primary_steps = int(self.graphics_entries["Primary steps"].get())
             self.max_dist = float(self.graphics_entries["Max distance"].get())
             self.shadow_steps = int(self.graphics_entries["Shadow steps"].get())
+            width = int(self.graphics_entries["Render width"].get())
+            height = int(self.graphics_entries["Render height"].get())
         except ValueError:
             print("Invalid graphics parameters")
             return
+        if 512 <= width <= 3840 and 512 <= height <= 2190:
+            self.render_width = width
+            self.render_height = height
+        else:
+            print("Render size out of range")
+            return
         if hasattr(self, "compute_np"):
-            self.compute_np.set_shader_input("u_max_primary_steps", self.primary_steps)
-            self.compute_np.set_shader_input("u_max_dist", self.max_dist)
-            self.compute_np.set_shader_input("u_shadow_steps", self.shadow_steps)
+            # Recreate the compute pipeline so the new texture size is used.
+            self._setup_compute()
 # In main.py, replace the MainMenuApp class's compute methods with these:
 
     def _setup_compute(self):
-        width = self.win.getXSize()
-        # Create the output texture and dispatch compute shader as shown in the Panda3D manual:
+        # If a compute pipeline already exists, remove its resources before
+        # creating new ones.
+        if hasattr(self, "card"):
+            self.card.remove_node()
+            del self.card
+        if hasattr(self, "compute_np"):
+            self.compute_np.remove_node()
+            del self.compute_np
+        if hasattr(self, "compute_node"):
+            del self.compute_node
+        self.taskMgr.remove("update-compute")
+
+        width = self.render_width
+        height = self.render_height
+        # Create the output texture and dispatch compute shader as shown in the
+        # Panda3D manual:
         # https://docs.panda3d.org/1.10/python/programming/shaders/compute-shaders
-        height = self.win.getYSize()
         self.output_tex = Texture()
         self.output_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
         self.output_tex.clear_image()
@@ -336,9 +374,9 @@ class MainMenuApp(ShowBase):
         self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
         cm = CardMaker("fullscreen")
         cm.set_frame_fullscreen_quad()
-        card = self.render2d.attach_new_node(cm.generate())
-        card.set_texture(self.output_tex)
-        card.set_shader_off()
+        self.card = self.render2d.attach_new_node(cm.generate())
+        self.card.set_texture(self.output_tex)
+        self.card.set_shader_off()
 
         self.taskMgr.add(self._update_compute, "update-compute")
 
