@@ -1,0 +1,244 @@
+#version 430 core
+
+//===============================================================================
+// Panda3D Compute Shader Raymarcher - Shading Pass
+//===============================================================================
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+
+layout(rgba32f, binding = 0) readonly  uniform image2D positionImage;
+layout(rgba32f, binding = 1) readonly  uniform image2D normalImage;
+layout(rgba32f, binding = 2) writeonly uniform image2D outputImage;
+
+uniform vec3  camera_pos;
+
+uniform vec3  u_light_spacing;
+uniform vec3  u_light_offset;
+uniform vec3  u_light_color;
+uniform int   u_use_camera_grid;
+
+uniform float u_material_scale;
+uniform int   u_fbm_octaves;
+uniform float u_fbm_lacunarity;
+uniform float u_fbm_gain;
+uniform float u_fbm_amplitude;
+
+uniform float u_R0;
+
+#include "SDF.glsl"
+
+const float PI = 3.14159265359;
+
+float DistributionGGX(vec3 N, vec3 H, float r) {
+    float a2 = r * r * r * r;
+    float nH = max(dot(N, H), 0.0);
+    return a2 / (PI * pow(nH * nH * (a2 - 1.0) + 1.0, 2.0));
+}
+
+float GeometrySchlickGGX(float nV, float r) {
+    float k = (r + 1.0) * (r + 1.0) / 8.0;
+    return nV / (nV * (1.0 - k) + k);
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float r) {
+    return GeometrySchlickGGX(max(dot(N, V), 0.0), r) *
+           GeometrySchlickGGX(max(dot(N, L), 0.0), r);
+}
+
+float luminance(vec3 c) { return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
+
+vec3 fresnelSchlick(float c, vec3 F0) {
+    float F90 = min(1.0, 60.0 * luminance(F0));
+    return F0 + (vec3(F90) - F0) * pow(clamp(1.0 - c, 0.0, 1.0), 5.0);
+}
+
+vec3 orenNayarDiffuse(vec3 albedo, float rough, vec3 N, vec3 V, vec3 L) {
+    float NL = max(dot(N, L), 0.0);
+    float NV = max(dot(N, V), 0.0);
+    float sigma2 = rough * rough;
+    float A = 1.0 - 0.5 * (sigma2 / (sigma2 + 0.33));
+    float B = 0.45 * (sigma2 / (sigma2 + 0.09));
+    float sinThetaL = sqrt(max(0.0, 1.0 - NL * NL));
+    float sinThetaV = sqrt(max(0.0, 1.0 - NV * NV));
+    float maxCos = 0.0;
+    if (sinThetaL > 1e-4 && sinThetaV > 1e-4) {
+        vec3 Lp = normalize(L - N * NL);
+        vec3 Vp = normalize(V - N * NV);
+        maxCos = max(dot(Lp, Vp), 0.0);
+    }
+    float sinAlpha = max(sinThetaL, sinThetaV);
+    float tanBeta = (sinThetaL < sinThetaV) ? sinThetaL / max(NL, 1e-4)
+                                             : sinThetaV / max(NV, 1e-4);
+    return albedo * NL * (A + B * maxCos * sinAlpha * tanBeta) / PI;
+}
+
+vec3 mod289(vec3 x) { return x - floor(x / 289.0) * 289.0; }
+vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
+vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
+vec4 taylorInvSqrt(vec4 r) {
+    return 1.79284291400159 - 0.85373472095314 * r;
+}
+
+float snoise(vec3 v) {
+    const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
+    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+    vec3 i = floor(v + dot(v, C.yyy));
+    vec3 x0 = v - i + dot(i, C.xxx);
+
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min(g.xyz, l.zxy);
+    vec3 i2 = max(g.xyz, l.zxy);
+
+    vec3 x1 = x0 - i1 + C.xxx;
+    vec3 x2 = x0 - i2 + C.yyy;
+    vec3 x3 = x0 - D.yyy;
+
+    i = mod289(i);
+    vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) +
+                             i.y + vec4(0.0, i1.y, i2.y, 1.0)) +
+                             i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+    float n_ = 0.142857142857;
+    vec3 ns = n_ * D.wyz - D.xzx;
+
+    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_);
+
+    vec4 x = x_ * ns.x + ns.y;
+    vec4 y = y_ * ns.x + ns.y;
+    vec4 h = 1.0 - abs(x) - abs(y);
+
+    vec4 b0 = vec4(x.xy, y.xy);
+    vec4 b1 = vec4(x.zw, y.zw);
+
+    vec4 s0 = floor(b0) * 2.0 + 1.0;
+    vec4 s1 = floor(b1) * 2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+
+    vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+    vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+
+    vec3 p0 = vec3(a0.xy, h.x);
+    vec3 p1 = vec3(a0.zw, h.y);
+    vec3 p2 = vec3(a1.xy, h.z);
+    vec3 p3 = vec3(a1.zw, h.w);
+
+    vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1),
+                                   dot(p2, p2), dot(p3, p3)));
+    p0 *= norm.x;
+    p1 *= norm.y;
+    p2 *= norm.z;
+    p3 *= norm.w;
+
+    vec4 m = max(0.6 - vec4(dot(x0, x0), dot(x1, x1),
+                            dot(x2, x2), dot(x3, x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1),
+                                  dot(p2, x2), dot(p3, x3)));
+}
+
+float fbm3(vec3 p) {
+    float v = 0.0;
+    float a = u_fbm_amplitude;
+    mat3 rot = mat3(0.00,0.80,0.60,-0.80,0.36,-0.48,-0.60,-0.48,0.64);
+    for(int i = 0; i < u_fbm_octaves; ++i){
+        v += a * snoise(p);
+        p = rot * p * u_fbm_lacunarity;
+        a *= u_fbm_gain;
+    }
+    return v;
+}
+
+vec3 ACESFilm(vec3 x){
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return clamp((x*(a*x+b))/(x*(c*x+d)+e), 0.0, 1.0);
+}
+
+vec4 shade(vec3 p, vec3 n, vec3 V){
+    float noiseVal = fbm3(p * u_material_scale);
+    float m = sin(p.y * u_material_scale * 4.0 + noiseVal * 6.0);
+    vec3 albedo = mix(vec3(0.2, 0.2, 0.25), vec3(0.9, 0.9, 0.95), m);
+    float roughness = 0.25 + 0.15 * noiseVal;
+
+    float metallic = 0.0;
+    vec3 F0 = vec3(u_R0);
+    vec3 Lo = vec3(0.0);
+    vec3 grid_base = u_light_offset;
+
+    if(u_use_camera_grid != 0){
+        vec3 gb = camera_pos + u_light_offset - u_light_spacing * 0.5;
+        for(int ix=0; ix<2; ++ix)
+            for(int iy=0; iy<2; ++iy)
+                for(int iz=0; iz<2; ++iz){
+                    vec3 lp = gb + vec3(ix,iy,iz) * u_light_spacing;
+                    vec3 L = normalize(lp - p);
+                    float ld = length(lp - p);
+                    float att = 1.0 / (ld * ld);
+                    vec3 radiance = u_light_color * att;
+                    vec3 H = normalize(V + L);
+                    float NdotL = max(dot(n,L),0.0);
+                    if(NdotL > 0.0){
+                        float NDF = DistributionGGX(n,H,roughness);
+                        float G = GeometrySmith(n,V,L,roughness);
+                        vec3 F = fresnelSchlick(max(dot(H,V),0.0), F0);
+                        vec3 spec = (NDF * G * F) /
+                                   (4.0 * max(dot(n,V),0.0) * NdotL + 0.001);
+                        vec3 kd = vec3(1.0) - F;
+                        kd *= (1.0 - metallic);
+                        vec3 diffuse = kd * orenNayarDiffuse(albedo, roughness,
+                                                            n, V, L);
+                        Lo += diffuse * radiance + spec * radiance * NdotL;
+                    }
+                }
+    } else {
+        for(int ix=-1; ix<=1; ++ix)
+            for(int iy=-1; iy<=1; ++iy)
+                for(int iz=-1; iz<=1; ++iz){
+                    vec3 lp = grid_base + vec3(ix,iy,iz) * u_light_spacing;
+                    vec3 L = normalize(lp - p);
+                    float ld = length(lp - p);
+                    float att = 1.0 / (ld * ld);
+                    vec3 radiance = u_light_color * att;
+                    vec3 H = normalize(V + L);
+                    float NdotL = max(dot(n,L),0.0);
+                    if(NdotL > 0.0){
+                        float NDF = DistributionGGX(n,H,roughness);
+                        float G = GeometrySmith(n,V,L,roughness);
+                        vec3 F = fresnelSchlick(max(dot(H,V),0.0), F0);
+                        vec3 spec = (NDF * G * F) /
+                                   (4.0 * max(dot(n,V),0.0) * NdotL + 0.001);
+                        vec3 kd = vec3(1.0) - F;
+                        kd *= (1.0 - metallic);
+                        vec3 diffuse = kd * orenNayarDiffuse(albedo, roughness,
+                                                            n, V, L);
+                        Lo += diffuse * radiance + spec * radiance * NdotL;
+                    }
+                }
+    }
+
+    vec3 color = ACESFilm(Lo);
+    color = pow(color, vec3(1.0/2.2));
+    return vec4(color, 1.0);
+}
+
+void main(){
+    ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
+    ivec2 size = imageSize(positionImage);
+    if(pixel.x >= size.x || pixel.y >= size.y) return;
+    vec4 pos = imageLoad(positionImage, pixel);
+    if(pos.w == 0.0){
+        imageStore(outputImage, pixel, vec4(0.0,0.0,0.0,1.0));
+        return;
+    }
+    vec3 p = pos.xyz;
+    vec3 n = imageLoad(normalImage, pixel).xyz;
+    vec3 V = normalize(camera_pos - p);
+    imageStore(outputImage, pixel, shade(p, n, V));
+}

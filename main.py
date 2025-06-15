@@ -134,7 +134,7 @@ class MainMenuApp(ShowBase):
         """Toggle the in-game menu when rendering is active."""
         # See Panda3D event handling: https://docs.panda3d.org/1.10/python/programming/events
 
-        if hasattr(self, "menu_frame") and hasattr(self, "compute_np") and not hasattr(self, "controller"):
+        if hasattr(self, "menu_frame") and hasattr(self, "shading_np") and not hasattr(self, "controller"):
             self._resume_render()
         else:
             self._build_menu()
@@ -229,16 +229,16 @@ class MainMenuApp(ShowBase):
         except ValueError:
             print("Invalid lighting parameters")
             return
-        if hasattr(self, "compute_np"):
-            self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
-            self.compute_np.set_shader_input("u_light_offset", self.light_offset)
-            self.compute_np.set_shader_input("u_light_color", self.light_color)
+        if hasattr(self, "shading_np"):
+            self.shading_np.set_shader_input("u_light_spacing", self.light_spacing)
+            self.shading_np.set_shader_input("u_light_offset", self.light_offset)
+            self.shading_np.set_shader_input("u_light_color", self.light_color)
 
     # See Panda3D docs on setShaderInput for updating shader uniforms
     def _toggle_camera_light_grid(self, value):
         self.use_camera_light_grid = bool(value)
-        if hasattr(self, "compute_np"):
-            self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
+        if hasattr(self, "shading_np"):
+            self.shading_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
 
 
 
@@ -268,12 +268,12 @@ class MainMenuApp(ShowBase):
         except ValueError:
             print("Invalid material parameters")
             return
-        if hasattr(self, "compute_np"):
-            self.compute_np.set_shader_input("u_material_scale", self.material_scale)
-            self.compute_np.set_shader_input("u_fbm_octaves", self.fbm_octaves)
-            self.compute_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
-            self.compute_np.set_shader_input("u_fbm_gain", self.fbm_gain)
-            self.compute_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
+        if hasattr(self, "shading_np"):
+            self.shading_np.set_shader_input("u_material_scale", self.material_scale)
+            self.shading_np.set_shader_input("u_fbm_octaves", self.fbm_octaves)
+            self.shading_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
+            self.shading_np.set_shader_input("u_fbm_gain", self.fbm_gain)
+            self.shading_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
 
 
     def _build_graphics_menu(self):
@@ -320,10 +320,9 @@ class MainMenuApp(ShowBase):
         else:
             print("Render size out of range")
             return
-        if hasattr(self, "compute_np"):
+        if hasattr(self, "shading_np"):
             # Recreate the compute pipeline so the new texture size is used.
             self._setup_compute()
-# In main.py, replace the MainMenuApp class's compute methods with these:
 
     def _setup_compute(self):
         # If a compute pipeline already exists, remove its resources before
@@ -331,47 +330,81 @@ class MainMenuApp(ShowBase):
         if hasattr(self, "card"):
             self.card.remove_node()
             del self.card
-        if hasattr(self, "compute_np"):
-            self.compute_np.remove_node()
-            del self.compute_np
-        if hasattr(self, "compute_node"):
-            del self.compute_node
+        if hasattr(self, "compute_root"):
+            self.compute_root.remove_node()
+            del self.compute_root
+        if hasattr(self, "intersection_np"):
+            self.intersection_np.remove_node()
+            del self.intersection_np
+        if hasattr(self, "shading_np"):
+            self.shading_np.remove_node()
+            del self.shading_np
+        if hasattr(self, "intersection_node"):
+            del self.intersection_node
+        if hasattr(self, "shading_node"):
+            del self.shading_node
         self.taskMgr.remove("update-compute")
 
         width = self.render_width
         height = self.render_height
-        # Create the output texture and dispatch compute shader as shown in the
-        # Panda3D manual:
+        # Create the output texture as documented in the Panda3D manual:
         # https://docs.panda3d.org/1.10/python/programming/shaders/compute-shaders
         self.output_tex = Texture()
         self.output_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
         self.output_tex.clear_image()
 
-        self.compute_shader = Shader.load_compute(Shader.SL_GLSL, "raymarch.comp")
+        # Intermediate textures holding intersection data
+        self.position_tex = Texture()
+        self.position_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
+        self.position_tex.clear_image()
+
+        self.normal_tex = Texture()
+        self.normal_tex.setup_2d_texture(width, height, Texture.T_float, Texture.F_rgba32)
+        self.normal_tex.clear_image()
+
         groups_x = (width + 7) // 8
         groups_y = (height + 7) // 8
-        self.compute_node = ComputeNode("raymarch")
-        self.compute_node.add_dispatch(groups_x, groups_y, 1)
-        self.compute_np = self.render.attach_new_node(self.compute_node)
-        self.compute_np.set_shader_input("outputImage", self.output_tex, False, True)
-        self.compute_np.set_shader(self.compute_shader)
-        self.compute_np.set_shader_input("u_R0", 0.04)
-        self.compute_np.set_shader_input("u_light_spacing", self.light_spacing)
-        self.compute_np.set_shader_input("u_light_offset", self.light_offset)
-        self.compute_np.set_shader_input("u_max_primary_steps", self.primary_steps)
-        self.compute_np.set_shader_input("u_max_dist", self.max_dist)
-        self.compute_np.set_shader_input("u_shadow_steps", self.shadow_steps)
-        self.compute_np.set_shader_input("u_light_color", self.light_color)
-        self.compute_np.set_shader_input("u_material_scale", self.material_scale)
-        self.compute_np.set_shader_input("u_fbm_octaves", self.fbm_octaves)
-        self.compute_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
-        self.compute_np.set_shader_input("u_fbm_gain", self.fbm_gain)
-        self.compute_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
-        self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
-        # Set initial values for the new uniforms
-        self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
-        self.compute_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
-        self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
+
+        self.intersection_shader = Shader.load_compute(Shader.SL_GLSL, "raymarch_intersection.comp")
+        self.shading_shader = Shader.load_compute(Shader.SL_GLSL, "raymarch_shading.comp")
+
+        self.compute_root = self.render.attach_new_node("compute-root")
+
+        self.intersection_node = ComputeNode("intersection")
+        self.intersection_node.add_dispatch(groups_x, groups_y, 1)
+        self.intersection_np = self.compute_root.attach_new_node(self.intersection_node)
+        self.intersection_np.set_sort(0)
+        self.intersection_np.set_shader(self.intersection_shader)
+        self.intersection_np.set_shader_input("positionImage", self.position_tex, False, True)
+        self.intersection_np.set_shader_input("normalImage", self.normal_tex, False, True)
+        self.intersection_np.set_shader_input("u_max_primary_steps", self.primary_steps)
+        self.intersection_np.set_shader_input("u_max_dist", self.max_dist)
+
+        self.shading_node = ComputeNode("shading")
+        self.shading_node.add_dispatch(groups_x, groups_y, 1)
+        self.shading_np = self.compute_root.attach_new_node(self.shading_node)
+        self.shading_np.set_sort(1)
+        self.shading_np.set_shader(self.shading_shader)
+        self.shading_np.set_shader_input("positionImage", self.position_tex)
+        self.shading_np.set_shader_input("normalImage", self.normal_tex)
+        self.shading_np.set_shader_input("outputImage", self.output_tex, False, True)
+        self.shading_np.set_shader_input("u_R0", 0.04)
+        self.shading_np.set_shader_input("u_light_spacing", self.light_spacing)
+        self.shading_np.set_shader_input("u_light_offset", self.light_offset)
+        self.shading_np.set_shader_input("u_shadow_steps", self.shadow_steps)
+        self.shading_np.set_shader_input("u_light_color", self.light_color)
+        self.shading_np.set_shader_input("u_material_scale", self.material_scale)
+        self.shading_np.set_shader_input("u_fbm_octaves", self.fbm_octaves)
+        self.shading_np.set_shader_input("u_fbm_lacunarity", self.fbm_lacunarity)
+        self.shading_np.set_shader_input("u_fbm_gain", self.fbm_gain)
+        self.shading_np.set_shader_input("u_fbm_amplitude", self.fbm_amplitude)
+        self.shading_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
+
+        self.intersection_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        self.intersection_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
+        self.intersection_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
+        self.shading_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+
         cm = CardMaker("fullscreen")
         cm.set_frame_fullscreen_quad()
         self.card = self.render2d.attach_new_node(cm.generate())
@@ -379,24 +412,13 @@ class MainMenuApp(ShowBase):
         self.card.set_shader_off()
 
         self.taskMgr.add(self._update_compute, "update-compute")
-
     def _update_compute(self, task):
-        # Instead of calculating a complex inverse matrix, we pass the simple,
-        # direct components needed for manual ray construction.
-        
-        # 1. The camera's world position (for the ray origin)
-        self.compute_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
-        
-        # 2. The camera's transformation matrix (for rotating the ray direction)
-        self.compute_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
-        
-        # 3. The projection matrix (to extract the FOV)
-        self.compute_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
-        self.compute_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
-
-        self.compute_np.set_shader_input("time", task.time)
+        self.intersection_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        self.intersection_np.set_shader_input("cam_to_world", self.camera.get_mat(self.render))
+        self.intersection_np.set_shader_input("proj_mat", self.camLens.get_projection_mat())
+        self.shading_np.set_shader_input("camera_pos", self.camera.get_pos(self.render))
+        self.shading_np.set_shader_input("u_use_camera_grid", int(self.use_camera_light_grid))
         return task.cont
-        
     def _on_launch(self):
         if hasattr(self, "menu_frame"):
             self.menu_frame.destroy()
